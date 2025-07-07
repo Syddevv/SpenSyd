@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import "../styles/Login.css";
-import SpenSyd_Icon from "../assets/SpenSyd Icon.png";
 import { Link } from "react-router-dom";
+import SpenSyd_Icon from "../assets/SpenSyd Icon.png";
+import "../styles/Register.css";
 
-const Login = () => {
+const Register = () => {
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -15,13 +16,18 @@ const Login = () => {
   };
 
   return (
-    <div className="login-wrapper">
-      <div className="loginPage">
+    <div className="register-wrapper">
+      <div className="registerPage">
         <img src={SpenSyd_Icon} alt="SpenSyd Icon" className="login-icon" />
         <h1 className="pageName-login">SpenSyd</h1>
-        <h2 className="description-login">Login</h2>
+        <h2 className="description-login">Register</h2>
 
-        <form action="" className="login-form">
+        <form action="" className="registration-form">
+          <div className="username-wrapper">
+            <label htmlFor="username">Username</label>
+            <input type="email" className="username-input" />
+          </div>
+
           <div className="email-wrapper">
             <label htmlFor="email">Email</label>
             <input type="email" className="email-input" />
@@ -32,13 +38,13 @@ const Login = () => {
             <input type="password" className="password-input" />
           </div>
 
-          <button className="login-button">Login</button>
+          <button className="login-button">Register</button>
         </form>
 
         <p className="link-wrapper">
-          Don't have an account?{" "}
-          <Link to="/register" style={{ textDecoration: "none" }}>
-            <span className="link">Register</span>
+          Already have an account?{" "}
+          <Link to="/login" style={{ textDecoration: "none" }}>
+            <span className="link">Login</span>
           </Link>
         </p>
       </div>
@@ -46,4 +52,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
