@@ -10,8 +10,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use();
-
 app.listen(PORT, () => {
   connectToDb();
   console.log("Server Up!");
