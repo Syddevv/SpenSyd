@@ -1,14 +1,26 @@
 import React, { useState } from "react";
 import "../styles/Login.css";
 import SpenSyd_Icon from "../assets/SpenSyd Icon.png";
-import { Link } from "react-router-dom";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = async (req, res) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
+      const res = await axios.post("http://localhost:5000/api/auth/login", {
+        email,
+        password,
+      });
+
+      if (res.data.success) {
+        localStorage.setItem("token", res.data.token);
+        navigate("/home");
+      }
     } catch (error) {
       console.log(error.message);
     }
@@ -21,18 +33,30 @@ const Login = () => {
         <h1 className="pageName-login">SpenSyd</h1>
         <h2 className="description-login">Login</h2>
 
-        <form action="" className="login-form">
+        <form onSubmit={handleSubmit} className="login-form">
           <div className="email-wrapper">
             <label htmlFor="email">Email</label>
-            <input type="email" className="email-input" />
+            <input
+              type="email"
+              className="email-input"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
 
           <div className="password-wrapper">
             <label htmlFor="password">Password</label>
-            <input type="password" className="password-input" />
+            <input
+              type="password"
+              className="password-input"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </div>
 
-          <button className="login-button">Login</button>
+          <button className="login-button" type="submit">
+            Login
+          </button>
         </form>
 
         <p className="link-wrapper">
