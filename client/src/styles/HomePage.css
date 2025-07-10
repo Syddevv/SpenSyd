@@ -1,0 +1,22 @@
+.homePage {
+  background-color: rgb(18, 18, 18);
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.statCard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.userGreetings {
+  color: white;
+  font-size: 20px;
+  margin-bottom: 0px;
+  margin-left: 15px;
+}
