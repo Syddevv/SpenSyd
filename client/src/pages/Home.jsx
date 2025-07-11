@@ -3,6 +3,8 @@ import NavBar from "../components/NavBar";
 import ExpenseStat from "../components/ExpenseStat";
 import IncomeStat from "../components/IncomeStat";
 import "../styles/HomePage.css";
+import RecentActWrapper from "../components/RecentActWrapper";
+import QuickAccess from "../components/QuickAccess";
 
 const Home = () => {
   return (
@@ -14,6 +16,11 @@ const Home = () => {
       <div className="statCard">
         <ExpenseStat />
         <IncomeStat />
+      </div>
+
+      <div className="recent_Controls">
+        <RecentActWrapper />
+        <QuickAccess />
       </div>
     </div>
   );
