@@ -5,6 +5,7 @@ import IncomeStat from "../components/IncomeStat";
 import "../styles/HomePage.css";
 import RecentActWrapper from "../components/RecentActWrapper";
 import QuickAccess from "../components/QuickAccess";
+import Chart from "../components/Chart";
 
 const Home = () => {
   return (
@@ -21,6 +22,10 @@ const Home = () => {
       <div className="recent_Controls">
         <RecentActWrapper />
         <QuickAccess />
+      </div>
+
+      <div className="chart">
+        <Chart />
       </div>
     </div>
   );
