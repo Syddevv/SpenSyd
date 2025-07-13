@@ -11,7 +11,24 @@ import addBalanceIcon from "../assets/add income icon.png";
 import "../styles/QuickAccess.css";
 
 const Home = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showExpenseModal, setShowExpenseModal] = useState(false);
+  const [showBalanceModal, setShowBalanceModal] = useState(false);
+
+  const expenseCategories = [
+    "Food",
+    "Transport",
+    "Grocery",
+    "Entertainment",
+    "Education",
+    "Clothes",
+    "Bills",
+    "Others",
+  ];
+  const balanceCategories = ["Salary", "Allowance", "Gift", "Freelance"];
+
+  const handleExpenseSubmit = () => {};
+  const handleBalanceSubmit = () => {};
+
   return (
     <div className="homePage">
       <NavBar />
@@ -28,14 +45,20 @@ const Home = () => {
 
         <div className="controlsContainer">
           <div className="controlsWrapper">
-            <div className="newExpense">
+            <div
+              className="newExpense"
+              onClick={() => setShowExpenseModal(true)}
+            >
               <div>
                 <img src={newExpenseIcon} className="quickAccessIcon" />
               </div>
               <p className="label">+ New Expense</p>
             </div>
 
-            <div className="addBalance">
+            <div
+              className="addBalance"
+              onClick={() => setShowBalanceModal(true)}
+            >
               <div>
                 <img src={addBalanceIcon} className="quickAccessIcon" />
               </div>
@@ -49,6 +72,26 @@ const Home = () => {
 
       <div className="chart">
         <Chart />
+      </div>
+
+      <div>
+        {showExpenseModal && (
+          <Modal
+            title="New Expense"
+            onClose={() => setShowExpenseModal(false)}
+            onSubmit={handleExpenseSubmit}
+            categories={expenseCategories}
+          />
+        )}
+
+        {showBalanceModal && (
+          <Modal
+            title="Add Balance"
+            onClose={() => setShowBalanceModal(false)}
+            onSubmit={handleBalanceSubmit}
+            categories={balanceCategories}
+          />
+        )}
       </div>
     </div>
   );
