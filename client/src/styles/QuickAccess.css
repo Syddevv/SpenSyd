@@ -1,0 +1,55 @@
+.controlsContainer {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.controlsWrapper {
+  display: flex;
+  flex-direction: column;
+  background-color: #1e1d31;
+  width: 120px;
+  height: 270px;
+  margin-top: 0px;
+  border-radius: 7px;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.newExpense,
+.addBalance {
+  background-color: #262626;
+  width: 95px;
+  height: 105px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 7px;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.quickAccessIcon {
+  width: 60px;
+  background-color: #ff8c8c;
+  padding: 10px;
+  border-radius: 30px;
+}
+
+.label {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  color: white;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.groupLabel {
+  color: white;
+  font-size: 13px;
+  text-align: center;
+  width: 120px;
+  margin-top: 8px;
+  font-weight: 500;
+}
