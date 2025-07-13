@@ -13,11 +13,14 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/register", {
-        username,
-        email,
-        password,
-      });
+      const res = await axios.post(
+        "https://spensyd-server.onrender.com/api/auth/register",
+        {
+          username,
+          email,
+          password,
+        }
+      );
 
       if (res.data.success) {
         navigate("/login");
