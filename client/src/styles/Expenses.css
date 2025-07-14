@@ -1,0 +1,7 @@
+.expensesWrapper {
+  background-color: rgb(18, 18, 18);
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
