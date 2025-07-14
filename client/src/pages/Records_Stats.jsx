@@ -1,7 +1,7 @@
 import NavBar from "../components/NavBar";
 import "../styles/Expenses.css";
 
-const Expenses = () => {
+const RecordsAndStats = () => {
   return (
     <div className="expensesWrapper">
       <div>
@@ -13,4 +13,4 @@ const Expenses = () => {
   );
 };
 
-export default Expenses;
+export default RecordsAndStats;

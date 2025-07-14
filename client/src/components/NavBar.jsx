@@ -24,6 +24,7 @@ const NavBar = () => {
     boxShadow: "0 10px 20px rgba(0,0,0,0.3)",
     display: isOpen ? "block" : "none",
     animation: isOpen ? "slideDown 0.3s ease forwards" : "none",
+    zIndex: 10, // <-- Add this line
   };
 
   const linkStyle = {
@@ -40,7 +41,7 @@ const NavBar = () => {
     backgroundColor: "rgba(255, 255, 255, 0.1)",
   };
 
-  const links = ["Home", "Expenses", "Incomes", "Logout"];
+  const links = ["Home", "Records", "Logout"];
 
   return (
     <div>
@@ -55,6 +56,22 @@ const NavBar = () => {
           ☰
         </span>
       </nav>
+
+      {/* Overlay for dimming the page */}
+      {isOpen && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            background: "rgba(0,0,0,0.5)",
+            zIndex: 9,
+          }}
+          onClick={() => setIsOpen(false)}
+        />
+      )}
 
       <div style={menuStyle}>
         {links.map((link, index) => (
