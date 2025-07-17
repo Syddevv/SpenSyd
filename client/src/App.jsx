@@ -4,7 +4,7 @@ import Register from "./pages/Register";
 import LandingPage from "./pages/LandingPage";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
-import Records from "./pages/Records_Stats";
+import Records from "./pages/expensesRecord";
 
 function App() {
   return (

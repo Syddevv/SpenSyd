@@ -1,0 +1,86 @@
+.statsWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.statsLabel {
+  margin-left: 10px;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.statsContainer {
+  background-color: #d7e3ff;
+  width: 95%;
+  border-radius: 10px;
+}
+
+.imgWrapper {
+  background-color: #ceccff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+}
+
+.imgWrapper img {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+}
+
+.stats {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 30px;
+}
+
+.imgCategory {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  min-width: 170px;
+}
+
+.categoryPercent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.category {
+  font-weight: 600;
+  margin-bottom: 0px;
+  font-size: 15px;
+}
+
+.percentage {
+  color: #8b8b8b;
+  margin-top: 5px;
+  font-size: 15px;
+}
+
+.total {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  min-width: 80px;
+}
+
+.amount {
+  font-weight: 600;
+  margin-bottom: 0px;
+  font-size: 15px;
+}
+
+.amountLabel {
+  color: #8b8b8b;
+  margin-top: 5px;
+  font-size: 15px;
+}

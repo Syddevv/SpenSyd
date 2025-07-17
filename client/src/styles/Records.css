@@ -1,0 +1,116 @@
+.expensesWrapper {
+  background-color: rgb(18, 18, 18);
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.controls {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-bottom: 0px;
+}
+
+.categoryControl {
+  background-color: #9491cd;
+  display: flex;
+  gap: 20px;
+  width: 220px;
+  justify-content: center;
+  border-radius: 50px;
+  height: 57px;
+  align-items: center;
+}
+
+.categoryControl p {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.expenses {
+  color: white;
+  background-color: #1e1d31;
+  padding: 10px 20px;
+  border-radius: 30px;
+}
+
+.income {
+  padding-right: 10px;
+}
+
+#date {
+  background-color: #9491cd;
+  font-weight: 600;
+  font-size: 15px;
+  height: 57px;
+  width: 120px;
+  padding: 5px 15px 5px 15px;
+  border-radius: 30px;
+  appearance: none;
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg width='25' height='25' viewBox='0 0 24 24' fill='black' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5H7z'/%3E%3C/svg%3E");
+}
+
+/** TABLE */
+
+.tableWrapper {
+  width: 95%;
+  max-height: 305px;
+  overflow-y: auto;
+  margin: 25px auto;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(20, 20, 40, 0.2);
+  border: 2px solid white;
+  margin-bottom: 0px;
+}
+
+.recordsTable {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #23224a;
+}
+
+.recordsTable thead th {
+  position: sticky;
+  top: 0;
+  background-color: #6c6ab0;
+  color: #fff;
+  padding: 12px;
+  font-weight: 700;
+  font-size: 16px;
+  text-align: center;
+  border-bottom: 2px solid #8986bd;
+  z-index: 1;
+  border-right: 2px solid #8986bd;
+}
+
+.recordsTable tbody td {
+  background-color: #23224a;
+  color: #fff;
+  padding: 12px;
+  font-size: 16px;
+  text-align: center;
+  border-bottom: 1px solid #8986bd;
+  border-right: 2px solid #8986bd;
+}
+
+.recordsTable thead th:last-child,
+.recordsTable tbody td:last-child {
+  border-right: none;
+}
+
+.recordsTable tr:last-child td {
+  border-bottom: none;
+}
+
+.recordsTable th:first-child {
+  border-top-left-radius: 12px;
+}
+
+.recordsTable th:last-child {
+  border-top-right-radius: 12px;
+}
