@@ -1,12 +1,11 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
+import { createRoot } from "react-dom/client";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
+import ContextProvider from "./context/ContextProvider";
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <BrowserRouter basename="/SpenSyd">
-      <App />
-    </BrowserRouter>
-  </React.StrictMode>
+createRoot(document.getElementById("root")).render(
+  <ContextProvider>
+    <App />
+  </ContextProvider>
 );

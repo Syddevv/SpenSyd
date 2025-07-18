@@ -9,6 +9,7 @@ import Modal from "../components/Modal";
 import newExpenseIcon from "../assets/add expenses icon.png";
 import addBalanceIcon from "../assets/add income icon.png";
 import "../styles/QuickAccess.css";
+import { useAuth } from "../context/ContextProvider";
 
 const Home = () => {
   const [showExpenseModal, setShowExpenseModal] = useState(false);
@@ -29,11 +30,13 @@ const Home = () => {
   const handleExpenseSubmit = () => {};
   const handleBalanceSubmit = () => {};
 
+  const { user } = useAuth();
+
   return (
     <div className="homePage">
       <NavBar />
 
-      <h1 className="userGreetings">Welcome, Syddu!</h1>
+      {user && <h1 className="userGreetings">Welcome, {user.username}!</h1>}
 
       <div className="statCard">
         <ExpenseStat />

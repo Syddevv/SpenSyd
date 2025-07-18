@@ -3,11 +3,13 @@ import "../styles/Login.css";
 import SpenSyd_Icon from "../assets/SpenSyd Icon.png";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/ContextProvider";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,6 +20,7 @@ const Login = () => {
       });
 
       if (res.data.success) {
+        login(res.data.user);
         localStorage.setItem("token", res.data.token);
         navigate("/home");
       }
