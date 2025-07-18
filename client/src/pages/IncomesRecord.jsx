@@ -97,7 +97,7 @@ const IncomesRecord = () => {
         </table>
       </div>
 
-      <h2 className="statsLabel">Statistics - Top 3 Expenses</h2>
+      <h2 className="statsLabel">Statistics - Top 3 Incomes</h2>
 
       <div className="statsWrapper">
         <div className="statsContainer">
