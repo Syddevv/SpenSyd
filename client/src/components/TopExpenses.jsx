@@ -1,6 +1,6 @@
 import "../styles/Stats.css";
 
-const Stats = ({ img, category, percentage, total }) => {
+const TopExpenses = ({ img, category, percentage, total }) => {
   return (
     <div className="stats">
       <div className="imgCategory">
@@ -22,4 +22,4 @@ const Stats = ({ img, category, percentage, total }) => {
   );
 };
 
-export default Stats;
+export default TopExpenses;

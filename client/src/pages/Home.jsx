@@ -24,7 +24,7 @@ const Home = () => {
     "Bills",
     "Others",
   ];
-  const balanceCategories = ["Salary", "Allowance", "Gift", "Freelance"];
+  const balanceCategories = ["Salary", "Allowance", "Loan", "Freelance"];
 
   const handleExpenseSubmit = () => {};
   const handleBalanceSubmit = () => {};

@@ -1,15 +1,15 @@
 import NavBar from "../components/NavBar";
 import "../styles/Records.css";
-import TopExpenses from "../components/TopExpenses";
-import ClothesIcon from "../assets/clothes icon.png";
-import EducationIcon from "../assets/education icon.png";
-import FoodsIcon from "../assets/foods icon.png";
+import TopIncomes from "../components/TopIncomes";
+import AllowanceIcon from "../assets/allowance icon.png";
+import OthersIcon from "../assets/others icon.png";
+import SalaryIcon from "../assets/salary icon.png";
 import { useNavigate } from "react-router-dom";
 
-const ExpensesRecord = () => {
+const IncomesRecord = () => {
   const navigate = useNavigate();
-  const navToIncome = () => {
-    navigate("/IncomesRecord");
+  const navToExpense = () => {
+    navigate("/Records");
   };
 
   return (
@@ -22,6 +22,13 @@ const ExpensesRecord = () => {
         <div className="categoryControl">
           <p
             className="expenses"
+            style={{ paddingLeft: "10px" }}
+            onClick={() => navToExpense()}
+          >
+            Expenses
+          </p>
+          <p
+            className="income"
             style={{
               color: "white",
               backgroundColor: "#1e1d31",
@@ -29,9 +36,6 @@ const ExpensesRecord = () => {
               borderRadius: "30px",
             }}
           >
-            Expenses
-          </p>
-          <p className="income" onClick={() => navToIncome()}>
             Income
           </p>
         </div>
@@ -65,32 +69,27 @@ const ExpensesRecord = () => {
           </thead>
           <tbody>
             <tr>
-              <td>Grocery</td>
+              <td>Salary</td>
               <td>07 / 12 / 25</td>
               <td>₱ 1,200</td>
             </tr>
             <tr>
-              <td>Entertainment</td>
+              <td>Allowance</td>
               <td>07 / 11 / 25</td>
               <td>₱ 500</td>
             </tr>
             <tr>
-              <td>Education</td>
+              <td>Salary</td>
               <td>07 / 10 / 25</td>
               <td>₱ 10,000</td>
             </tr>
             <tr>
-              <td>Others</td>
+              <td>Freelance</td>
               <td>07 / 09 / 25</td>
               <td>₱ 320</td>
             </tr>
             <tr>
-              <td>Foods</td>
-              <td>07 / 07 / 25</td>
-              <td>₱ 180</td>
-            </tr>
-            <tr>
-              <td>Foods</td>
+              <td>Loan</td>
               <td>07 / 07 / 25</td>
               <td>₱ 180</td>
             </tr>
@@ -102,21 +101,21 @@ const ExpensesRecord = () => {
 
       <div className="statsWrapper">
         <div className="statsContainer">
-          <TopExpenses
-            img={ClothesIcon}
-            category={"Clothes"}
+          <TopIncomes
+            img={SalaryIcon}
+            category={"Salary"}
             percentage={28}
             total={1200}
           />
-          <TopExpenses
-            img={EducationIcon}
-            category={"Education"}
+          <TopIncomes
+            img={AllowanceIcon}
+            category={"Allowance"}
             percentage={20}
             total={1200}
           />
-          <TopExpenses
-            img={FoodsIcon}
-            category={"Foods"}
+          <TopIncomes
+            img={OthersIcon}
+            category={"Others"}
             percentage={18}
             total={1000}
           />
@@ -126,4 +125,4 @@ const ExpensesRecord = () => {
   );
 };
 
-export default ExpensesRecord;
+export default IncomesRecord;
