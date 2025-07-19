@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/ContextProvider";
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { logout } = useAuth;
 
   const navStyle = {
     backgroundColor: "rgb(30, 29, 49)",
@@ -41,8 +43,6 @@ const NavBar = () => {
     backgroundColor: "rgba(255, 255, 255, 0.1)",
   };
 
-  const links = ["Home", "Records", "Logout"];
-
   return (
     <div>
       <nav style={navStyle}>
@@ -74,21 +74,45 @@ const NavBar = () => {
       )}
 
       <div style={menuStyle}>
-        {links.map((link, index) => (
-          <Link
-            key={index}
-            to={`/${link}`}
-            style={linkStyle}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.background = hoverStyle.backgroundColor)
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.background = "transparent")
-            }
-          >
-            {link}
-          </Link>
-        ))}
+        <Link
+          style={linkStyle}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.background = hoverStyle.backgroundColor)
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.background = "transparent")
+          }
+          to={"/home"}
+        >
+          Home
+        </Link>
+
+        <Link
+          style={linkStyle}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.background = hoverStyle.backgroundColor)
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.background = "transparent")
+          }
+          to={"/records"}
+        >
+          Records
+        </Link>
+
+        <Link
+          style={linkStyle}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.background = hoverStyle.backgroundColor)
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.background = "transparent")
+          }
+          to={"/login"}
+          onClick={() => useAuth()}
+        >
+          Logout
+        </Link>
       </div>
 
       {/* Keyframe animation */}
