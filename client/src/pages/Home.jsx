@@ -10,11 +10,13 @@ import newExpenseIcon from "../assets/add expenses icon.png";
 import addBalanceIcon from "../assets/add income icon.png";
 import "../styles/QuickAccess.css";
 import { useAuth } from "../context/ContextProvider";
+import axios from "axios";
 
 const Home = () => {
   const [showExpenseModal, setShowExpenseModal] = useState(false);
   const [showBalanceModal, setShowBalanceModal] = useState(false);
-
+  const [expenses, setExpenses] = useState([]);
+  const [balances, setBalances] = useState([]);
   const expenseCategories = [
     "Food",
     "Transport",
@@ -27,8 +29,47 @@ const Home = () => {
   ];
   const balanceCategories = ["Salary", "Allowance", "Loan", "Freelance"];
 
-  const handleExpenseSubmit = () => {};
-  const handleBalanceSubmit = () => {};
+  const addExpense = async (expense) => {
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/expense/addExpense",
+        { expense },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (res.data.success) {
+        console.log("Expense Submitted:", res.data);
+        setShowExpenseModal(false);
+      }
+    } catch (error) {
+      console.log("Error adding expense:", error.message);
+    }
+  };
+
+  const addBalance = async (balance) => {
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/expense/addExpense",
+        balance,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (res.data.success) {
+        console.log("Balance Submitted:", res.data);
+        setShowBalanceModal(false);
+      }
+    } catch (error) {
+      console.log("Error adding balance:", error.message);
+    }
+  };
 
   const { user } = useAuth();
 
@@ -82,7 +123,7 @@ const Home = () => {
           <Modal
             title="New Expense"
             onClose={() => setShowExpenseModal(false)}
-            onSubmit={handleExpenseSubmit}
+            onSubmit={addExpense}
             categories={expenseCategories}
           />
         )}
@@ -91,7 +132,7 @@ const Home = () => {
           <Modal
             title="Add Balance"
             onClose={() => setShowBalanceModal(false)}
-            onSubmit={handleBalanceSubmit}
+            onSubmit={addBalance}
             categories={balanceCategories}
           />
         )}
