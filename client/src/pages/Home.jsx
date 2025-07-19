@@ -53,8 +53,8 @@ const Home = () => {
   const addBalance = async (balance) => {
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/expense/addExpense",
-        balance,
+        "http://localhost:5000/api/balance/addBalance",
+        { balance },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
