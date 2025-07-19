@@ -10,12 +10,12 @@ export const addExpense = async (req, res) => {
         .json({ success: false, message: "Expense is Required" });
     }
 
-    const newExpense = new ExpenseModel({
+    const newBalance = new ExpenseModel({
       ...expense,
       userId: req.user.id,
     });
 
-    await newExpense.save();
+    await newBalance.save();
 
     return res.status(201).json({
       success: true,
