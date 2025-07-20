@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
 import ExpenseStat from "../components/ExpenseStat";
 import IncomeStat from "../components/IncomeStat";
@@ -13,10 +13,15 @@ import { useAuth } from "../context/ContextProvider";
 import axios from "axios";
 
 const Home = () => {
+  const { user } = useAuth();
   const [showExpenseModal, setShowExpenseModal] = useState(false);
   const [showBalanceModal, setShowBalanceModal] = useState(false);
   const [expenses, setExpenses] = useState([]);
   const [balances, setBalances] = useState([]);
+
+  const totalExpenses = expenses.reduce((sum, item) => sum + item.amount, 0);
+  const totalBalances = balances.reduce((sum, item) => sum + item.amount, 0);
+
   const expenseCategories = [
     "Food",
     "Transport",
@@ -29,6 +34,7 @@ const Home = () => {
   ];
   const balanceCategories = ["Salary", "Allowance", "Loan", "Freelance"];
 
+  // Adding Expense
   const addExpense = async (expense) => {
     try {
       const res = await axios.post(
@@ -50,6 +56,7 @@ const Home = () => {
     }
   };
 
+  // Adding Balance
   const addBalance = async (balance) => {
     try {
       const res = await axios.post(
@@ -71,7 +78,30 @@ const Home = () => {
     }
   };
 
-  const { user } = useAuth();
+  // Fetching Expenses and Balance
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = localStorage.getItem("token");
+
+      const expenseRes = await axios.get(
+        "http://localhost:5000/api/expense/getExpenses",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setExpenses(expenseRes.data.expenses);
+
+      const balanceRes = await axios.get(
+        "http://localhost:5000/api/balance/getBalances",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setBalances(balanceRes.data.balances);
+    };
+
+    fetchData();
+  }, [expenses, balances]);
 
   return (
     <div className="homePage">
@@ -80,8 +110,8 @@ const Home = () => {
       {user && <h1 className="userGreetings">Welcome, {user.username}!</h1>}
 
       <div className="statCard">
-        <ExpenseStat />
-        <IncomeStat />
+        <ExpenseStat totalExpenses={totalExpenses} />
+        <IncomeStat totalBalances={totalBalances} />
       </div>
 
       <div className="recent_Controls">

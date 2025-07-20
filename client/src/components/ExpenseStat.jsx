@@ -1,6 +1,6 @@
 import ExpensesIcon from "../assets/expenses icon.png";
 
-const ExpenseStat = ({ expenseAmount }) => {
+const ExpenseStat = ({ totalExpenses }) => {
   return (
     <div
       style={{
@@ -22,7 +22,7 @@ const ExpenseStat = ({ expenseAmount }) => {
           marginBottom: "0px",
         }}
       >
-        <span style={{ fontSize: "30px" }}>₱</span> 1, 400
+        <span style={{ fontSize: "30px" }}>₱</span> {totalExpenses.toFixed(0)}
       </h1>
       <p
         style={{
