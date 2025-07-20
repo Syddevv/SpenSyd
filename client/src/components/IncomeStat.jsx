@@ -1,6 +1,6 @@
 import IncomeIcon from "../assets/income icon.png";
 
-const IncomeStat = ({ totalBalances }) => {
+const IncomeStat = ({ currentBalance }) => {
   return (
     <div
       style={{
@@ -22,7 +22,7 @@ const IncomeStat = ({ totalBalances }) => {
           marginBottom: "0px",
         }}
       >
-        <span style={{ fontSize: "30px" }}>₱</span> {totalBalances.toFixed(0)}
+        <span style={{ fontSize: "30px" }}>₱</span> {currentBalance.toFixed(0)}
       </h1>
       <p
         style={{

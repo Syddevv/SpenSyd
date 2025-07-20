@@ -21,6 +21,7 @@ const Home = () => {
 
   const totalExpenses = expenses.reduce((sum, item) => sum + item.amount, 0);
   const totalBalances = balances.reduce((sum, item) => sum + item.amount, 0);
+  const currentBalance = totalBalances - totalExpenses;
 
   const expenseCategories = [
     "Food",
@@ -111,11 +112,11 @@ const Home = () => {
 
       <div className="statCard">
         <ExpenseStat totalExpenses={totalExpenses} />
-        <IncomeStat totalBalances={totalBalances} />
+        <IncomeStat currentBalance={currentBalance} />
       </div>
 
       <div className="recent_Controls">
-        <RecentActWrapper />
+        <RecentActWrapper expenses={expenses} balances={balances} />
 
         <div className="controlsContainer">
           <div className="controlsWrapper">
@@ -155,6 +156,7 @@ const Home = () => {
             onClose={() => setShowExpenseModal(false)}
             onSubmit={addExpense}
             categories={expenseCategories}
+            currentBalance={currentBalance}
           />
         )}
 
@@ -164,6 +166,7 @@ const Home = () => {
             onClose={() => setShowBalanceModal(false)}
             onSubmit={addBalance}
             categories={balanceCategories}
+            currentBalance={currentBalance}
           />
         )}
       </div>

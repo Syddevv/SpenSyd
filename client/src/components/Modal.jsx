@@ -2,7 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import React, { useState } from "react";
 import "../styles/Modal.css";
 
-const Modal = ({ title, onClose, onSubmit, categories }) => {
+const Modal = ({ title, onClose, onSubmit, categories, currentBalance }) => {
   const [category, setCategory] = useState(categories[0]?.toLowerCase() || "");
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState("");
@@ -10,6 +10,13 @@ const Modal = ({ title, onClose, onSubmit, categories }) => {
   const handleSave = () => {
     if (!amount || !date) {
       alert("Please fill out all fields");
+      return;
+    }
+    if (
+      (title === "New Expense" || title.toLowerCase().includes("expense")) &&
+      parseFloat(amount) > currentBalance
+    ) {
+      alert("Not enough balance");
       return;
     }
 
