@@ -18,6 +18,7 @@ const Home = () => {
   const [showBalanceModal, setShowBalanceModal] = useState(false);
   const [expenses, setExpenses] = useState([]);
   const [balances, setBalances] = useState([]);
+  const [refresh, setRefresh] = useState(false);
 
   const totalExpenses = expenses.reduce((sum, item) => sum + item.amount, 0);
   const totalBalances = balances.reduce((sum, item) => sum + item.amount, 0);
@@ -49,8 +50,9 @@ const Home = () => {
       );
 
       if (res.data.success) {
-        console.log("Expense Submitted:", res.data);
+        setExpenses((prev) => [{ ...expense, date: expense.date }, ...prev]);
         setShowExpenseModal(false);
+        setRefresh((r) => !r);
       }
     } catch (error) {
       console.log("Error adding expense:", error.message);
@@ -71,8 +73,9 @@ const Home = () => {
       );
 
       if (res.data.success) {
-        console.log("Balance Submitted:", res.data);
+        setBalances((prev) => [{ ...balance, date: balance.date }, ...prev]);
         setShowBalanceModal(false);
+        setRefresh((r) => !r);
       }
     } catch (error) {
       console.log("Error adding balance:", error.message);
@@ -99,10 +102,11 @@ const Home = () => {
         }
       );
       setBalances(balanceRes.data.balances);
+      console.log("Fetched balances:", balanceRes.data.balances);
     };
 
     fetchData();
-  }, [expenses, balances]);
+  }, [refresh]);
 
   return (
     <div className="homePage">

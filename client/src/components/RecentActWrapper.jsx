@@ -9,8 +9,8 @@ import Bills from "../assets/bills icon.png";
 import Others from "../assets/others icon.png";
 import Salary from "../assets/salary icon.png";
 import Loan from "../assets/loan icon.png";
-import Gift from "../assets/money gift icon.png";
 import Freelance from "../assets/freelance icon.png";
+import Allowance from "../assets/allowance icon.png";
 
 const RecentActWrapper = ({ expenses, balances }) => {
   const wrapperStyle = {
@@ -38,35 +38,42 @@ const RecentActWrapper = ({ expenses, balances }) => {
     others: Others,
     salary: Salary,
     loan: Loan,
-    gift: Gift,
+    allowance: Allowance,
     freelance: Freelance,
   };
 
+  // Combine both expenses and balances and ensure createdAt exists
   const combinedActivities = [
-    ...expenses.map((item) => ({ ...item, type: "expense" })),
-    ...balances.map((item) => ({ ...item, type: "income" })),
+    ...expenses.map((item) => ({
+      ...item,
+      type: "expense",
+      createdAt: item.createdAt || item.date, // Fallback to date if createdAt is missing
+    })),
+    ...balances.map((item) => ({
+      ...item,
+      type: "income",
+      createdAt: item.createdAt || item.date, // Fallback to date if createdAt is missing
+    })),
   ];
 
-  const sortedActivities = combinedActivities
-    .sort((a, b) => new Date(b.date) - new Date(a.date))
+  // Sort combined activities by date (newest first) and get top 3
+  const sortedActivities = [...combinedActivities]
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     .slice(0, 3);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
+    <div style={{ display: "flex", flexDirection: "column" }}>
       <div style={wrapperStyle}>
-        {sortedActivities.map((activity, idx) => (
-          <RecentActs
-            key={idx}
-            icon={icons[activity.category.toLowerCase()] || Others}
-            amount={activity.amount}
-            type={activity.type}
-          />
-        ))}
+        {sortedActivities.map((activity, idx) => {
+          return (
+            <RecentActs
+              key={idx}
+              icon={icons[activity.category?.toLowerCase()] || Others}
+              amount={activity.amount}
+              type={activity.type}
+            />
+          );
+        })}
       </div>
 
       <p
