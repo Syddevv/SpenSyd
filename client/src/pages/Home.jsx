@@ -19,13 +19,12 @@ const Home = () => {
   const [expenses, setExpenses] = useState([]);
   const [balances, setBalances] = useState([]);
   const [refresh, setRefresh] = useState(false);
-
   const totalExpenses = expenses.reduce((sum, item) => sum + item.amount, 0);
   const totalBalances = balances.reduce((sum, item) => sum + item.amount, 0);
   const currentBalance = totalBalances - totalExpenses;
 
   const expenseCategories = [
-    "Food",
+    "Foods",
     "Transport",
     "Grocery",
     "Entertainment",
@@ -102,7 +101,6 @@ const Home = () => {
         }
       );
       setBalances(balanceRes.data.balances);
-      console.log("Fetched balances:", balanceRes.data.balances);
     };
 
     fetchData();
@@ -150,7 +148,7 @@ const Home = () => {
       </div>
 
       <div className="chart">
-        <Chart />
+        <Chart expenses={expenses} balances={balances} />
       </div>
 
       <div>

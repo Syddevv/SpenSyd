@@ -47,12 +47,12 @@ const RecentActWrapper = ({ expenses, balances }) => {
     ...expenses.map((item) => ({
       ...item,
       type: "expense",
-      createdAt: item.createdAt || item.date, // Fallback to date if createdAt is missing
+      createdAt: item.createdAt || item.date,
     })),
     ...balances.map((item) => ({
       ...item,
       type: "income",
-      createdAt: item.createdAt || item.date, // Fallback to date if createdAt is missing
+      createdAt: item.createdAt || item.date,
     })),
   ];
 
