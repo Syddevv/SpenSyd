@@ -129,7 +129,6 @@ const Chart = ({ expenses, balances }) => {
             selectsStart
             startDate={customStart}
             endDate={customEnd}
-            maxDate={new Date()}
             dateFormat="yyyy-MM-dd"
           />
           <DatePicker
