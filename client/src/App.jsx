@@ -13,9 +13,9 @@ function App() {
       <BrowserRouter basename="/SpenSyd">
         <Routes>
           <Route path="/register" element={<Register />} />
-          <Route path="/LandingPage" element={<LandingPage />} />
+          <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/records" element={<Records />} />
           <Route path="/IncomesRecord" element={<IncomesRecord />} />
         </Routes>
