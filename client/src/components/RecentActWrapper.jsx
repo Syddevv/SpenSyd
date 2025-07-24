@@ -12,7 +12,7 @@ import Loan from "../assets/loan icon.png";
 import Freelance from "../assets/freelance icon.png";
 import Allowance from "../assets/allowance icon.png";
 
-const RecentActWrapper = ({ expenses, balances }) => {
+const RecentActWrapper = ({ recentActivities }) => {
   const wrapperStyle = {
     display: "flex",
     flexDirection: "column",
@@ -25,6 +25,7 @@ const RecentActWrapper = ({ expenses, balances }) => {
     position: "relative",
     justifyContent: "center",
     gap: "8px",
+    padding: "8px",
   };
 
   const icons = {
@@ -42,38 +43,21 @@ const RecentActWrapper = ({ expenses, balances }) => {
     freelance: Freelance,
   };
 
-  // Combine both expenses and balances and ensure createdAt exists
-  const combinedActivities = [
-    ...expenses.map((item) => ({
-      ...item,
-      type: "expense",
-      createdAt: item.createdAt || item.date,
-    })),
-    ...balances.map((item) => ({
-      ...item,
-      type: "income",
-      createdAt: item.createdAt || item.date,
-    })),
-  ];
-
-  // Sort combined activities by date (newest first) and get top 3
-  const sortedActivities = [...combinedActivities]
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-    .slice(0, 3);
-
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       <div style={wrapperStyle}>
-        {sortedActivities.map((activity, idx) => {
-          return (
+        {recentActivities.length === 0 ? (
+          <p style={{ color: "#bbb", fontSize: "14px" }}>No recent activity</p>
+        ) : (
+          recentActivities.map((activity, index) => (
             <RecentActs
-              key={idx}
+              key={`${activity.type}_${activity.amount}_${index}`}
               icon={icons[activity.category?.toLowerCase()] || Others}
               amount={activity.amount}
               type={activity.type}
             />
-          );
-        })}
+          ))
+        )}
       </div>
 
       <p

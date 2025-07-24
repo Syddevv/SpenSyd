@@ -4,7 +4,6 @@ import { useAuth } from "../context/ContextProvider";
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { logout } = useAuth;
 
   const navStyle = {
     backgroundColor: "rgb(30, 29, 49)",
@@ -13,7 +12,9 @@ const NavBar = () => {
     justifyContent: "space-between",
     padding: "0 20px",
     height: "75px",
-    position: "relative",
+    position: "fixed", // 🔹 Fixed position
+    top: 0, // 🔹 Stick to top
+    width: "100%", // 🔹 Full width
     zIndex: 10,
   };
 

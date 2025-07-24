@@ -18,7 +18,9 @@ const Home = () => {
   const [showBalanceModal, setShowBalanceModal] = useState(false);
   const [expenses, setExpenses] = useState([]);
   const [balances, setBalances] = useState([]);
+  const [recentActivities, setRecentActivities] = useState([]);
   const [refresh, setRefresh] = useState(false);
+
   const totalExpenses = expenses.reduce((sum, item) => sum + item.amount, 0);
   const totalBalances = balances.reduce((sum, item) => sum + item.amount, 0);
   const currentBalance = totalBalances - totalExpenses;
@@ -35,7 +37,18 @@ const Home = () => {
   ];
   const balanceCategories = ["Salary", "Allowance", "Loan", "Freelance"];
 
-  // Adding Expense
+  const pushRecentActivity = (activity, type) => {
+    const newAct = { ...activity, type };
+    const updated = [newAct, ...recentActivities].slice(0, 3);
+    setRecentActivities(updated);
+    if (user && user.username) {
+      localStorage.setItem(
+        `recentActivities_${user.username}`,
+        JSON.stringify(updated)
+      );
+    }
+  };
+
   const addExpense = async (expense) => {
     try {
       const res = await axios.post(
@@ -49,7 +62,13 @@ const Home = () => {
       );
 
       if (res.data.success) {
-        setExpenses((prev) => [{ ...expense, date: expense.date }, ...prev]);
+        const newExpense = {
+          ...expense,
+          amount: Number(expense.amount),
+          date: expense.date,
+        };
+        setExpenses((prev) => [newExpense, ...prev]);
+        pushRecentActivity(newExpense, "expense");
         setShowExpenseModal(false);
         setRefresh((r) => !r);
       }
@@ -58,7 +77,6 @@ const Home = () => {
     }
   };
 
-  // Adding Balance
   const addBalance = async (balance) => {
     try {
       const res = await axios.post(
@@ -72,7 +90,13 @@ const Home = () => {
       );
 
       if (res.data.success) {
-        setBalances((prev) => [{ ...balance, date: balance.date }, ...prev]);
+        const newBalance = {
+          ...balance,
+          amount: Number(balance.amount),
+          date: balance.date,
+        };
+        setBalances((prev) => [newBalance, ...prev]);
+        pushRecentActivity(newBalance, "income");
         setShowBalanceModal(false);
         setRefresh((r) => !r);
       }
@@ -81,7 +105,6 @@ const Home = () => {
     }
   };
 
-  // Fetching Expenses and Balance
   useEffect(() => {
     const fetchData = async () => {
       const token = localStorage.getItem("token");
@@ -106,71 +129,82 @@ const Home = () => {
     fetchData();
   }, [refresh]);
 
+  useEffect(() => {
+    if (user && user.username) {
+      const saved = localStorage.getItem(`recentActivities_${user.username}`);
+      if (saved) {
+        setRecentActivities(JSON.parse(saved));
+      }
+    }
+  }, [user]);
+
   return (
     <div className="homePage">
       <NavBar />
 
-      {user && <h1 className="userGreetings">Welcome, {user.username}!</h1>}
+      <div style={{ paddingTop: "70px" }}>
+        {user && <h1 className="userGreetings">Welcome, {user.username}!</h1>}
 
-      <div className="statCard">
-        <ExpenseStat totalExpenses={totalExpenses} />
-        <IncomeStat currentBalance={currentBalance} />
-      </div>
-
-      <div className="recent_Controls">
-        <RecentActWrapper expenses={expenses} balances={balances} />
-
-        <div className="controlsContainer">
-          <div className="controlsWrapper">
-            <div
-              className="newExpense"
-              onClick={() => setShowExpenseModal(true)}
-            >
-              <div>
-                <img src={newExpenseIcon} className="quickAccessIcon" />
-              </div>
-              <p className="label">+ New Expense</p>
-            </div>
-
-            <div
-              className="addBalance"
-              onClick={() => setShowBalanceModal(true)}
-            >
-              <div>
-                <img src={addBalanceIcon} className="quickAccessIcon" />
-              </div>
-              <p className="label">+ Balance</p>
-            </div>
-          </div>
-
-          <p className="groupLabel">Quick Access</p>
+        <div className="statCard">
+          <ExpenseStat totalExpenses={totalExpenses} />
+          <IncomeStat currentBalance={currentBalance} />
         </div>
-      </div>
 
-      <div className="chart">
-        <Chart expenses={expenses} balances={balances} />
-      </div>
+        <div className="recent_Controls">
+          <RecentActWrapper recentActivities={recentActivities} />
 
-      <div>
-        {showExpenseModal && (
-          <Modal
-            title="New Expense"
-            onClose={() => setShowExpenseModal(false)}
-            onSubmit={addExpense}
-            categories={expenseCategories}
-            currentBalance={currentBalance}
-          />
-        )}
+          <div className="controlsContainer">
+            <div className="controlsWrapper">
+              <div
+                className="newExpense"
+                onClick={() => setShowExpenseModal(true)}
+              >
+                <div>
+                  <img src={newExpenseIcon} className="quickAccessIcon" />
+                </div>
+                <p className="label">+ New Expense</p>
+              </div>
 
-        {showBalanceModal && (
-          <Modal
-            title="Add Balance"
-            onClose={() => setShowBalanceModal(false)}
-            onSubmit={addBalance}
-            categories={balanceCategories}
-            currentBalance={currentBalance}
-          />
-        )}
+              <div
+                className="addBalance"
+                onClick={() => setShowBalanceModal(true)}
+              >
+                <div>
+                  <img src={addBalanceIcon} className="quickAccessIcon" />
+                </div>
+                <p className="label">+ Balance</p>
+              </div>
+            </div>
+
+            <p className="groupLabel">Quick Access</p>
+          </div>
+        </div>
+
+        <div className="chart">
+          <Chart expenses={expenses} balances={balances} />
+        </div>
+
+        <div>
+          {showExpenseModal && (
+            <Modal
+              title="New Expense"
+              onClose={() => setShowExpenseModal(false)}
+              onSubmit={addExpense}
+              categories={expenseCategories}
+              currentBalance={currentBalance}
+            />
+          )}
+
+          {showBalanceModal && (
+            <Modal
+              title="Add Balance"
+              onClose={() => setShowBalanceModal(false)}
+              onSubmit={addBalance}
+              categories={balanceCategories}
+              currentBalance={currentBalance}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

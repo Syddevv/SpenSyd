@@ -18,6 +18,8 @@ const ExpensesRecord = () => {
         <NavBar />
       </div>
 
+      <div style={{ paddingTop: "70px" }}></div>
+
       <div className="controls">
         <div className="categoryControl">
           <p
