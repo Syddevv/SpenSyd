@@ -2,15 +2,21 @@ import React, { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
 import "../styles/Records.css";
 import TopExpenses from "../components/TopExpenses";
-import ClothesIcon from "../assets/clothes icon.png";
-import EducationIcon from "../assets/education icon.png";
-import FoodsIcon from "../assets/foods icon.png";
+import Grocery from "../assets/grocery icon.png";
+import Clothes from "../assets/clothes icon.png";
+import Transport from "../assets/bus icon.png";
+import Foods from "../assets/foods icon.png";
+import Entertainment from "../assets/entertainment icon.png";
+import Education from "../assets/education icon.png";
+import Bills from "../assets/bills icon.png";
+import Others from "../assets/others icon.png";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const ExpensesRecord = () => {
   const navigate = useNavigate();
   const [expenses, setExpenses] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState(getCurrentMonth());
 
   const navToIncome = () => {
     navigate("/IncomesRecord");
@@ -35,6 +41,64 @@ const ExpensesRecord = () => {
     };
     fetchExpenses();
   }, []);
+
+  const icons = {
+    grocery: Grocery,
+    clothes: Clothes,
+    transport: Transport,
+    foods: Foods,
+    entertainment: Entertainment,
+    education: Education,
+    bills: Bills,
+  };
+
+  const filteredExpenses = selectedMonth
+    ? expenses.filter((expense) => {
+        const expenseMonth = new Date(expense.date).toLocaleString("default", {
+          month: "long",
+        });
+        return expenseMonth === selectedMonth;
+      })
+    : expenses;
+
+  function getCurrentMonth() {
+    const now = new Date();
+    return now.toLocaleString("default", { month: "long" });
+  }
+
+  function getTop3Expenses(expenses) {
+    // 1. Total expenses per category
+    const categoryTotals = {};
+
+    for (const expense of expenses) {
+      const cat = expense.category.toLowerCase();
+      if (!categoryTotals[cat]) {
+        categoryTotals[cat] = 0;
+      }
+      categoryTotals[cat] += Number(expense.amount);
+    }
+
+    // 2. Convert to array of objects
+    const totalsArray = Object.keys(categoryTotals).map((cat) => ({
+      category: cat,
+      total: categoryTotals[cat],
+    }));
+
+    // 3. Sort by total descending
+    totalsArray.sort((a, b) => b.total - a.total);
+
+    // 4. Take top 3
+    const top3 = totalsArray.slice(0, 3);
+
+    // 5. Compute overall total of top 3
+    const overall = top3.reduce((sum, item) => sum + item.total, 0);
+
+    // 6. Add percentage to each
+    return top3.map((item) => ({
+      ...item,
+      percentage: Math.round((item.total / overall) * 100),
+    }));
+  }
 
   return (
     <div className="expensesWrapper">
@@ -63,7 +127,11 @@ const ExpensesRecord = () => {
         </div>
 
         <div className="dateWrapper">
-          <select id="date">
+          <select
+            id="date"
+            onChange={(e) => setSelectedMonth(e.target.value)}
+            value={selectedMonth}
+          >
             <option value="January">January</option>
             <option value="February">February</option>
             <option value="March">March</option>
@@ -90,14 +158,14 @@ const ExpensesRecord = () => {
             </tr>
           </thead>
           <tbody>
-            {expenses.length === 0 ? (
+            {filteredExpenses.length === 0 ? (
               <tr>
                 <td colSpan="3" style={{ textAlign: "center" }}>
                   No Records
                 </td>
               </tr>
             ) : (
-              expenses.map((expense, index) => (
+              filteredExpenses.map((expense, index) => (
                 <tr key={index}>
                   <td>{capitalizeFirst(expense.category)}</td>
                   <td>{new Date(expense.date).toLocaleDateString()}</td>
@@ -113,24 +181,21 @@ const ExpensesRecord = () => {
 
       <div className="statsWrapper">
         <div className="statsContainer">
-          <TopExpenses
-            img={ClothesIcon}
-            category={"Clothes"}
-            percentage={28}
-            total={1200}
-          />
-          <TopExpenses
-            img={EducationIcon}
-            category={"Education"}
-            percentage={20}
-            total={1200}
-          />
-          <TopExpenses
-            img={FoodsIcon}
-            category={"Foods"}
-            percentage={18}
-            total={1000}
-          />
+          {expenses.length === 0 ? (
+            <p style={{ textAlign: "center", fontWeight: "600" }}>
+              No Expenses
+            </p>
+          ) : (
+            getTop3Expenses(filteredExpenses).map((item, index) => (
+              <TopExpenses
+                key={index}
+                img={icons[item.category] || Others}
+                category={capitalizeFirst(item.category)}
+                percentage={item.percentage}
+                total={item.total}
+              />
+            ))
+          )}
         </div>
       </div>
     </div>
