@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
 import "../styles/Records.css";
 import TopExpenses from "../components/TopExpenses";
@@ -5,12 +6,35 @@ import ClothesIcon from "../assets/clothes icon.png";
 import EducationIcon from "../assets/education icon.png";
 import FoodsIcon from "../assets/foods icon.png";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const ExpensesRecord = () => {
   const navigate = useNavigate();
+  const [expenses, setExpenses] = useState([]);
+
   const navToIncome = () => {
     navigate("/IncomesRecord");
   };
+  const capitalizeFirst = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+
+  useEffect(() => {
+    const fetchExpenses = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await axios.get(
+          "http://localhost:5000/api/expense/getExpenses",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        setExpenses(res.data.expenses);
+      } catch (error) {
+        console.log("Error in Fetching Expenses", error.message);
+      }
+    };
+    fetchExpenses();
+  }, []);
 
   return (
     <div className="expensesWrapper">
@@ -66,36 +90,21 @@ const ExpensesRecord = () => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Grocery</td>
-              <td>07 / 12 / 25</td>
-              <td>₱ 1,200</td>
-            </tr>
-            <tr>
-              <td>Entertainment</td>
-              <td>07 / 11 / 25</td>
-              <td>₱ 500</td>
-            </tr>
-            <tr>
-              <td>Education</td>
-              <td>07 / 10 / 25</td>
-              <td>₱ 10,000</td>
-            </tr>
-            <tr>
-              <td>Others</td>
-              <td>07 / 09 / 25</td>
-              <td>₱ 320</td>
-            </tr>
-            <tr>
-              <td>Foods</td>
-              <td>07 / 07 / 25</td>
-              <td>₱ 180</td>
-            </tr>
-            <tr>
-              <td>Foods</td>
-              <td>07 / 07 / 25</td>
-              <td>₱ 180</td>
-            </tr>
+            {expenses.length === 0 ? (
+              <tr>
+                <td colSpan="3" style={{ textAlign: "center" }}>
+                  No Records
+                </td>
+              </tr>
+            ) : (
+              expenses.map((expense, index) => (
+                <tr key={index}>
+                  <td>{capitalizeFirst(expense.category)}</td>
+                  <td>{new Date(expense.date).toLocaleDateString()}</td>
+                  <td>₱ {expense.amount.toLocaleString()}</td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

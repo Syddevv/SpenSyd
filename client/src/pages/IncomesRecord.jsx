@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
 import "../styles/Records.css";
 import TopIncomes from "../components/TopIncomes";
@@ -5,12 +6,35 @@ import AllowanceIcon from "../assets/allowance icon.png";
 import OthersIcon from "../assets/others icon.png";
 import SalaryIcon from "../assets/salary icon.png";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const IncomesRecord = () => {
   const navigate = useNavigate();
+  const [incomes, setIncomes] = useState([]);
+
   const navToExpense = () => {
     navigate("/Records");
   };
+  const capitalizeFirst = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+
+  useEffect(() => {
+    const fetchIncomes = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await axios.get(
+          "http://localhost:5000/api/balance/getBalances",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        setIncomes(res.data.balances);
+      } catch (error) {
+        console.log("Error in Fetching Incomes", error.message);
+      }
+    };
+    fetchIncomes();
+  }, []);
 
   return (
     <div className="expensesWrapper">
@@ -70,31 +94,21 @@ const IncomesRecord = () => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Salary</td>
-              <td>07 / 12 / 25</td>
-              <td>₱ 1,200</td>
-            </tr>
-            <tr>
-              <td>Allowance</td>
-              <td>07 / 11 / 25</td>
-              <td>₱ 500</td>
-            </tr>
-            <tr>
-              <td>Salary</td>
-              <td>07 / 10 / 25</td>
-              <td>₱ 10,000</td>
-            </tr>
-            <tr>
-              <td>Freelance</td>
-              <td>07 / 09 / 25</td>
-              <td>₱ 320</td>
-            </tr>
-            <tr>
-              <td>Loan</td>
-              <td>07 / 07 / 25</td>
-              <td>₱ 180</td>
-            </tr>
+            {incomes.length === 0 ? (
+              <tr>
+                <td colSpan="3" style={{ textAlign: "center" }}>
+                  No Records
+                </td>
+              </tr>
+            ) : (
+              incomes.map((income, index) => (
+                <tr key={index}>
+                  <td>{capitalizeFirst(income.category)}</td>
+                  <td>{new Date(income.date).toLocaleDateString()}</td>
+                  <td>₱ {income.amount.toLocaleString()}</td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
