@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/ContextProvider";
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -116,10 +115,9 @@ const NavBar = () => {
           onMouseLeave={(e) =>
             (e.currentTarget.style.background = "transparent")
           }
-          to={"/login"}
-          onClick={() => useAuth()}
+          to={"/settings"}
         >
-          Logout
+          Settings
         </Link>
       </div>
 
