@@ -170,9 +170,7 @@ const Home = () => {
     <div className="homePage">
       <NavBar />
 
-      <div style={{ paddingTop: "70px" }}>
-        {user && <h1 className="userGreetings">Welcome, {user.username}!</h1>}
-
+      <div style={{ paddingTop: "85px" }}>
         <div className="statCard">
           <ExpenseStat totalExpenses={totalExpenses} />
           <IncomeStat currentBalance={currentBalance} />
