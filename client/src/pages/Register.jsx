@@ -3,28 +3,58 @@ import { Link, useNavigate } from "react-router-dom";
 import SpenSyd_Icon from "../assets/SpenSyd Icon.png";
 import axios from "axios";
 import "../styles/Register.css";
+import VerificationModal from "../components/VerificationModal";
 
 const Register = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
+  const [pendingUser, setPendingUser] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/register", {
+      const res = await axios.post("http://localhost:5000/api/auth/send-code", {
         username,
         email,
         password,
       });
 
       if (res.data.success) {
-        navigate("/login");
+        setPendingUser({ username, email, password });
+        setShowModal(true);
       }
-      console.log("✅Registered:", res.data);
     } catch (error) {
-      console.log("❌ Error:", error.response?.data?.message || error.message);
+      alert(
+        "Error sending verification code: " +
+          (error.response?.data?.message || error.message)
+      );
+    }
+  };
+
+  const handleVerify = async (code) => {
+    try {
+      const verifyRes = await axios.post(
+        "http://localhost:5000/api/auth/verify-email",
+        {
+          email: pendingUser.email,
+          code,
+        }
+      );
+
+      if (verifyRes.data.success) {
+        alert("Account created successfully!");
+        navigate("/login");
+      } else {
+        alert("Verification failed.");
+      }
+    } catch (err) {
+      alert(
+        "Verification failed: " + (err.response?.data?.message || err.message)
+      );
     }
   };
 
@@ -79,6 +109,16 @@ const Register = () => {
             <span className="link">Login</span>
           </Link>
         </p>
+      </div>
+
+      <div>
+        {showModal && (
+          <VerificationModal
+            email={email}
+            onSubmitCode={handleVerify}
+            onClose={() => setShowModal(false)}
+          />
+        )}
       </div>
     </div>
   );
