@@ -10,6 +10,11 @@ import Allowance from "../assets/allowance icon.png";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+function getCurrentMonth() {
+  const now = new Date();
+  return now.toLocaleString("default", { month: "long" });
+}
+
 const IncomesRecord = () => {
   const navigate = useNavigate();
   const [incomes, setIncomes] = useState([]);
@@ -28,52 +33,44 @@ const IncomesRecord = () => {
     freelance: Freelance,
   };
 
-  function getTop3Incomes(incomes) {
-    // 1. Total incomes per category
-    const categoryTotals = {};
+  // ⬇️ Filter incomes by selected month
+  const filteredIncomes = incomes.filter((income) => {
+    const incomeMonth = new Date(income.date).toLocaleString("default", {
+      month: "long",
+    });
+    return incomeMonth === selectedMonth;
+  });
 
-    for (const income of incomes) {
+  // ⬇️ Total for current month
+  const getTotalForMonth = () => {
+    return filteredIncomes.reduce(
+      (total, income) => total + Number(income.amount),
+      0
+    );
+  };
+
+  // ⬇️ Top 3 income stats
+  function getTop3Incomes(balances) {
+    const categoryTotals = {};
+    for (const income of balances) {
       const cat = income.category.toLowerCase();
-      if (!categoryTotals[cat]) {
-        categoryTotals[cat] = 0;
-      }
+      if (!categoryTotals[cat]) categoryTotals[cat] = 0;
       categoryTotals[cat] += Number(income.amount);
     }
 
-    // 2. Convert to array of objects
     const totalsArray = Object.keys(categoryTotals).map((cat) => ({
       category: cat,
       total: categoryTotals[cat],
     }));
 
-    // 3. Sort by total descending
     totalsArray.sort((a, b) => b.total - a.total);
-
-    // 4. Take top 3
     const top3 = totalsArray.slice(0, 3);
-
-    // 5. Compute overall total of top 3
     const overall = top3.reduce((sum, item) => sum + item.total, 0);
 
-    // 6. Add percentage to each
     return top3.map((item) => ({
       ...item,
-      percentage: Math.round((item.total / overall) * 100),
+      percentage: overall ? Math.round((item.total / overall) * 100) : 0,
     }));
-  }
-
-  const filteredIncomes = selectedMonth
-    ? incomes.filter((income) => {
-        const incomeMonth = new Date(income.date).toLocaleString("default", {
-          month: "long",
-        });
-        return incomeMonth === selectedMonth;
-      })
-    : incomes;
-
-  function getCurrentMonth() {
-    const now = new Date();
-    return now.toLocaleString("default", { month: "long" });
   }
 
   useEffect(() => {
@@ -194,6 +191,15 @@ const IncomesRecord = () => {
             ))
           )}
         </div>
+      </div>
+
+      <div>
+        <p style={{ color: "white", textAlign: "center", fontSize: "18px" }}>
+          <span style={{ color: "rgb(251, 126, 239)", fontWeight: "bold" }}>
+            {selectedMonth.toUpperCase()}
+          </span>{" "}
+          Total Incomes = ₱ {getTotalForMonth().toLocaleString()}
+        </p>
       </div>
     </div>
   );

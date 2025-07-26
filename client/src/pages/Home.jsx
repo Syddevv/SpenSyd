@@ -23,14 +23,13 @@ const Home = () => {
 
   const getCurrentMonth = () => {
     const now = new Date();
-    return now.getMonth(); // 0-based index: Jan = 0, Dec = 11
+    return now.getMonth();
   };
 
   const getCurrentYear = () => {
     return new Date().getFullYear();
   };
 
-  // Filter only expenses for the current month and year
   const filteredExpenses = expenses.filter((item) => {
     const expenseDate = new Date(item.date);
     return (
@@ -43,7 +42,6 @@ const Home = () => {
     (sum, item) => sum + item.amount,
     0
   );
-
   const totalBalances = balances.reduce((sum, item) => sum + item.amount, 0);
   const currentBalance = totalBalances - totalExpenses;
 
