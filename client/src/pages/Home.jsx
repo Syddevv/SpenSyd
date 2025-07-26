@@ -30,6 +30,7 @@ const Home = () => {
     return new Date().getFullYear();
   };
 
+  // Filter current month expenses
   const filteredExpenses = expenses.filter((item) => {
     const expenseDate = new Date(item.date);
     return (
@@ -43,7 +44,8 @@ const Home = () => {
     0
   );
   const totalBalances = balances.reduce((sum, item) => sum + item.amount, 0);
-  const currentBalance = totalBalances - totalExpenses;
+  const overallExpenses = expenses.reduce((sum, item) => sum + item.amount, 0);
+  const currentBalance = totalBalances - overallExpenses;
 
   const expenseCategories = [
     "Foods",
@@ -55,7 +57,13 @@ const Home = () => {
     "Bills",
     "Others",
   ];
-  const balanceCategories = ["Salary", "Allowance", "Loan", "Freelance"];
+  const balanceCategories = [
+    "Salary",
+    "Allowance",
+    "Loan",
+    "Freelance",
+    "Others",
+  ];
 
   const pushRecentActivity = (activity, type) => {
     const newAct = { ...activity, type };
@@ -201,7 +209,7 @@ const Home = () => {
         </div>
 
         <div className="chart">
-          <Chart expenses={expenses} balances={balances} />
+          <Chart expenses={filteredExpenses} balances={balances} />
         </div>
 
         <div>
