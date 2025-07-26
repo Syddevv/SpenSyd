@@ -21,7 +21,29 @@ const Home = () => {
   const [recentActivities, setRecentActivities] = useState([]);
   const [refresh, setRefresh] = useState(false);
 
-  const totalExpenses = expenses.reduce((sum, item) => sum + item.amount, 0);
+  const getCurrentMonth = () => {
+    const now = new Date();
+    return now.getMonth(); // 0-based index: Jan = 0, Dec = 11
+  };
+
+  const getCurrentYear = () => {
+    return new Date().getFullYear();
+  };
+
+  // Filter only expenses for the current month and year
+  const filteredExpenses = expenses.filter((item) => {
+    const expenseDate = new Date(item.date);
+    return (
+      expenseDate.getMonth() === getCurrentMonth() &&
+      expenseDate.getFullYear() === getCurrentYear()
+    );
+  });
+
+  const totalExpenses = filteredExpenses.reduce(
+    (sum, item) => sum + item.amount,
+    0
+  );
+
   const totalBalances = balances.reduce((sum, item) => sum + item.amount, 0);
   const currentBalance = totalBalances - totalExpenses;
 

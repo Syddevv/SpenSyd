@@ -1,6 +1,12 @@
 import ExpensesIcon from "../assets/expenses icon.png";
 
 const ExpenseStat = ({ totalExpenses }) => {
+  function getCurrentMonth() {
+    const now = new Date();
+    return now.toLocaleString("default", { month: "long" });
+  }
+  const month = getCurrentMonth();
+
   return (
     <div
       style={{
@@ -27,12 +33,13 @@ const ExpenseStat = ({ totalExpenses }) => {
       <p
         style={{
           color: "white",
-          fontSize: "14px",
+          fontSize: "13px",
           fontWeight: "500",
           marginTop: "0px",
         }}
       >
-        Total Expenses
+        Total Expenses -{" "}
+        <span style={{ color: "rgb(251, 126, 239)" }}>{month}</span>
       </p>
     </div>
   );

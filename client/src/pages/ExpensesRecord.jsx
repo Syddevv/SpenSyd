@@ -13,6 +13,11 @@ import Others from "../assets/others icon.png";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+function getCurrentMonth() {
+  const now = new Date();
+  return now.toLocaleString("default", { month: "long" });
+}
+
 const ExpensesRecord = () => {
   const navigate = useNavigate();
   const [expenses, setExpenses] = useState([]);
@@ -21,6 +26,7 @@ const ExpensesRecord = () => {
   const navToIncome = () => {
     navigate("/IncomesRecord");
   };
+
   const capitalizeFirst = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
   useEffect(() => {
@@ -33,7 +39,6 @@ const ExpensesRecord = () => {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-
         setExpenses(res.data.expenses);
       } catch (error) {
         console.log("Error in Fetching Expenses", error.message);
@@ -52,51 +57,43 @@ const ExpensesRecord = () => {
     bills: Bills,
   };
 
-  const filteredExpenses = selectedMonth
-    ? expenses.filter((expense) => {
-        const expenseMonth = new Date(expense.date).toLocaleString("default", {
-          month: "long",
-        });
-        return expenseMonth === selectedMonth;
-      })
-    : expenses;
+  // ⬇️ Filter expenses by selected month
+  const filteredExpenses = expenses.filter((expense) => {
+    const expenseMonth = new Date(expense.date).toLocaleString("default", {
+      month: "long",
+    });
+    return expenseMonth === selectedMonth;
+  });
 
-  function getCurrentMonth() {
-    const now = new Date();
-    return now.toLocaleString("default", { month: "long" });
-  }
+  // ⬇️ Total for current month
+  const getTotalForMonth = () => {
+    return filteredExpenses.reduce(
+      (total, expense) => total + Number(expense.amount),
+      0
+    );
+  };
 
+  // ⬇️ Top 3 stats
   function getTop3Expenses(expenses) {
-    // 1. Total expenses per category
     const categoryTotals = {};
-
     for (const expense of expenses) {
       const cat = expense.category.toLowerCase();
-      if (!categoryTotals[cat]) {
-        categoryTotals[cat] = 0;
-      }
+      if (!categoryTotals[cat]) categoryTotals[cat] = 0;
       categoryTotals[cat] += Number(expense.amount);
     }
 
-    // 2. Convert to array of objects
     const totalsArray = Object.keys(categoryTotals).map((cat) => ({
       category: cat,
       total: categoryTotals[cat],
     }));
 
-    // 3. Sort by total descending
     totalsArray.sort((a, b) => b.total - a.total);
-
-    // 4. Take top 3
     const top3 = totalsArray.slice(0, 3);
-
-    // 5. Compute overall total of top 3
     const overall = top3.reduce((sum, item) => sum + item.total, 0);
 
-    // 6. Add percentage to each
     return top3.map((item) => ({
       ...item,
-      percentage: Math.round((item.total / overall) * 100),
+      percentage: overall ? Math.round((item.total / overall) * 100) : 0,
     }));
   }
 
@@ -132,18 +129,24 @@ const ExpensesRecord = () => {
             onChange={(e) => setSelectedMonth(e.target.value)}
             value={selectedMonth}
           >
-            <option value="January">January</option>
-            <option value="February">February</option>
-            <option value="March">March</option>
-            <option value="April">April</option>
-            <option value="May">May</option>
-            <option value="June">June</option>
-            <option value="July">July</option>
-            <option value="August">August</option>
-            <option value="September">September</option>
-            <option value="October">October</option>
-            <option value="November">November</option>
-            <option value="December">December</option>
+            {[
+              "January",
+              "February",
+              "March",
+              "April",
+              "May",
+              "June",
+              "July",
+              "August",
+              "September",
+              "October",
+              "November",
+              "December",
+            ].map((month) => (
+              <option key={month} value={month}>
+                {month}
+              </option>
+            ))}
           </select>
         </div>
       </div>
@@ -169,7 +172,7 @@ const ExpensesRecord = () => {
                 <tr key={index}>
                   <td>{capitalizeFirst(expense.category)}</td>
                   <td>{new Date(expense.date).toLocaleDateString()}</td>
-                  <td>₱ {expense.amount.toLocaleString()}</td>
+                  <td>₱ {Number(expense.amount).toLocaleString()}</td>
                 </tr>
               ))
             )}
@@ -197,6 +200,15 @@ const ExpensesRecord = () => {
             ))
           )}
         </div>
+      </div>
+
+      <div>
+        <p style={{ color: "white", textAlign: "center", fontSize: "18px" }}>
+          <span style={{ color: "rgb(251, 126, 239)", fontWeight: "bold" }}>
+            {selectedMonth.toUpperCase()}
+          </span>{" "}
+          Total Expenses = ₱ {getTotalForMonth().toLocaleString()}
+        </p>
       </div>
     </div>
   );
