@@ -209,7 +209,7 @@ const Home = () => {
         </div>
 
         <div className="chart">
-          <Chart expenses={filteredExpenses} balances={balances} />
+          <Chart expenses={expenses} balances={balances} />
         </div>
 
         <div>
