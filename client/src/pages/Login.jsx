@@ -22,6 +22,7 @@ const Login = () => {
       if (res.data.success) {
         login(res.data.user);
         localStorage.setItem("token", res.data.token);
+        localStorage.setItem("user", JSON.stringify(res.data.user)); // <-- Add this line
         navigate("/home");
       }
     } catch (error) {

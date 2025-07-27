@@ -30,6 +30,7 @@
   width: 70px;
   height: 70px;
   border-radius: 35px;
+  margin-bottom: 10px;
 }
 
 .modalName {
@@ -38,21 +39,10 @@
   font-size: 18px;
 }
 
-.updateProfile {
-  background-color: #3e3b77;
-  border: 2px solid #8986bd;
-  color: white;
-  border-radius: 5px;
-  padding: 6px 20px;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 10px;
-  margin-bottom: 15px;
-}
-
 .usernameInput label {
   color: white;
   font-size: 11px;
+  margin-top: 20px;
 }
 
 .profileUsername {
@@ -74,4 +64,15 @@
   border-radius: 50px;
   cursor: pointer;
   margin-bottom: 20px;
+}
+
+.uploadButton {
+  background-color: #3e3b77;
+  border: 2px solid #8986bd;
+  color: white;
+  border-radius: 5px;
+  padding: 6px 15px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 11px;
 }

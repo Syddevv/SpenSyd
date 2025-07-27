@@ -1,8 +1,66 @@
 import "../styles/EditProfileModal.css";
-import ProfilePic from "../assets/sung-jin-woo.jpg";
 import CloseBTN from "../assets/close-btn.png";
+import { useState } from "react";
+import axios from "axios";
+import fallbackImage from "../assets/default-profile.png";
 
 export const EditProfileModal = ({ closeModal }) => {
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [preview, setPreview] = useState(null);
+  const [username, setUsername] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setSelectedFile(file);
+    setPreview(URL.createObjectURL(file));
+  };
+
+  const handleSubmit = async () => {
+    const token = localStorage.getItem("token");
+    let user = null;
+    try {
+      user = JSON.parse(localStorage.getItem("user"));
+    } catch {
+      user = null;
+    }
+
+    if (!token || !user || !user._id) {
+      return;
+    }
+
+    const formData = new FormData();
+    if (selectedFile) formData.append("profilePicture", selectedFile);
+    if (username) formData.append("username", username);
+
+    try {
+      const res = await axios.put(
+        `http://localhost:5000/api/auth/updateProfile/${user._id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // Update local storage with new user data
+      const updatedUser = {
+        ...user,
+        username: res.data.user?.username || user.username,
+        profilePicture: res.data.user?.profilePicture || user.profilePicture,
+      };
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+
+      closeModal();
+      window.location.reload();
+    } catch (err) {
+      console.error("Update error:", err);
+      // You can add silent fail logging or UI feedback here if needed
+    }
+  };
+
   return (
     <div className="editProfileModalWrapper">
       <div className="editProfileModalContent">
@@ -11,23 +69,44 @@ export const EditProfileModal = ({ closeModal }) => {
           src={CloseBTN}
           alt="Close Button"
           className="closeButton"
-          onClick={() => closeModal()}
+          onClick={closeModal}
         />
-
         <img
-          src={ProfilePic}
-          alt="Profile Picture"
+          src={preview || fallbackImage}
+          alt="preview"
           className="profilePicModal"
         />
-
-        <button className="updateProfile">Update Picture</button>
+        <div className="fileUploadWrapper">
+          <input
+            type="file"
+            id="profilePicture"
+            accept="image/*"
+            onChange={handleFileChange}
+            style={{ display: "none" }}
+          />
+          <label htmlFor="profilePicture" className="uploadButton">
+            Update Picture
+          </label>
+        </div>
 
         <div className="usernameInput">
           <label htmlFor="profileUsername">Username</label>
-          <input type="text" placeholder="Syddu" className="profileUsername" />
+          <input
+            type="text"
+            placeholder="New Username"
+            className="profileUsername"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
         </div>
 
-        <button className="confirmChangesBTN">SAVE CHANGES</button>
+        <button
+          className="confirmChangesBTN"
+          onClick={handleSubmit}
+          disabled={loading}
+        >
+          {loading ? "Saving..." : "SAVE CHANGES"}
+        </button>
       </div>
     </div>
   );
