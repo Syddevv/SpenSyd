@@ -12,6 +12,7 @@ import { useAuth } from "../context/ContextProvider";
 import { useNavigate } from "react-router-dom";
 import { ChangePassModal } from "../components/ChangePassModal";
 import { ChangeEmailModal } from "../components/ChangeEmailModal";
+import { EditProfileModal } from "../components/EditProfileModal";
 
 const Settings = () => {
   const [showPassModal, setShowPassModal] = useState(false);
@@ -19,6 +20,7 @@ const Settings = () => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showChangePassModal, setshowChangePassModal] = useState(false);
   const [showChangeEmailModal, setshowChangeEmailModal] = useState(false);
+  const [showEditProfileModal, setshowEditProfileModal] = useState(false);
 
   const navigate = useNavigate();
   const { logout } = useAuth();
@@ -40,7 +42,7 @@ const Settings = () => {
 
       <div className="contents">
         <div className="profileWrapper">
-          <Profile />
+          <Profile openModal={() => setshowEditProfileModal(true)} />
         </div>
 
         <div className="settingControlsWrapper">
@@ -124,6 +126,12 @@ const Settings = () => {
 
           {showChangeEmailModal && (
             <ChangeEmailModal onClose={() => setshowChangeEmailModal(false)} />
+          )}
+
+          {showEditProfileModal && (
+            <EditProfileModal
+              closeModal={() => setshowEditProfileModal(false)}
+            />
           )}
         </div>
       </div>

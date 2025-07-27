@@ -1,0 +1,77 @@
+.editProfileModalContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #1e1d31;
+  width: 300px;
+  border-radius: 10px;
+  position: relative;
+}
+
+.editProfileModalWrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+}
+
+.usernameInput {
+  display: flex;
+  flex-direction: column;
+}
+
+.profilePicModal {
+  width: 70px;
+  height: 70px;
+  border-radius: 35px;
+}
+
+.modalName {
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.updateProfile {
+  background-color: #3e3b77;
+  border: 2px solid #8986bd;
+  color: white;
+  border-radius: 5px;
+  padding: 6px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+.usernameInput label {
+  color: white;
+  font-size: 11px;
+}
+
+.profileUsername {
+  background-color: #d2d2d2;
+  border: none;
+  border-radius: 5px;
+  padding: 7px 15px;
+  font-weight: 600;
+  width: 140px;
+}
+
+.confirmChangesBTN {
+  background-color: #d49ef8;
+  color: white;
+  border: none;
+  margin-top: 20px;
+  font-weight: 600;
+  padding: 8px 20px;
+  border-radius: 50px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
