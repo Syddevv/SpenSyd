@@ -7,3 +7,70 @@
   overflow-y: auto;
   padding-bottom: 20px;
 }
+
+.contents {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.settingControlsWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #1e1d31;
+  width: 325px;
+  padding: 5px 20px;
+  border-radius: 8px;
+  border: 2px solid #8986bd;
+}
+
+.settingControl {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 0;
+}
+
+.iconWrapper {
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 15px;
+  flex-shrink: 0;
+}
+
+.passwordIcon,
+.gmailIcon,
+.logoutIcon,
+.aboutIcon {
+  width: 22px;
+  height: 22px;
+}
+
+.labels {
+  color: white;
+  font-weight: 600;
+  flex-grow: 1;
+}
+
+.arrowIcon {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+hr {
+  width: 100%;
+  border: none;
+  border-top: 1px solid #3f3c5c;
+  margin: 0;
+}
