@@ -10,11 +10,13 @@ import AboutIcon from "../assets/about icon.png";
 import { ConfirmationModal } from "../components/ConfirmationModal";
 import { useAuth } from "../context/ContextProvider";
 import { useNavigate } from "react-router-dom";
+import { ChangePassModal } from "../components/ChangePassModal";
 
 const Settings = () => {
   const [showPassModal, setShowPassModal] = useState(false);
   const [showGmailModal, setShowGmailModal] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showChangePassModal, setshowChangePassModal] = useState(false);
 
   const navigate = useNavigate();
   const { logout } = useAuth();
@@ -84,7 +86,7 @@ const Settings = () => {
           </div>
         </div>
 
-        <div>
+        <div className="modalsContainer">
           {showPassModal && (
             <ConfirmationModal
               onClose={() => setShowPassModal(false)}
@@ -109,6 +111,8 @@ const Settings = () => {
               onSubmit={() => handleLogout()}
             />
           )}
+
+          {showChangePassModal && <ChangePassModal />}
         </div>
       </div>
     </div>

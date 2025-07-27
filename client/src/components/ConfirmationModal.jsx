@@ -1,4 +1,3 @@
-import PasswordIcon from "../assets/password.png";
 import "../styles/ConfirmationModal.css";
 
 export const ConfirmationModal = ({ onClose, icon, text, onSubmit }) => {
