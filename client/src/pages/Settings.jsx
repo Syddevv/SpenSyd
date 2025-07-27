@@ -11,18 +11,25 @@ import { ConfirmationModal } from "../components/ConfirmationModal";
 import { useAuth } from "../context/ContextProvider";
 import { useNavigate } from "react-router-dom";
 import { ChangePassModal } from "../components/ChangePassModal";
+import { ChangeEmailModal } from "../components/ChangeEmailModal";
 
 const Settings = () => {
   const [showPassModal, setShowPassModal] = useState(false);
   const [showGmailModal, setShowGmailModal] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showChangePassModal, setshowChangePassModal] = useState(false);
+  const [showChangeEmailModal, setshowChangeEmailModal] = useState(false);
 
   const navigate = useNavigate();
   const { logout } = useAuth();
   const handleLogout = () => {
     logout();
     navigate("/login");
+  };
+
+  const handleChangeEmail = () => {
+    setshowChangeEmailModal(true);
+    setShowGmailModal(false);
   };
 
   return (
@@ -100,6 +107,7 @@ const Settings = () => {
               onClose={() => setShowGmailModal(false)}
               icon={GmailIcon}
               text={"Change email address?"}
+              onSubmit={() => handleChangeEmail()}
             />
           )}
 
@@ -113,6 +121,10 @@ const Settings = () => {
           )}
 
           {showChangePassModal && <ChangePassModal />}
+
+          {showChangeEmailModal && (
+            <ChangeEmailModal onClose={() => setshowChangeEmailModal(false)} />
+          )}
         </div>
       </div>
     </div>
