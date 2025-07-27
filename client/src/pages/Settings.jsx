@@ -7,8 +7,13 @@ import ArrowIcon from "../assets/arrow icon.png";
 import GmailIcon from "../assets/gmail.png";
 import LogoutIcon from "../assets/logout.png";
 import AboutIcon from "../assets/about icon.png";
+import { ConfirmationModal } from "../components/ConfirmationModal";
 
 const Settings = () => {
+  const [showPassModal, setShowPassModal] = useState(false);
+  const [showGmailModal, setShowGmailModal] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+
   return (
     <div className="settingsWrapper">
       <div>
@@ -21,7 +26,10 @@ const Settings = () => {
         </div>
 
         <div className="settingControlsWrapper">
-          <div className="settingControl">
+          <div
+            className="settingControl"
+            onClick={() => setShowPassModal(true)}
+          >
             <div className="iconWrapper">
               <img
                 src={PasswordIcon}
@@ -34,7 +42,10 @@ const Settings = () => {
           </div>
           <hr />
 
-          <div className="settingControl">
+          <div
+            className="settingControl"
+            onClick={() => setShowGmailModal(true)}
+          >
             <div className="iconWrapper">
               <img src={GmailIcon} alt="Gmail Icon" className="gmailIcon" />
             </div>
@@ -43,7 +54,10 @@ const Settings = () => {
           </div>
           <hr />
 
-          <div className="settingControl">
+          <div
+            className="settingControl"
+            onClick={() => setShowLogoutModal(true)}
+          >
             <div className="iconWrapper">
               <img src={LogoutIcon} alt="Logout Icon" className="logoutIcon" />
             </div>
@@ -59,6 +73,32 @@ const Settings = () => {
             <p className="labels">About Us</p>
             <img src={ArrowIcon} alt="Arrow" className="arrowIcon" />
           </div>
+        </div>
+
+        <div>
+          {showPassModal && (
+            <ConfirmationModal
+              onClose={() => setShowPassModal(false)}
+              icon={PasswordIcon}
+              text={"Change password?"}
+            />
+          )}
+
+          {showGmailModal && (
+            <ConfirmationModal
+              onClose={() => setShowGmailModal(false)}
+              icon={GmailIcon}
+              text={"Change email address?"}
+            />
+          )}
+
+          {showLogoutModal && (
+            <ConfirmationModal
+              onClose={() => setShowLogoutModal(false)}
+              icon={LogoutIcon}
+              text={"Do you want to logout?"}
+            />
+          )}
         </div>
       </div>
     </div>
