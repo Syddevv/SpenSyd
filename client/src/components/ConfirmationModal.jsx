@@ -1,10 +1,10 @@
 import PasswordIcon from "../assets/password.png";
 import "../styles/ConfirmationModal.css";
 
-export const ConfirmationModal = ({ onClose, icon, text }) => {
+export const ConfirmationModal = ({ onClose, icon, text, onSubmit }) => {
   return (
     <div className="confirmationModalWrapper">
-      <div className="modalContent">
+      <div className="confirmationModalContent">
         <img src={icon} alt="Password Icon" className="passIcon" />
         <p className="text">{text}</p>
 
@@ -12,7 +12,9 @@ export const ConfirmationModal = ({ onClose, icon, text }) => {
           <button className="cancelBTN" onClick={() => onClose()}>
             Cancel
           </button>
-          <button className="confirmBTN">Confirm</button>
+          <button className="confirmBTN" onClick={() => onSubmit()}>
+            Confirm
+          </button>
         </div>
       </div>
     </div>

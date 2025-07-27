@@ -8,11 +8,20 @@ import GmailIcon from "../assets/gmail.png";
 import LogoutIcon from "../assets/logout.png";
 import AboutIcon from "../assets/about icon.png";
 import { ConfirmationModal } from "../components/ConfirmationModal";
+import { useAuth } from "../context/ContextProvider";
+import { useNavigate } from "react-router-dom";
 
 const Settings = () => {
   const [showPassModal, setShowPassModal] = useState(false);
   const [showGmailModal, setShowGmailModal] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   return (
     <div className="settingsWrapper">
@@ -97,6 +106,7 @@ const Settings = () => {
               onClose={() => setShowLogoutModal(false)}
               icon={LogoutIcon}
               text={"Do you want to logout?"}
+              onSubmit={() => handleLogout()}
             />
           )}
         </div>
