@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import "../styles/Login.css";
 import SpenSyd_Icon from "../assets/SpenSyd Icon.png";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/ContextProvider";
+import { EnterEmailModal } from "../components/EnterEmailModal";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showEmailModal, setShowEmailModal] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -88,7 +90,7 @@ const Login = () => {
           </button>
         </form>
 
-        <div>
+        <div onClick={() => setShowEmailModal(true)}>
           <p className="forgotPass">Forgot password?</p>
           <hr className="underline" />
         </div>
@@ -99,6 +101,12 @@ const Login = () => {
             <span className="link">Register</span>
           </Link>
         </p>
+      </div>
+
+      <div>
+        {showEmailModal && (
+          <EnterEmailModal onClose={() => setShowEmailModal(false)} />
+        )}
       </div>
     </div>
   );
