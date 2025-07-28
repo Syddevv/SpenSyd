@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { ChangePassModal } from "../components/ChangePassModal";
 import { ChangeEmailModal } from "../components/ChangeEmailModal";
 import { EditProfileModal } from "../components/EditProfileModal";
+import { ForgotPassModal } from "../components/ForgotPassModal";
 
 const Settings = () => {
   const [showPassModal, setShowPassModal] = useState(false);
@@ -21,6 +22,7 @@ const Settings = () => {
   const [showChangePassModal, setshowChangePassModal] = useState(false);
   const [showChangeEmailModal, setshowChangeEmailModal] = useState(false);
   const [showEditProfileModal, setshowEditProfileModal] = useState(false);
+  const [showForgotPassModal, setShowForgotPassModal] = useState(false);
 
   const navigate = useNavigate();
   const { logout } = useAuth();
@@ -32,6 +34,11 @@ const Settings = () => {
   const handleChangeEmail = () => {
     setshowChangeEmailModal(true);
     setShowGmailModal(false);
+  };
+
+  const handleChangePass = () => {
+    setshowChangePassModal(true);
+    setShowPassModal(false);
   };
 
   return (
@@ -96,14 +103,17 @@ const Settings = () => {
         </div>
 
         <div className="modalsContainer">
+          {/* Confirmation Modal for Change Password */}
           {showPassModal && (
             <ConfirmationModal
               onClose={() => setShowPassModal(false)}
               icon={PasswordIcon}
               text={"Change password?"}
+              onSubmit={() => handleChangePass()}
             />
           )}
 
+          {/* Confirmation Modal for Change Email Address */}
           {showGmailModal && (
             <ConfirmationModal
               onClose={() => setShowGmailModal(false)}
@@ -113,6 +123,7 @@ const Settings = () => {
             />
           )}
 
+          {/* Confirmation Modal for Logout*/}
           {showLogoutModal && (
             <ConfirmationModal
               onClose={() => setShowLogoutModal(false)}
@@ -122,17 +133,25 @@ const Settings = () => {
             />
           )}
 
-          {showChangePassModal && <ChangePassModal />}
+          {/* Modal for Change Password */}
+          {showChangePassModal && (
+            <ChangePassModal onClose={() => setshowChangePassModal(false)} />
+          )}
 
+          {/* Modal for Change Email Address */}
           {showChangeEmailModal && (
             <ChangeEmailModal onClose={() => setshowChangeEmailModal(false)} />
           )}
 
+          {/* Modal for Edit Profile */}
           {showEditProfileModal && (
             <EditProfileModal
               closeModal={() => setshowEditProfileModal(false)}
             />
           )}
+
+          {/* Modal for Forgot Password */}
+          {showForgotPassModal && <ForgotPassModal />}
         </div>
       </div>
     </div>
