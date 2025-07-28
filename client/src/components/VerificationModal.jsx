@@ -23,7 +23,7 @@ const VerificationModal = ({ email, onSubmitCode, onClose }) => {
 
         <div className="messageWrapper">
           <p className="message">Verification code was sent to:</p>
-          <p className="userGmail">sydneysantos176@gmail.com</p>
+          <p className="userGmail">{email}</p>
         </div>
 
         <input

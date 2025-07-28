@@ -14,6 +14,7 @@ import { ChangePassModal } from "../components/ChangePassModal";
 import { ChangeEmailModal } from "../components/ChangeEmailModal";
 import { EditProfileModal } from "../components/EditProfileModal";
 import { ForgotPassModal } from "../components/ForgotPassModal";
+import VerificationModal from "../components/VerificationModal";
 
 const Settings = () => {
   const [showPassModal, setShowPassModal] = useState(false);
@@ -23,9 +24,10 @@ const Settings = () => {
   const [showChangeEmailModal, setshowChangeEmailModal] = useState(false);
   const [showEditProfileModal, setshowEditProfileModal] = useState(false);
   const [showForgotPassModal, setShowForgotPassModal] = useState(false);
+  const [showVerificationModal, setShowVerificationModal] = useState(false);
 
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const handleLogout = () => {
     logout();
     navigate("/login");
@@ -39,6 +41,64 @@ const Settings = () => {
   const handleChangePass = () => {
     setshowChangePassModal(true);
     setShowPassModal(false);
+  };
+
+  const openVerificationModal = async () => {
+    if (!user?.email) return alert("No email found for this account.");
+
+    try {
+      const res = await fetch(
+        "http://localhost:5000/api/auth/send-reset-code",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: user.email }),
+        }
+      );
+
+      const data = await res.json();
+      if (data.success) {
+        setShowVerificationModal(true); // only show if code sent successfully
+      } else {
+        alert(data.message || "Failed to send verification code.");
+      }
+    } catch (error) {
+      alert("Error sending verification code.");
+      console.error(error);
+    }
+  };
+
+  const closeVerificationModal = () => {
+    setShowVerificationModal(false);
+    setshowChangePassModal(false);
+  };
+
+  const handleVerificationSuccess = async (code) => {
+    try {
+      const res = await fetch(
+        "http://localhost:5000/api/auth/verify-reset-code",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: user?.email, code }), // include user email
+        }
+      );
+
+      const data = await res.json();
+      if (data.success) {
+        setShowVerificationModal(false);
+        setshowChangePassModal(false);
+        setShowForgotPassModal(true);
+      } else {
+        alert(data.message || "Invalid code");
+      }
+    } catch (error) {
+      alert("Error verifying code");
+    }
   };
 
   return (
@@ -135,7 +195,10 @@ const Settings = () => {
 
           {/* Modal for Change Password */}
           {showChangePassModal && (
-            <ChangePassModal onClose={() => setshowChangePassModal(false)} />
+            <ChangePassModal
+              onClose={() => setshowChangePassModal(false)}
+              openModal={() => openVerificationModal()}
+            />
           )}
 
           {/* Modal for Change Email Address */}
@@ -151,7 +214,18 @@ const Settings = () => {
           )}
 
           {/* Modal for Forgot Password */}
-          {showForgotPassModal && <ForgotPassModal />}
+          {showForgotPassModal && (
+            <ForgotPassModal onClose={() => setShowForgotPassModal(false)} />
+          )}
+
+          {/* Modal for Email Verification */}
+          {showVerificationModal && (
+            <VerificationModal
+              email={user?.email} // dynamically from context
+              onSubmitCode={handleVerificationSuccess}
+              onClose={() => closeVerificationModal()}
+            />
+          )}
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@ import "../styles/ChangePassModal.css";
 import CloseBTN from "../assets/close-btn.png";
 import axios from "axios";
 
-export const ChangePassModal = ({ onClose }) => {
+export const ChangePassModal = ({ onClose, openModal }) => {
   const [currentPass, setCurrentPass] = useState("");
   const [newPass, setNewPass] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
@@ -72,11 +72,14 @@ export const ChangePassModal = ({ onClose }) => {
         {error && <p className="errorMsg">{error}</p>}
         {success && <p className="successMsg">{success}</p>}
 
-        <button className="changePassBTN" onClick={handleSubmit}>
+        <button className="changePassBtn" onClick={handleSubmit}>
           CHANGE PASSWORD
         </button>
-        <p className="backToSettings">Forgot password?</p>
-        <hr className="line" />
+
+        <div onClick={() => openModal()}>
+          <p className="backToSettings">Forgot password?</p>
+          <hr className="line" />
+        </div>
       </div>
     </div>
   );
