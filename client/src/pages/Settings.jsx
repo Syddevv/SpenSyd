@@ -61,6 +61,7 @@ const Settings = () => {
       const data = await res.json();
       if (data.success) {
         setShowVerificationModal(true); // only show if code sent successfully
+        setshowChangePassModal(false);
       } else {
         alert(data.message || "Failed to send verification code.");
       }

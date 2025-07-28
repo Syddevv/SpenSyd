@@ -37,7 +37,7 @@ export const ForgotPassModal = ({ onClose }) => {
   return (
     <div className="forgotPassModalWrapper">
       <div className="forgotPassModalContent">
-        <p className="modalTitle">CHANGE PASSWORD</p>
+        <p className="modalTop">CHANGE PASSWORD</p>
         <img
           src={CloseBTN}
           alt="Close Button"
@@ -47,14 +47,14 @@ export const ForgotPassModal = ({ onClose }) => {
 
         <div className="passInputs">
           <input
-            type="password"
+            type="text"
             placeholder="New Password"
             className="newPass"
             value={newPass}
             onChange={(e) => setNewPass(e.target.value)}
           />
           <input
-            type="password"
+            type="text"
             placeholder="Confirm Password"
             className="confirmPass"
             value={confirmPass}

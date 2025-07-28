@@ -40,7 +40,7 @@ export const ChangePassModal = ({ onClose, openModal }) => {
   return (
     <div className="changePassModalWrapper">
       <div className="changePassModalContent">
-        <p className="modalTitle">CHANGE PASSWORD</p>
+        <p className="modalTop">CHANGE PASSWORD</p>
         <img
           src={CloseBTN}
           alt="Close"
