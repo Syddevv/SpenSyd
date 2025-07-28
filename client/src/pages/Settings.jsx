@@ -14,7 +14,7 @@ import { ChangePassModal } from "../components/ChangePassModal";
 import { ChangeEmailModal } from "../components/ChangeEmailModal";
 import { EditProfileModal } from "../components/EditProfileModal";
 import { ForgotPassModal } from "../components/ForgotPassModal";
-import VerificationModal from "../components/VerificationModal";
+import { VerifyCodeModal } from "../components/VerifyCodeModal";
 
 const Settings = () => {
   const [showPassModal, setShowPassModal] = useState(false);
@@ -24,7 +24,7 @@ const Settings = () => {
   const [showChangeEmailModal, setshowChangeEmailModal] = useState(false);
   const [showEditProfileModal, setshowEditProfileModal] = useState(false);
   const [showForgotPassModal, setShowForgotPassModal] = useState(false);
-  const [showVerificationModal, setShowVerificationModal] = useState(false);
+  const [showVerifyCodeModal, setShowVerifyCodeModal] = useState(false);
 
   const navigate = useNavigate();
   const { logout, user, token, setUser } = useAuth(); // Make sure token and setUser are available
@@ -48,19 +48,21 @@ const Settings = () => {
 
     try {
       const res = await fetch(
-        "http://localhost:5000/api/auth/send-reset-code",
+        "http://localhost:5000/api/auth/send-reset-code/logged-in",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ email: user.email }),
+          // Don't need to send email - backend gets it from token
+          body: JSON.stringify({}),
         }
       );
 
       const data = await res.json();
       if (data.success) {
-        setShowVerificationModal(true); // only show if code sent successfully
+        setShowVerificationModal(true);
         setshowChangePassModal(false);
       } else {
         alert(data.message || "Failed to send verification code.");
@@ -72,10 +74,11 @@ const Settings = () => {
   };
 
   const closeVerificationModal = () => {
-    setShowVerificationModal(false);
+    setShowVerifyCodeModal(false);
     setshowChangePassModal(false);
   };
 
+  // In Settings.jsx
   const handleVerificationSuccess = async (code) => {
     try {
       const res = await fetch(
@@ -84,15 +87,18 @@ const Settings = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Add auth token for logged-in flow
           },
-          body: JSON.stringify({ email: user?.email, code }), // include user email
+          body: JSON.stringify({
+            email: user.email,
+            code,
+          }),
         }
       );
 
       const data = await res.json();
       if (data.success) {
-        setShowVerificationModal(false);
-        setshowChangePassModal(false);
+        setShowVerifyCodeModal(false);
         setShowForgotPassModal(true);
       } else {
         alert(data.message || "Invalid code");
@@ -101,6 +107,17 @@ const Settings = () => {
       alert("Error verifying code");
     }
   };
+
+  // When rendering the modal
+  {
+    showVerifyCodeModal && (
+      <VerifyCodeModal
+        email={user.email}
+        onVerified={handleVerificationSuccess}
+        onClose={() => closeVerificationModal()}
+      />
+    );
+  }
 
   // When email is changed, update user context
   const handleEmailChanged = (newEmail) => {
@@ -227,15 +244,6 @@ const Settings = () => {
           {/* Modal for Forgot Password */}
           {showForgotPassModal && (
             <ForgotPassModal onClose={() => setShowForgotPassModal(false)} />
-          )}
-
-          {/* Modal for Email Verification */}
-          {showVerificationModal && (
-            <VerificationModal
-              email={user?.email} // dynamically from context
-              onSubmitCode={handleVerificationSuccess}
-              onClose={() => closeVerificationModal()}
-            />
           )}
         </div>
       </div>

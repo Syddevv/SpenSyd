@@ -1,21 +1,32 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import GmailIcon from "../assets/gmail.png";
 import CloseIcon from "../assets/close-btn.png";
 import "../styles/EnterEmailModal.css";
 import { ForgotPassModal } from "./ForgotPassModal";
 import { VerifyCodeModal } from "./VerifyCodeModal";
+import { useAuth } from "../context/ContextProvider";
 
 export const EnterEmailModal = ({ onClose, isLoggedIn = false }) => {
+  const { user } = useAuth(); // Get user from auth context
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [showForgotPassModal, setShowForgotPassModal] = useState(false);
   const [showVerifyCodeModal, setShowVerifyCodeModal] = useState(false);
-  const [userEmail, setUserEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleConfirmEmail = async () => {
+  useEffect(() => {
+    if (isLoggedIn && user?.email) {
+      setEmail(user.email);
+      // Automatically send verification code for logged-in users
+      handleSendCode(user.email);
+    }
+  }, [isLoggedIn, user]);
+
+  const handleSendCode = async (emailToVerify) => {
+    setIsLoading(true);
     try {
       const endpoint = isLoggedIn
-        ? "/api/auth/send-reset-code-logged-in"
+        ? "/api/auth/send-reset-code/logged-in"
         : "/api/auth/send-reset-code";
 
       const res = await fetch(`http://localhost:5000${endpoint}`, {
@@ -26,93 +37,134 @@ export const EnterEmailModal = ({ onClose, isLoggedIn = false }) => {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           }),
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email: emailToVerify }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        return setError(data.message || "No account found.");
+        return setError(data.message || "Failed to send verification code.");
       }
 
-      // Save email temporarily
-      localStorage.setItem("resetEmail", email);
-      setUserEmail(email);
+      localStorage.setItem("resetEmail", emailToVerify);
+
+      // First show the verify modal, THEN close the email modal
       setShowVerifyCodeModal(true);
+
+      // For logged-in users, we can immediately hide the email content
+      if (isLoggedIn) {
+        setEmail(""); // Clear the email display
+      }
+
+      // Don't call onClose() here anymore
     } catch (err) {
-      setError("Something went wrong.");
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  return (
-    <>
-      {showForgotPassModal && (
-        <ForgotPassModal
-          onClose={() => {
-            setShowForgotPassModal(false);
-            onClose();
-          }}
-          email={userEmail}
-        />
-      )}
+  const handleConfirmEmail = async () => {
+    if (!email.includes("@")) {
+      return setError("Please enter a valid email address");
+    }
+    await handleSendCode(email);
+  };
 
-      {showVerifyCodeModal && (
-        <VerifyCodeModal
-          onClose={() => setShowVerifyCodeModal(false)}
-          onVerified={() => {
-            setShowVerifyCodeModal(false);
-            setShowForgotPassModal(true);
-          }}
-          email={userEmail}
-          isLoggedIn={isLoggedIn}
-        />
-      )}
+  if (showForgotPassModal) {
+    return (
+      <ForgotPassModal
+        onClose={() => {
+          setShowForgotPassModal(false);
+          onClose();
+        }}
+        email={email}
+      />
+    );
+  }
 
-      {!showForgotPassModal && !showVerifyCodeModal && (
-        <div className="enterEmailModalWrapper">
-          <div className="enterEmailModalContent">
-            <div>
-              <img src={GmailIcon} alt="gmail-icon" className="gmail-icon" />
-              <img
-                src={CloseIcon}
-                alt="close-icon"
-                className="close-icon"
-                onClick={onClose}
-              />
-            </div>
+  if (showVerifyCodeModal) {
+    return (
+      <VerifyCodeModal
+        onClose={() => {
+          setShowVerifyCodeModal(false);
+          onClose(); // Only close parent modal when verify modal closes
+        }}
+        onVerified={() => {
+          setShowVerifyCodeModal(false);
+          setShowForgotPassModal(true);
+        }}
+        email={email}
+      />
+    );
+  }
 
-            <div className="inputContents">
-              <p className="modalDescription">
-                {isLoggedIn
-                  ? "Enter your email to reset password"
-                  : "Enter the email linked to your account"}
+  // For logged-in users during loading/success
+  if (isLoggedIn && (isLoading || showVerifyCodeModal)) {
+    return (
+      <div className="enterEmailModalWrapper">
+        <div className="enterEmailModalContent">
+          <div>
+            <img src={GmailIcon} alt="gmail-icon" className="gmail-icon" />
+            <img
+              src={CloseIcon}
+              alt="close-icon"
+              className="close-icon"
+              onClick={() => {
+                setShowVerifyCodeModal(false);
+                onClose();
+              }}
+            />
+          </div>
+          <div className="inputContents">
+            {isLoading ? (
+              <p style={{ textAlign: "center" }}>
+                Sending verification code to {email}...
               </p>
-              <input
-                type="email"
-                placeholder="you@example.com"
-                className="emailInput"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  setError("");
-                }}
-              />
-              {error && (
-                <p className="errorText" style={{ textAlign: "center" }}>
-                  {error}
-                </p>
-              )}
-              <button
-                className="confirmEmail"
-                onClick={handleConfirmEmail}
-                disabled={!email.includes("@")}
-              >
-                Confirm Email
-              </button>
-            </div>
+            ) : null}
           </div>
         </div>
-      )}
-    </>
+      </div>
+    );
+  }
+
+  // Original email input for non-logged-in users
+  return (
+    <div className="enterEmailModalWrapper">
+      <div className="enterEmailModalContent">
+        <div>
+          <img src={GmailIcon} alt="gmail-icon" className="gmail-icon" />
+          <img
+            src={CloseIcon}
+            alt="close-icon"
+            className="close-icon"
+            onClick={onClose}
+          />
+        </div>
+        <div className="inputContents">
+          <p className="modalDescription">
+            Enter the email linked to your account
+          </p>
+          <input
+            type="email"
+            placeholder="you@example.com"
+            className="emailInput"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              setError("");
+            }}
+          />
+          {error && <p className="errorText">{error}</p>}
+          <button
+            className="confirmEmail"
+            onClick={handleConfirmEmail}
+            disabled={!email.includes("@") || isLoading}
+          >
+            {isLoading ? "Sending..." : "Confirm Email"}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 };

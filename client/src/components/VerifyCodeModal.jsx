@@ -10,24 +10,34 @@ export const VerifyCodeModal = ({ onClose, onVerified, email }) => {
   const handleVerifyCode = async () => {
     setIsLoading(true);
     try {
+      // Always get email from localStorage for consistency
+      const verificationEmail = localStorage.getItem("resetEmail") || email;
+
       const res = await fetch(
         "http://localhost:5000/api/auth/verify-reset-code",
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, code }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`, // Add if logged in
+          },
+          body: JSON.stringify({
+            email: verificationEmail,
+            code,
+          }),
         }
       );
 
       const data = await res.json();
+      console.log("Verification response:", data); // Debug log
 
       if (!res.ok) {
-        return setError(data.message || "Invalid code");
+        throw new Error(data.message || "Invalid code");
       }
 
       onVerified();
     } catch (err) {
-      setError("Something went wrong.");
+      setError(err.message || "Verification failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
