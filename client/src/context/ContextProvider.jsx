@@ -4,15 +4,19 @@ import axios from "axios";
 const authContext = createContext();
 const ContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem("token") || null);
 
-  const login = (user) => {
+  const login = (user, token) => {
     setUser(user);
+    setToken(token);
+    localStorage.setItem("token", token);
   };
 
   const logout = () => {
     try {
       localStorage.removeItem("token");
       setUser(null);
+      setToken(null);
     } catch (error) {
       console.log(error.message);
     }
@@ -20,18 +24,28 @@ const ContextProvider = ({ children }) => {
 
   useEffect(() => {
     const verifyUser = async () => {
+      const storedToken = localStorage.getItem("token");
+      if (!storedToken) {
+        setUser(null);
+        setToken(null);
+        return;
+      }
       try {
         const res = await axios.get("http://localhost:5000/api/auth/verify", {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${storedToken}`,
           },
         });
         if (res.data.success) {
           setUser(res.data.user);
+          setToken(storedToken);
         } else {
           setUser(null);
+          setToken(null);
         }
       } catch (error) {
+        setUser(null);
+        setToken(null);
         console.log(error.message);
       }
     };
@@ -39,7 +53,7 @@ const ContextProvider = ({ children }) => {
   }, []);
 
   return (
-    <authContext.Provider value={{ user, login, logout }}>
+    <authContext.Provider value={{ user, token, login, logout, setUser }}>
       {children}
     </authContext.Provider>
   );

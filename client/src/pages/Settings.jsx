@@ -27,7 +27,7 @@ const Settings = () => {
   const [showVerificationModal, setShowVerificationModal] = useState(false);
 
   const navigate = useNavigate();
-  const { logout, user } = useAuth();
+  const { logout, user, token, setUser } = useAuth(); // Make sure token and setUser are available
   const handleLogout = () => {
     logout();
     navigate("/login");
@@ -99,6 +99,11 @@ const Settings = () => {
     } catch (error) {
       alert("Error verifying code");
     }
+  };
+
+  // When email is changed, update user context
+  const handleEmailChanged = (newEmail) => {
+    setUser({ ...user, email: newEmail });
   };
 
   return (
@@ -203,7 +208,12 @@ const Settings = () => {
 
           {/* Modal for Change Email Address */}
           {showChangeEmailModal && (
-            <ChangeEmailModal onClose={() => setshowChangeEmailModal(false)} />
+            <ChangeEmailModal
+              onClose={() => setshowChangeEmailModal(false)}
+              user={user}
+              token={token}
+              onEmailChanged={handleEmailChanged}
+            />
           )}
 
           {/* Modal for Edit Profile */}
