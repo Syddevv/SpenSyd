@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/ContextProvider";
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate();
-  function toHome() {
-    navigate("/home");
-  }
+  const { user } = useAuth();
 
   const navStyle = {
     backgroundColor: "rgb(30, 29, 49)",
@@ -50,12 +48,16 @@ const NavBar = () => {
   return (
     <div>
       <nav style={navStyle}>
-        <h2
-          style={{ color: "rgb(251, 126, 239)", fontSize: "18px" }}
-          onClick={() => toHome()}
-        >
-          SpenSyd
-        </h2>
+        <div className="userProfile">
+          <img
+            src={
+              user && user.profilePicture ? user.profilePicture : defaultProfile
+            }
+            alt="profile"
+            className="profilePic"
+          />
+          <p className="usernameProfile">{user?.username}</p>
+        </div>
         <span
           style={{ color: "white", fontSize: "30px", cursor: "pointer" }}
           onClick={() => setIsOpen(!isOpen)}

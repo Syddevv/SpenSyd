@@ -187,7 +187,17 @@ export const loginUser = async (req, res) => {
 };
 
 export const verifyUser = async (req, res) => {
-  return res.status(200).json({ success: true, user: req.user });
+  const user = await User.findById(req.user.id);
+  if (!user) return res.status(404).json({ success: false });
+  res.json({
+    success: true,
+    user: {
+      username: user.username,
+      email: user.email,
+      profilePicture: user.profilePicture, // <-- this must be included
+      // ...other fields
+    },
+  });
 };
 
 export const updateUserProfile = async (req, res) => {

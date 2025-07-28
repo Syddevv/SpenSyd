@@ -13,7 +13,6 @@
   align-items: center;
   justify-content: center;
   gap: 15px;
-  margin-top: 10px;
 }
 
 .userGreetings {
@@ -36,4 +35,24 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
+}
+
+.userProfile img {
+  width: 50px;
+  height: 50px;
+  border: 2px solid #89e88c;
+  object-fit: cover;
+}
+
+.userProfile {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: left;
+  gap: 10px;
+}
+
+.usernameProfile {
+  color: rgb(201, 201, 201);
+  font-weight: 600;
 }

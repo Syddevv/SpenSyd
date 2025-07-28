@@ -26,7 +26,7 @@ const Profile = ({ openModal }) => {
         alt="profile"
         className="profilePic"
       />
-      <p className="username">{user.username}</p>
+      <p className="username">@{user.username}</p>
       <p className="email">{user.email}</p>
       <button className="editBtn" onClick={openModal}>
         Edit Profile

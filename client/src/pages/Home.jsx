@@ -11,6 +11,7 @@ import addBalanceIcon from "../assets/add income icon.png";
 import "../styles/QuickAccess.css";
 import { useAuth } from "../context/ContextProvider";
 import axios from "axios";
+import defaultProfile from "../assets/default-profile.png";
 
 const Home = () => {
   const { user } = useAuth();
@@ -170,7 +171,7 @@ const Home = () => {
     <div className="homePage">
       <NavBar />
 
-      <div style={{ paddingTop: "85px" }}>
+      <div style={{ paddingTop: "95px" }}>
         <div className="statCard">
           <ExpenseStat totalExpenses={totalExpenses} />
           <IncomeStat currentBalance={currentBalance} />
