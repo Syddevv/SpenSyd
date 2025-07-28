@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/ContextProvider";
+import defaultProfile from "../assets/default-profile.png";
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);

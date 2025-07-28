@@ -3,6 +3,7 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
+  background: linear-gradient(135deg, #1e1d31 0%, #3a2e5f 100%);
 }
 
 * {
@@ -11,56 +12,65 @@ body {
 }
 
 .register-wrapper {
-  background-color: rgb(30, 29, 49);
+  min-height: 100vh;
   display: flex;
   align-items: center;
-  flex-direction: column;
   justify-content: center;
-  height: 100vh;
-  width: 100%;
+  background: transparent;
+  padding: 20px 10px;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .registerPage {
+  background: rgba(40, 38, 66, 0.98);
+  border-radius: 18px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
-  max-width: 400px;
+  padding: 40px 32px;
+  max-width: 370px;
   width: 100%;
+  gap: 18px;
 }
 
-.login-icon {
-  max-width: 300px;
-  margin-left: 10px;
+.register-icon {
+  max-width: 140px;
+  margin-bottom: 10px;
+  filter: drop-shadow(0 2px 8px rgba(212, 158, 248, 0.15));
 }
 
-.pageName-login {
-  margin-top: 0;
-  margin-bottom: 0;
+.register-login {
+  margin: 0;
   color: white;
-  font-size: 2rem;
+  font-size: 2.1rem;
   font-weight: 700;
+  letter-spacing: 1px;
 }
 
-.description-login {
-  color: white;
-  font-weight: 500;
-  margin-top: 5px;
-  font-size: 1.8rem;
-  text-align: center;
+.description-register {
   color: rgb(212, 158, 248);
+  font-weight: 600;
+  margin-top: 2px;
+  font-size: 1.2rem;
+  text-align: center;
+  margin-bottom: 10px;
 }
 
-.registration-form {
+.register-form {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
+  width: 100%;
+  gap: 16px;
 }
 
-.registration-form label {
-  color: white;
+.register-form label {
+  color: #e0e0e0;
   font-size: 13px;
   margin-bottom: 5px;
+  font-weight: 500;
 }
 
 .email-wrapper,
@@ -68,49 +78,114 @@ body {
 .username-wrapper {
   display: flex;
   flex-direction: column;
+  gap: 4px;
 }
 
-.email-input {
-  width: 240px;
-  padding: 10px;
-  border-radius: 5px;
-  border: none;
-  margin-bottom: 10px;
-}
-
-.password-input {
-  width: 240px;
-  padding: 10px;
-  border-radius: 5px;
-  border: none;
-}
-
+.email-input,
+.password-input,
 .username-input {
-  width: 240px;
-  padding: 10px;
-  border-radius: 5px;
-  border: none;
-  margin-bottom: 10px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 7px;
+  border: 1px solid #3a2e5f;
+  background: #23213a;
+  color: #fff;
+  margin-bottom: 0;
+  font-size: 0.9rem;
+  transition: border 0.2s, box-shadow 0.2s;
+  font-weight: 400;
 }
 
-.login-button {
-  background-color: rgb(230, 215, 248);
+.email-input:focus,
+.password-input:focus {
+  outline: none;
+  border: 1.5px solid rgb(212, 158, 248);
+  box-shadow: 0 0 0 2px rgba(212, 158, 248, 0.15);
+}
+
+.register-button {
+  background: linear-gradient(
+    90deg,
+    rgb(212, 158, 248) 0%,
+    rgb(230, 215, 248) 100%
+  );
   border: none;
-  width: 130px;
+  width: 100%;
   height: 45px;
   border-radius: 7px;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 1.1rem;
+  color: #2d1e3f;
   cursor: pointer;
-  transition: background-color 0.1s ease-in-out;
-  margin-top: 25px;
+  margin-top: 10px;
+  margin-bottom: 8px;
+  transition: background 0.15s, transform 0.1s;
+  box-shadow: 0 2px 8px rgba(212, 158, 248, 0.08);
+}
+
+.login-button:hover,
+.login-button:focus {
+  background: linear-gradient(
+    90deg,
+    rgb(230, 215, 248) 0%,
+    rgb(212, 158, 248) 100%
+  );
+  transform: translateY(-2px) scale(1.03);
 }
 
 .link-wrapper {
-  color: white;
+  color: #e0e0e0;
+  font-size: 0.98rem;
+  margin-top: 0px;
+  text-align: center;
 }
 
 .link {
   color: rgb(212, 158, 248);
   cursor: pointer;
+  font-weight: 600;
+  transition: color 0.15s;
+}
+
+.link:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.pageName-register {
+  margin: 0;
+  color: white;
+  font-size: 2.1rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* 🔁 Mobile Responsiveness */
+@media screen and (max-width: 480px) {
+  .registerPage {
+    padding: 32px 20px;
+    max-width: 95%;
+    border-radius: 12px;
+  }
+
+  .pageName-register {
+    font-size: 1.8rem;
+  }
+
+  .description-register {
+    font-size: 1.5rem;
+  }
+
+  .register-button {
+    font-size: 1rem;
+    height: 42px;
+  }
+
+  .register-icon {
+    max-width: 120px;
+  }
+
+  .link-wrapper {
+    font-size: 0.9rem;
+  }
 }

@@ -8,6 +8,7 @@ import { useAuth } from "../context/ContextProvider";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -22,8 +23,9 @@ const Login = () => {
       if (res.data.success) {
         login(res.data.user);
         localStorage.setItem("token", res.data.token);
-        localStorage.setItem("user", JSON.stringify(res.data.user)); // <-- Add this line
+        localStorage.setItem("user", JSON.stringify(res.data.user));
         navigate("/home");
+        window.location.reload();
       }
     } catch (error) {
       console.log(error.message);
@@ -32,36 +34,64 @@ const Login = () => {
 
   return (
     <div className="login-wrapper">
-      <div className="loginPage">
+      <div>
         <img src={SpenSyd_Icon} alt="SpenSyd Icon" className="login-icon" />
         <h1 className="pageName-login">SpenSyd</h1>
-        <h2 className="description-login">Login</h2>
+      </div>
 
+      <div className="loginPage">
+        <h2 className="description-login">Login</h2>
         <form onSubmit={handleSubmit} className="login-form">
           <div className="email-wrapper">
             <label htmlFor="email">Email</label>
             <input
               type="email"
               className="email-input"
+              placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
             />
           </div>
 
           <div className="password-wrapper">
             <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              className="password-input"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <div style={{ position: "relative" }}>
+              <input
+                type={showPassword ? "text" : "password"}
+                className="password-input"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <span
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  position: "absolute",
+                  right: 12,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  cursor: "pointer",
+                  color: "#aaa",
+                  fontSize: "0.85rem",
+                  userSelect: "none",
+                }}
+              >
+                {showPassword ? "Hide" : "Show"}
+              </span>
+            </div>
           </div>
 
           <button className="login-button" type="submit">
             Login
           </button>
         </form>
+
+        <div>
+          <p className="forgotPass">Forgot password?</p>
+          <hr className="underline" />
+        </div>
 
         <p className="link-wrapper">
           Don't have an account?{" "}

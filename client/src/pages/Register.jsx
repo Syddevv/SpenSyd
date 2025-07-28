@@ -9,6 +9,7 @@ const Register = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [pendingUser, setPendingUser] = useState(null);
@@ -60,16 +61,20 @@ const Register = () => {
 
   return (
     <div className="register-wrapper">
-      <div className="registerPage">
-        <img src={SpenSyd_Icon} alt="SpenSyd Icon" className="login-icon" />
-        <h1 className="pageName-login">SpenSyd</h1>
-        <h2 className="description-login">Register</h2>
+      <div>
+        <img src={SpenSyd_Icon} alt="SpenSyd Icon" className="register-icon" />
+        <h1 className="pageName-register">SpenSyd</h1>
+      </div>
 
-        <form onSubmit={handleSubmit} className="registration-form">
+      <div className="registerPage">
+        <h2 className="description-register">Register</h2>
+
+        <form onSubmit={handleSubmit} className="register-form">
           <div className="username-wrapper">
             <label htmlFor="username">Username</label>
             <input
               className="username-input"
+              placeholder="Enter a username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
@@ -81,6 +86,7 @@ const Register = () => {
             <input
               type="email"
               className="email-input"
+              placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -89,16 +95,34 @@ const Register = () => {
 
           <div className="password-wrapper">
             <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              className="password-input"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <div style={{ position: "relative" }}>
+              <input
+                type={showPassword ? "text" : "password"}
+                className="password-input"
+                placeholder="Create a password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <span
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  position: "absolute",
+                  right: 12,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  cursor: "pointer",
+                  color: "#aaa",
+                  fontSize: "0.85rem",
+                  userSelect: "none",
+                }}
+              >
+                {showPassword ? "Hide" : "Show"}
+              </span>
+            </div>
           </div>
 
-          <button className="login-button" type="submit">
+          <button className="register-button" type="submit">
             Register
           </button>
         </form>
