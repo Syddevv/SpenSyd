@@ -340,7 +340,6 @@ export const sendResetCode = async (req, res) => {
   }
 };
 
-// In your authController.js
 export const verifyResetCode = async (req, res) => {
   try {
     const { email, code } = req.body;

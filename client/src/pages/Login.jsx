@@ -1,4 +1,4 @@
-import React, { use, useState } from "react";
+import React, { useState } from "react";
 import "../styles/Login.css";
 import SpenSyd_Icon from "../assets/SpenSyd Icon.png";
 import axios from "axios";
@@ -11,11 +11,14 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showEmailModal, setShowEmailModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(""); // 1️⃣ Error state
   const navigate = useNavigate();
   const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMessage(""); // clear previous error
+
     try {
       const res = await axios.post("http://localhost:5000/api/auth/login", {
         email,
@@ -30,7 +33,10 @@ const Login = () => {
         window.location.reload();
       }
     } catch (error) {
-      console.log(error.message);
+      // 2️⃣ Show message from server or fallback
+      setErrorMessage(
+        error.response?.data?.message || "Invalid email or password"
+      );
     }
   };
 
@@ -84,6 +90,21 @@ const Login = () => {
               </span>
             </div>
           </div>
+
+          {/* 3️⃣ Error display */}
+          {errorMessage && (
+            <p
+              style={{
+                color: "red",
+                marginTop: "0px",
+                marginBottom: "0px",
+                textAlign: "center",
+                fontSize: "15px",
+              }}
+            >
+              {errorMessage}
+            </p>
+          )}
 
           <button className="login-button" type="submit">
             Login
