@@ -12,6 +12,11 @@ export const ChangePassModal = ({ onClose, openModal }) => {
   const [success, setSuccess] = useState("");
   const [showForgotPasswordFlow, setShowForgotPasswordFlow] = useState(false);
 
+  // Individual toggles for each input
+  const [showCurrent, setShowCurrent] = useState(false);
+  const [showNew, setShowNew] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+
   const handleSubmit = async () => {
     setError("");
     setSuccess("");
@@ -42,7 +47,6 @@ export const ChangePassModal = ({ onClose, openModal }) => {
       );
 
       setSuccess(res.data.message);
-      // Auto-close after 2 seconds if successful
       setTimeout(() => {
         onClose();
       }, 2000);
@@ -60,7 +64,7 @@ export const ChangePassModal = ({ onClose, openModal }) => {
       <EnterEmailModal
         onClose={() => {
           setShowForgotPasswordFlow(false);
-          onClose(); // Close both modals if needed
+          onClose();
         }}
         isLoggedIn={true}
       />
@@ -79,33 +83,59 @@ export const ChangePassModal = ({ onClose, openModal }) => {
         />
 
         <div className="passInputs">
-          <input
-            type="password"
-            placeholder="Current Password"
-            value={currentPass}
-            onChange={(e) => {
-              setCurrentPass(e.target.value);
-              setError("");
-            }}
-          />
-          <input
-            type="password"
-            placeholder="New Password"
-            value={newPass}
-            onChange={(e) => {
-              setNewPass(e.target.value);
-              setError("");
-            }}
-          />
-          <input
-            type="password"
-            placeholder="Confirm Password"
-            value={confirmPass}
-            onChange={(e) => {
-              setConfirmPass(e.target.value);
-              setError("");
-            }}
-          />
+          <div className="inputWithToggle">
+            <input
+              type={showCurrent ? "text" : "password"}
+              placeholder="Current Password"
+              value={currentPass}
+              onChange={(e) => {
+                setCurrentPass(e.target.value);
+                setError("");
+              }}
+            />
+            <span
+              className="toggleText"
+              onClick={() => setShowCurrent((prev) => !prev)}
+            >
+              {showCurrent ? "Hide" : "Show"}
+            </span>
+          </div>
+
+          <div className="inputWithToggle">
+            <input
+              type={showNew ? "text" : "password"}
+              placeholder="New Password"
+              value={newPass}
+              onChange={(e) => {
+                setNewPass(e.target.value);
+                setError("");
+              }}
+            />
+            <span
+              className="toggleText"
+              onClick={() => setShowNew((prev) => !prev)}
+            >
+              {showNew ? "Hide" : "Show"}
+            </span>
+          </div>
+
+          <div className="inputWithToggle">
+            <input
+              type={showConfirm ? "text" : "password"}
+              placeholder="Confirm Password"
+              value={confirmPass}
+              onChange={(e) => {
+                setConfirmPass(e.target.value);
+                setError("");
+              }}
+            />
+            <span
+              className="toggleText"
+              onClick={() => setShowConfirm((prev) => !prev)}
+            >
+              {showConfirm ? "Hide" : "Show"}
+            </span>
+          </div>
         </div>
 
         {error && <p className="errorMsg">{error}</p>}

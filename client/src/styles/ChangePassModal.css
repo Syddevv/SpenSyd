@@ -114,3 +114,24 @@
     width: 90vw;
   }
 }
+
+.inputWithToggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inputWithToggle input {
+  flex: 1;
+  padding-right: 60px; /* space for toggle text */
+}
+
+.toggleText {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  font-size: 12px;
+  color: #888;
+  user-select: none;
+  margin-bottom: 7px;
+}

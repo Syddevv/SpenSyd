@@ -8,6 +8,8 @@ export const ForgotPassModal = ({ onClose }) => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const userEmail = localStorage.getItem("resetEmail");
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleChangePassword = async () => {
     if (newPass !== confirmPass) {
@@ -51,26 +53,61 @@ export const ForgotPassModal = ({ onClose }) => {
         />
 
         <div className="passInputs">
-          <input
-            type="password"
-            placeholder="New Password"
-            className="newPass"
-            value={newPass}
-            onChange={(e) => {
-              setNewPass(e.target.value);
-              setError("");
-            }}
-          />
-          <input
-            type="password"
-            placeholder="Confirm Password"
-            className="confirmPass"
-            value={confirmPass}
-            onChange={(e) => {
-              setConfirmPass(e.target.value);
-              setError("");
-            }}
-          />
+          <div className="inputWithToggle">
+            <input
+              type={showNewPassword ? "text" : "password"}
+              placeholder="New Password"
+              className="newPass"
+              value={newPass}
+              onChange={(e) => {
+                setNewPass(e.target.value);
+                setError("");
+              }}
+            />
+            <span
+              onClick={() => setShowNewPassword(!showNewPassword)}
+              style={{
+                position: "absolute",
+                right: 12,
+                top: "46%",
+                transform: "translateY(-50%)",
+                cursor: "pointer",
+                color: "#aaa",
+                fontSize: "0.75rem",
+                userSelect: "none",
+              }}
+            >
+              {showNewPassword ? "Hide" : "Show"}
+            </span>
+          </div>
+
+          <div className="inputWithToggle">
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              placeholder="Confirm Password"
+              className="confirmPass"
+              value={confirmPass}
+              onChange={(e) => {
+                setConfirmPass(e.target.value);
+                setError("");
+              }}
+            />
+            <span
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              style={{
+                position: "absolute",
+                right: 12,
+                top: "46%",
+                transform: "translateY(-50%)",
+                cursor: "pointer",
+                color: "#aaa",
+                fontSize: "0.75rem",
+                userSelect: "none",
+              }}
+            >
+              {showConfirmPassword ? "Hide" : "Show"}
+            </span>
+          </div>
         </div>
 
         {error && <p className="errorText">{error}</p>}
