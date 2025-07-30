@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/Login.css";
 import SpenSyd_Icon from "../assets/SpenSyd Icon.png";
 import axios from "axios";
@@ -11,9 +11,19 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showEmailModal, setShowEmailModal] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(""); // 1️⃣ Error state
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
   const { login } = useAuth();
+
+  useEffect(() => {
+    if (errorMessage) {
+      const timer = setTimeout(() => {
+        setErrorMessage("");
+      }, 2000); // Clear after 2 seconds
+
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,7 +43,6 @@ const Login = () => {
         window.location.reload();
       }
     } catch (error) {
-      // 2️⃣ Show message from server or fallback
       setErrorMessage(
         error.response?.data?.message || "Invalid email or password"
       );
@@ -91,7 +100,6 @@ const Login = () => {
             </div>
           </div>
 
-          {/* 3️⃣ Error display */}
           {errorMessage && (
             <p
               style={{

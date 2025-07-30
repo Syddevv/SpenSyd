@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import SpenSyd_Icon from "../assets/SpenSyd Icon.png";
 import axios from "axios";
@@ -13,6 +13,17 @@ const Register = () => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [pendingUser, setPendingUser] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    if (errorMessage) {
+      const timer = setTimeout(() => {
+        setErrorMessage("");
+      }, 2000); // Clear after 2 seconds
+
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,10 +40,7 @@ const Register = () => {
         setShowModal(true);
       }
     } catch (error) {
-      alert(
-        "Error sending verification code: " +
-          (error.response?.data?.message || error.message)
-      );
+      setErrorMessage(error.response?.data?.message || "Something went wrong");
     }
   };
 
@@ -53,9 +61,7 @@ const Register = () => {
         alert("Verification failed.");
       }
     } catch (err) {
-      alert(
-        "Verification failed: " + (err.response?.data?.message || err.message)
-      );
+      setErrorMessage(err.response?.data?.message || "Verification Failed");
     }
   };
 
@@ -121,6 +127,20 @@ const Register = () => {
               </span>
             </div>
           </div>
+
+          {errorMessage && (
+            <p
+              style={{
+                color: "red",
+                marginTop: "0px",
+                marginBottom: "0px",
+                textAlign: "center",
+                fontSize: "15px",
+              }}
+            >
+              {errorMessage}
+            </p>
+          )}
 
           <button className="register-button" type="submit">
             Register

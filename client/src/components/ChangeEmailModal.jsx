@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CloseBTN from "../assets/close-btn.png";
 import "../styles/ChangeEmailModal.css";
 import GmailIcon from "../assets/gmail.png";
@@ -9,6 +9,7 @@ export const ChangeEmailModal = ({ onClose, user, token, onEmailChanged }) => {
   const [newEmail, setNewEmail] = useState("");
   const [newEmailCode, setNewEmailCode] = useState("");
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(false);
 
   // Step 1: Send code to current email
   const sendCurrentCode = async () => {
@@ -31,6 +32,7 @@ export const ChangeEmailModal = ({ onClose, user, token, onEmailChanged }) => {
   // Step 2: Verify code from current email
   const verifyCurrentCode = async () => {
     setLoading(true);
+    setErrorMessage("");
     const res = await fetch(
       "http://localhost:5000/api/auth/change-email/verify-current-code",
       {
@@ -44,7 +46,7 @@ export const ChangeEmailModal = ({ onClose, user, token, onEmailChanged }) => {
     );
     setLoading(false);
     if ((await res.json()).success) setStep(3);
-    else alert("Invalid or expired code.");
+    else setErrorMessage("Invalid or expired code");
   };
 
   // Step 3: Send code to new email
@@ -69,6 +71,7 @@ export const ChangeEmailModal = ({ onClose, user, token, onEmailChanged }) => {
 
   // Step 4: Verify code from new email and update
   const verifyNewEmailCode = async () => {
+    setErrorMessage("");
     setLoading(true);
     const res = await fetch(
       "http://localhost:5000/api/auth/change-email/verify-new-code",
@@ -89,14 +92,27 @@ export const ChangeEmailModal = ({ onClose, user, token, onEmailChanged }) => {
       onClose();
       window.location.reload(); // <-- Add this line
     } else {
-      alert("Invalid or expired code.");
+      setErrorMessage("Invalid or expired code");
     }
   };
 
   React.useEffect(() => {
-    if (step === 1) sendCurrentCode();
+    const delaySend = setTimeout(() => {
+      if (step === 1) sendCurrentCode();
+    }, 1000); // slight delay so UI renders first
+    return () => clearTimeout(delaySend);
     // eslint-disable-next-line
-  }, []);
+  }, [step]);
+
+  useEffect(() => {
+    if (errorMessage) {
+      const timer = setTimeout(() => {
+        setErrorMessage("");
+      }, 2000); // Clear after 2 seconds
+
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage]);
 
   return (
     <div className="changeEmailModalWrapper">
@@ -108,6 +124,16 @@ export const ChangeEmailModal = ({ onClose, user, token, onEmailChanged }) => {
           onClick={onClose}
         />
         <img src={GmailIcon} alt="Gmail" className="gmailIcon" />
+        {step === 1 && (
+          <>
+            <p className="modalTitle">Please Wait</p>
+            <p className="modalDesc">
+              We’re sending a code to <b>{user.email}</b>
+            </p>
+            {loading && <p className="modalLoadingText">Sending...</p>}
+          </>
+        )}
+
         {step === 2 && (
           <>
             <p className="modalTitle">Verify Your Current Email</p>
@@ -121,6 +147,19 @@ export const ChangeEmailModal = ({ onClose, user, token, onEmailChanged }) => {
               value={code}
               onChange={(e) => setCode(e.target.value)}
             />
+            {errorMessage && (
+              <p
+                style={{
+                  color: "red",
+                  marginTop: "0px",
+                  marginBottom: "0px",
+                  textAlign: "center",
+                  fontSize: "15px",
+                }}
+              >
+                {errorMessage}
+              </p>
+            )}
             <button
               className="changeEmailBTN"
               onClick={verifyCurrentCode}
@@ -140,6 +179,19 @@ export const ChangeEmailModal = ({ onClose, user, token, onEmailChanged }) => {
               value={newEmail}
               onChange={(e) => setNewEmail(e.target.value)}
             />
+            {errorMessage && (
+              <p
+                style={{
+                  color: "red",
+                  marginTop: "0px",
+                  marginBottom: "0px",
+                  textAlign: "center",
+                  fontSize: "15px",
+                }}
+              >
+                {errorMessage}
+              </p>
+            )}
             <button
               className="changeEmailBTN"
               onClick={sendNewEmailCode}
@@ -161,7 +213,20 @@ export const ChangeEmailModal = ({ onClose, user, token, onEmailChanged }) => {
               className="codeInput"
               value={newEmailCode}
               onChange={(e) => setNewEmailCode(e.target.value)}
-            />
+            />{" "}
+            {errorMessage && (
+              <p
+                style={{
+                  color: "red",
+                  marginTop: "0px",
+                  marginBottom: "0px",
+                  textAlign: "center",
+                  fontSize: "15px",
+                }}
+              >
+                {errorMessage}
+              </p>
+            )}
             <button
               className="changeEmailBTN"
               onClick={verifyNewEmailCode}
