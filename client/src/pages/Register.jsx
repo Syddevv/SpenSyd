@@ -14,6 +14,8 @@ const Register = () => {
   const [showModal, setShowModal] = useState(false);
   const [pendingUser, setPendingUser] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const [loadingCode, setLoadingCode] = useState(false);
+  const [modalErrorMessage, setModalErrorMessage] = useState(false);
 
   useEffect(() => {
     if (errorMessage) {
@@ -27,6 +29,7 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoadingCode(true);
 
     try {
       const res = await axios.post("http://localhost:5000/api/auth/send-code", {
@@ -38,9 +41,11 @@ const Register = () => {
       if (res.data.success) {
         setPendingUser({ username, email, password });
         setShowModal(true);
+        setLoadingCode(false);
       }
     } catch (error) {
       setErrorMessage(error.response?.data?.message || "Something went wrong");
+      setLoadingCode(false);
     }
   };
 
@@ -61,7 +66,7 @@ const Register = () => {
         alert("Verification failed.");
       }
     } catch (err) {
-      setErrorMessage(err.response?.data?.message || "Verification Failed");
+      setModalErrorMessage("Invalid or expired code");
     }
   };
 
@@ -143,7 +148,7 @@ const Register = () => {
           )}
 
           <button className="register-button" type="submit">
-            Register
+            {loadingCode ? "Please wait ..." : "Register"}
           </button>
         </form>
 
@@ -161,6 +166,8 @@ const Register = () => {
             email={email}
             onSubmitCode={handleVerify}
             onClose={() => setShowModal(false)}
+            errorMessage={modalErrorMessage}
+            clearError={() => setModalErrorMessage("")}
           />
         )}
       </div>
