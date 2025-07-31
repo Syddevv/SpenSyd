@@ -7,7 +7,7 @@ import { useAuth } from "../context/ContextProvider";
 import { EnterEmailModal } from "../components/EnterEmailModal";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showEmailModal, setShowEmailModal] = useState(false);
@@ -31,7 +31,7 @@ const Login = () => {
 
     try {
       const res = await axios.post("http://localhost:5000/api/auth/login", {
-        email,
+        identifier,
         password,
       });
 
@@ -60,13 +60,13 @@ const Login = () => {
         <h2 className="description-login">Login</h2>
         <form onSubmit={handleSubmit} className="login-form">
           <div className="email-wrapper">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="identifier">Email or Username</label>
             <input
-              type="email"
+              type="text"
               className="email-input"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com or username"
+              value={identifier}
+              onChange={(e) => setIdentifier(e.target.value)}
               required
             />
           </div>
