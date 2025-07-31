@@ -3,12 +3,15 @@ import CloseBTN from "../assets/close-btn.png";
 import { useState } from "react";
 import axios from "axios";
 import fallbackImage from "../assets/default-profile.png";
+import { useAuth } from "../context/ContextProvider";
+import { toast } from "react-toastify";
 
 export const EditProfileModal = ({ closeModal }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -29,6 +32,7 @@ export const EditProfileModal = ({ closeModal }) => {
       return;
     }
 
+    setLoading(true);
     const formData = new FormData();
     if (selectedFile) formData.append("profilePicture", selectedFile);
     if (username) formData.append("username", username);
@@ -55,9 +59,9 @@ export const EditProfileModal = ({ closeModal }) => {
 
       closeModal();
       window.location.reload();
+      toast.success("Profile updated sucessfully.");
     } catch (err) {
       console.error("Update error:", err);
-      // You can add silent fail logging or UI feedback here if needed
     }
   };
 
@@ -93,7 +97,7 @@ export const EditProfileModal = ({ closeModal }) => {
           <label htmlFor="profileUsername">Username</label>
           <input
             type="text"
-            placeholder="New Username"
+            placeholder={`@ ${user.username}`}
             className="profileUsername"
             value={username}
             onChange={(e) => setUsername(e.target.value)}

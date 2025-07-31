@@ -3,33 +3,36 @@ import "../styles/ChangePassModal.css";
 import CloseBTN from "../assets/close-btn.png";
 import axios from "axios";
 import { EnterEmailModal } from "./EnterEmailModal";
+import { toast } from "react-toastify";
+import ClipLoader from "react-spinners/ClipLoader"; // ✅ Make sure this is installed
 
 export const ChangePassModal = ({ onClose, openModal }) => {
   const [currentPass, setCurrentPass] = useState("");
   const [newPass, setNewPass] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
   const [showForgotPasswordFlow, setShowForgotPasswordFlow] = useState(false);
 
-  // Individual toggles for each input
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
+  const showTemporaryError = (message) => {
+    setError(message);
+    setTimeout(() => setError(""), 2000);
+  };
+
   const handleSubmit = async () => {
     setError("");
-    setSuccess("");
 
-    if (newPass !== confirmPass) {
-      setError("New passwords do not match");
-      return;
-    }
+    if (newPass !== confirmPass)
+      return showTemporaryError("Passwords don't match");
+    if (newPass.length < 6) return showTemporaryError("Min 6 characters");
+    if (newPass === currentPass)
+      return showTemporaryError("Must differ from current");
 
-    if (newPass.length < 6) {
-      setError("Password must be at least 6 characters");
-      return;
-    }
+    setLoading(true);
 
     const token = localStorage.getItem("token");
     try {
@@ -40,18 +43,18 @@ export const ChangePassModal = ({ onClose, openModal }) => {
           newPassword: newPass,
         },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
-      setSuccess(res.data.message);
+      toast.success(res.data.message || "Password updated!");
       setTimeout(() => {
+        setLoading(false);
         onClose();
-      }, 2000);
+      }, 1500);
     } catch (err) {
-      setError(err.response?.data?.message || "Something went wrong");
+      setLoading(false);
+      showTemporaryError(err.response?.data?.message || "Error occurred");
     }
   };
 
@@ -138,11 +141,21 @@ export const ChangePassModal = ({ onClose, openModal }) => {
           </div>
         </div>
 
-        {error && <p className="errorMsg">{error}</p>}
-        {success && <p className="successMsg">{success}</p>}
+        {error && (
+          <p
+            className="errorMsg"
+            style={{ marginTop: "0px", color: "red", fontSize: "13px" }}
+          >
+            {error}
+          </p>
+        )}
 
-        <button className="changePassBtn" onClick={handleSubmit}>
-          CHANGE PASSWORD
+        <button
+          className="changePassBtn"
+          onClick={handleSubmit}
+          disabled={loading}
+        >
+          {loading ? <ClipLoader color="#fff" size={20} /> : "CHANGE PASSWORD"}
         </button>
 
         <div onClick={handleForgotPassword}>

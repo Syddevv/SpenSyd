@@ -4,6 +4,7 @@ import SpenSyd_Icon from "../assets/SpenSyd Icon.png";
 import axios from "axios";
 import "../styles/Register.css";
 import VerificationModal from "../components/VerificationModal";
+import { toast } from "react-toastify";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -60,10 +61,10 @@ const Register = () => {
       );
 
       if (verifyRes.data.success) {
-        alert("Account created successfully!");
+        toast.success("Account Created Successfully");
         navigate("/login");
       } else {
-        alert("Verification failed.");
+        toast.error("Invalid Verification");
       }
     } catch (err) {
       setModalErrorMessage("Invalid or expired code");

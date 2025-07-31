@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
 import Register from "./pages/Register";
 import LandingPage from "./pages/LandingPage";
@@ -21,6 +22,7 @@ function App() {
           <Route path="/IncomesRecord" element={<IncomesRecord />} />
           <Route path="/settings" element={<Settings />} />
         </Routes>
+        <ToastContainer position="top-center" autoClose={3000} theme="dark" />
       </BrowserRouter>
     </div>
   );

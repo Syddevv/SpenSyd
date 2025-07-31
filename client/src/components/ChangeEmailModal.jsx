@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import CloseBTN from "../assets/close-btn.png";
 import "../styles/ChangeEmailModal.css";
 import GmailIcon from "../assets/gmail.png";
+import { toast } from "react-toastify";
 
 export const ChangeEmailModal = ({ onClose, user, token, onEmailChanged }) => {
   const [step, setStep] = useState(1);
@@ -65,8 +66,7 @@ export const ChangeEmailModal = ({ onClose, user, token, onEmailChanged }) => {
     );
     setLoading(false);
     if ((await res.json()).success) setStep(4);
-    else
-      alert("Failed to send code to new email. Email may already be in use.");
+    else setErrorMessage("Email in use. Try another.");
   };
 
   // Step 4: Verify code from new email and update
@@ -88,7 +88,7 @@ export const ChangeEmailModal = ({ onClose, user, token, onEmailChanged }) => {
     setLoading(false);
     if (data.success) {
       onEmailChanged(data.newEmail);
-      alert("Email changed successfully!");
+      toast.success("Email changed successfully");
       onClose();
       window.location.reload(); // <-- Add this line
     } else {
