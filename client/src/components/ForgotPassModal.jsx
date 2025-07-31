@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "../styles/ForgotPassModal.css";
 import CloseBTN from "../assets/close-btn.png";
+import { toast } from "react-toastify";
 
 export const ForgotPassModal = ({ onClose }) => {
   const [newPass, setNewPass] = useState("");
@@ -15,6 +16,7 @@ export const ForgotPassModal = ({ onClose }) => {
     if (newPass !== confirmPass) {
       return setError("Passwords do not match");
     }
+
     if (newPass.length < 6) {
       return setError("Password must be at least 6 characters");
     }
@@ -33,9 +35,10 @@ export const ForgotPassModal = ({ onClose }) => {
       }
 
       localStorage.removeItem("resetEmail");
+      toast.success("Password updated successfully");
       onClose();
     } catch (err) {
-      setError("Error updating password");
+      toast.error("Error updating password");
     } finally {
       setIsLoading(false);
     }

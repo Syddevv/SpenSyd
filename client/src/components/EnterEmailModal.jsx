@@ -22,6 +22,13 @@ export const EnterEmailModal = ({ onClose, isLoggedIn = false }) => {
     }
   }, [isLoggedIn, user]);
 
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => setError(""), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
   const handleSendCode = async (emailToVerify) => {
     setIsLoading(true);
     try {
@@ -155,7 +162,11 @@ export const EnterEmailModal = ({ onClose, isLoggedIn = false }) => {
               setError("");
             }}
           />
-          {error && <p className="errorText">{error}</p>}
+          {error && (
+            <p className="errorText" style={{ margin: "0px" }}>
+              {error}
+            </p>
+          )}
           <button
             className="confirmEmail"
             onClick={handleConfirmEmail}

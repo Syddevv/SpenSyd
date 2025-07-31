@@ -66,7 +66,12 @@ export const VerifyCodeModal = ({ onClose, onVerified, email }) => {
           maxLength={6}
         />
 
-        {error && <p className="errorText">{error}</p>}
+        {error && (
+          <p className="errorText" style={{ color: "red" }}>
+            {" "}
+            {error}
+          </p>
+        )}
 
         <button
           onClick={handleVerifyCode}
