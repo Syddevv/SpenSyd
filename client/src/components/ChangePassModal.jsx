@@ -4,7 +4,8 @@ import CloseBTN from "../assets/close-btn.png";
 import axios from "axios";
 import { EnterEmailModal } from "./EnterEmailModal";
 import { toast } from "react-toastify";
-import ClipLoader from "react-spinners/ClipLoader"; // ✅ Make sure this is installed
+import ClipLoader from "react-spinners/ClipLoader";
+import { motion } from "framer-motion";
 
 export const ChangePassModal = ({ onClose, openModal }) => {
   const [currentPass, setCurrentPass] = useState("");
@@ -13,7 +14,6 @@ export const ChangePassModal = ({ onClose, openModal }) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showForgotPasswordFlow, setShowForgotPasswordFlow] = useState(false);
-
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -76,7 +76,13 @@ export const ChangePassModal = ({ onClose, openModal }) => {
 
   return (
     <div className="changePassModalWrapper">
-      <div className="changePassModalContent">
+      <motion.div
+        className="changePassModalContent"
+        initial={{ opacity: 0, scale: 0.7 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.7 }}
+        transition={{ duration: 0.35, ease: "easeOut" }}
+      >
         <p className="modalTop">CHANGE PASSWORD</p>
         <img
           src={CloseBTN}
@@ -162,7 +168,7 @@ export const ChangePassModal = ({ onClose, openModal }) => {
           <p className="backToSettings">Forgot password?</p>
           <hr className="line" />
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };

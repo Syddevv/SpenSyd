@@ -1,3 +1,4 @@
+import { motion, AnimatePresence } from "framer-motion";
 import RecentActs from "./RecentActs";
 import Grocery from "../assets/grocery icon.png";
 import Clothes from "../assets/clothes icon.png";
@@ -26,6 +27,7 @@ const RecentActWrapper = ({ recentActivities }) => {
     justifyContent: "center",
     gap: "8px",
     padding: "8px",
+    overflowY: "auto",
   };
 
   const icons = {
@@ -49,14 +51,23 @@ const RecentActWrapper = ({ recentActivities }) => {
         {recentActivities.length === 0 ? (
           <p style={{ color: "#bbb", fontSize: "14px" }}>No recent activity</p>
         ) : (
-          recentActivities.map((activity, index) => (
-            <RecentActs
-              key={`${activity.type}_${activity.amount}_${index}`}
-              icon={icons[activity.category?.toLowerCase()] || Others}
-              amount={activity.amount}
-              type={activity.type}
-            />
-          ))
+          <AnimatePresence initial={false}>
+            {recentActivities.map((activity, index) => (
+              <motion.div
+                key={`${activity.type}_${activity.amount}_${index}`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+              >
+                <RecentActs
+                  icon={icons[activity.category?.toLowerCase()] || Others}
+                  amount={activity.amount}
+                  type={activity.type}
+                />
+              </motion.div>
+            ))}
+          </AnimatePresence>
         )}
       </div>
 

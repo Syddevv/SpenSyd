@@ -12,6 +12,7 @@ import Bills from "../assets/bills icon.png";
 import Others from "../assets/others icon.png";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { motion } from "framer-motion";
 
 function getCurrentMonth() {
   const now = new Date();
@@ -98,14 +99,25 @@ const ExpensesRecord = () => {
   }
 
   return (
-    <div className="expensesWrapper">
+    <motion.div
+      className="expensesWrapper"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.4 }}
+    >
       <div>
         <NavBar />
       </div>
 
       <div style={{ paddingTop: "70px" }}></div>
 
-      <div className="controls">
+      <motion.div
+        className="controls"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
+      >
         <div className="categoryControl">
           <p
             className="expenses"
@@ -149,9 +161,14 @@ const ExpensesRecord = () => {
             ))}
           </select>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="tableWrapper">
+      <motion.div
+        className="tableWrapper"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3, duration: 0.5 }}
+      >
         <table className="recordsTable">
           <thead>
             <tr>
@@ -178,39 +195,59 @@ const ExpensesRecord = () => {
             )}
           </tbody>
         </table>
-      </div>
+      </motion.div>
 
-      <h2 className="statsLabel">Statistics - Top 3 Expenses</h2>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4, duration: 0.5 }}
+      >
+        <h2 className="statsLabel">Statistics - Top 3 Expenses</h2>
+      </motion.div>
 
-      <div className="statsWrapper">
-        <div className="statsContainer">
-          {expenses.length === 0 ? (
-            <p style={{ textAlign: "center", fontWeight: "600" }}>
-              No Expenses
-            </p>
-          ) : (
-            getTop3Expenses(filteredExpenses).map((item, index) => (
-              <TopExpenses
-                key={index}
-                img={icons[item.category] || Others}
-                category={capitalizeFirst(item.category)}
-                percentage={item.percentage}
-                total={item.total}
-              />
-            ))
-          )}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5, duration: 0.5 }}
+      >
+        {" "}
+        <div className="statsWrapper">
+          <div className="statsContainer">
+            {expenses.length === 0 ? (
+              <p style={{ textAlign: "center", fontWeight: "600" }}>
+                No Expenses
+              </p>
+            ) : (
+              getTop3Expenses(filteredExpenses).map((item, index) => (
+                <TopExpenses
+                  key={index}
+                  img={icons[item.category] || Others}
+                  category={capitalizeFirst(item.category)}
+                  percentage={item.percentage}
+                  total={item.total}
+                />
+              ))
+            )}
+          </div>
         </div>
-      </div>
+      </motion.div>
 
-      <div>
-        <p style={{ color: "white", textAlign: "center", fontSize: "18px" }}>
-          <span style={{ color: "rgb(251, 126, 239)", fontWeight: "bold" }}>
-            {selectedMonth.toUpperCase()}
-          </span>{" "}
-          Total Expenses = ₱ {getTotalForMonth().toLocaleString()}
-        </p>
-      </div>
-    </div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.6, duration: 0.5 }}
+      >
+        {" "}
+        <div>
+          <p style={{ color: "white", textAlign: "center", fontSize: "18px" }}>
+            <span style={{ color: "rgb(251, 126, 239)", fontWeight: "bold" }}>
+              {selectedMonth.toUpperCase()}
+            </span>{" "}
+            Total Expenses = ₱ {getTotalForMonth().toLocaleString()}
+          </p>
+        </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

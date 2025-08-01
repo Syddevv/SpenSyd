@@ -11,7 +11,7 @@ import addBalanceIcon from "../assets/add income icon.png";
 import "../styles/QuickAccess.css";
 import { useAuth } from "../context/ContextProvider";
 import axios from "axios";
-import defaultProfile from "../assets/default-profile.png";
+import { AnimatePresence, motion } from "framer-motion";
 
 const Home = () => {
   const { user } = useAuth();
@@ -168,72 +168,132 @@ const Home = () => {
   }, [user]);
 
   return (
-    <div className="homePage">
+    <motion.div
+      className="homePage"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.4 }}
+    >
       <NavBar />
 
       <div style={{ paddingTop: "95px" }}>
-        <div className="statCard">
+        <motion.div
+          className="statCard"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        >
           <ExpenseStat totalExpenses={totalExpenses} />
           <IncomeStat currentBalance={currentBalance} />
-        </div>
+        </motion.div>
 
-        <div className="recent_Controls">
+        <motion.div
+          className="recent_Controls"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+        >
           <RecentActWrapper recentActivities={recentActivities} />
 
           <div className="controlsContainer">
             <div className="controlsWrapper">
-              <div
+              <motion.div
                 className="newExpense"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => setShowExpenseModal(true)}
               >
                 <div>
                   <img src={newExpenseIcon} className="quickAccessIcon" />
                 </div>
                 <p className="label">+ New Expense</p>
-              </div>
+              </motion.div>
 
-              <div
+              <motion.div
                 className="addBalance"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => setShowBalanceModal(true)}
               >
                 <div>
                   <img src={addBalanceIcon} className="quickAccessIcon" />
                 </div>
                 <p className="label">+ Balance</p>
-              </div>
+              </motion.div>
             </div>
-
             <p className="groupLabel">Quick Access</p>
           </div>
-        </div>
+        </motion.div>
 
-        <div className="chart">
+        <motion.div
+          className="chart"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.5 }}
+        >
           <Chart expenses={expenses} balances={balances} />
-        </div>
+        </motion.div>
 
         <div>
-          {showExpenseModal && (
-            <Modal
-              title="New Expense"
-              onClose={() => setShowExpenseModal(false)}
-              onSubmit={addExpense}
-              categories={expenseCategories}
-              currentBalance={currentBalance}
-            />
-          )}
+          <AnimatePresence>
+            {showExpenseModal && (
+              <motion.div
+                className="modalBackground"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <motion.div
+                  className="modalWrapper"
+                  initial={{ opacity: 0, scale: 0.7 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.7 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                >
+                  <Modal
+                    title="New Expense"
+                    onClose={() => setShowExpenseModal(false)}
+                    onSubmit={addExpense}
+                    categories={expenseCategories}
+                    currentBalance={currentBalance}
+                    isInnerModal={true}
+                  />
+                </motion.div>
+              </motion.div>
+            )}
 
-          {showBalanceModal && (
-            <Modal
-              title="Add Balance"
-              onClose={() => setShowBalanceModal(false)}
-              onSubmit={addBalance}
-              categories={balanceCategories}
-              currentBalance={currentBalance}
-            />
-          )}
+            {showBalanceModal && (
+              <motion.div
+                className="modalBackground"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <motion.div
+                  className="modalWrapper"
+                  initial={{ opacity: 0, scale: 0.7 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.7 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                >
+                  <Modal
+                    title="Add Balance"
+                    onClose={() => setShowBalanceModal(false)}
+                    onSubmit={addBalance}
+                    categories={balanceCategories}
+                    currentBalance={currentBalance}
+                    isInnerModal={true}
+                  />
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

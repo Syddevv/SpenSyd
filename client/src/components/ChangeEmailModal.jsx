@@ -3,6 +3,7 @@ import CloseBTN from "../assets/close-btn.png";
 import "../styles/ChangeEmailModal.css";
 import GmailIcon from "../assets/gmail.png";
 import { toast } from "react-toastify";
+import { motion, AnimatePresence } from "framer-motion";
 
 export const ChangeEmailModal = ({ onClose, user, token, onEmailChanged }) => {
   const [step, setStep] = useState(1);
@@ -116,7 +117,13 @@ export const ChangeEmailModal = ({ onClose, user, token, onEmailChanged }) => {
 
   return (
     <div className="changeEmailModalWrapper">
-      <div className="changeEmailModalContent">
+      <motion.div
+        className="changeEmailModalContent"
+        initial={{ opacity: 0, scale: 0.7 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.7 }}
+        transition={{ duration: 0.35, ease: "easeOut" }}
+      >
         <img
           src={CloseBTN}
           alt="Close"
@@ -124,6 +131,7 @@ export const ChangeEmailModal = ({ onClose, user, token, onEmailChanged }) => {
           onClick={onClose}
         />
         <img src={GmailIcon} alt="Gmail" className="gmailIcon" />
+
         {step === 1 && (
           <>
             <p className="modalTitle">Please Wait</p>
@@ -236,7 +244,7 @@ export const ChangeEmailModal = ({ onClose, user, token, onEmailChanged }) => {
             </button>
           </>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 };

@@ -15,6 +15,7 @@ import { ChangeEmailModal } from "../components/ChangeEmailModal";
 import { EditProfileModal } from "../components/EditProfileModal";
 import { ForgotPassModal } from "../components/ForgotPassModal";
 import { VerifyCodeModal } from "../components/VerifyCodeModal";
+import { AnimatePresence, motion } from "framer-motion";
 
 const Settings = () => {
   const [showPassModal, setShowPassModal] = useState(false);
@@ -125,129 +126,230 @@ const Settings = () => {
   };
 
   return (
-    <div className="settingsWrapper">
+    <motion.div
+      className="settingsWrapper"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.4 }}
+    >
       <div>
-        <NavBar />
-      </div>
-
-      <div className="contents">
-        <div className="profileWrapper">
-          <Profile openModal={() => setshowEditProfileModal(true)} />
+        <div>
+          <NavBar />
         </div>
 
-        <div className="settingControlsWrapper">
-          <div
-            className="settingControl"
-            onClick={() => setShowPassModal(true)}
+        <div className="contents">
+          <motion.div
+            className="profileWrapper"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
           >
-            <div className="iconWrapper">
-              <img
-                src={PasswordIcon}
-                alt="Password Icon"
-                className="passwordIcon"
+            <div>
+              <Profile openModal={() => setshowEditProfileModal(true)} />
+            </div>
+          </motion.div>
+
+          <motion.div
+            className="settingControlsWrapper"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+          >
+            <div>
+              <div
+                className="settingControl"
+                onClick={() => setShowPassModal(true)}
+              >
+                <div className="iconWrapper">
+                  <img
+                    src={PasswordIcon}
+                    alt="Password Icon"
+                    className="passwordIcon"
+                  />
+                </div>
+                <p className="labels">Change Password</p>
+                <img src={ArrowIcon} alt="Arrow" className="arrowIcon" />
+              </div>
+              <hr />
+
+              <div
+                className="settingControl"
+                onClick={() => setShowGmailModal(true)}
+              >
+                <div className="iconWrapper">
+                  <img src={GmailIcon} alt="Gmail Icon" className="gmailIcon" />
+                </div>
+                <p className="labels">Change Email Address</p>
+                <img src={ArrowIcon} alt="Arrow" className="arrowIcon" />
+              </div>
+              <hr />
+
+              <div
+                className="settingControl"
+                onClick={() => setShowLogoutModal(true)}
+              >
+                <div className="iconWrapper">
+                  <img
+                    src={LogoutIcon}
+                    alt="Logout Icon"
+                    className="logoutIcon"
+                  />
+                </div>
+                <p className="labels">Logout</p>
+                <img src={ArrowIcon} alt="Arrow" className="arrowIcon" />
+              </div>
+              <hr />
+
+              <div className="settingControl">
+                <div className="iconWrapper">
+                  <img src={AboutIcon} alt="About Icon" className="aboutIcon" />
+                </div>
+                <p className="labels">About Us</p>
+                <img src={ArrowIcon} alt="Arrow" className="arrowIcon" />
+              </div>
+            </div>
+          </motion.div>
+
+          <AnimatePresence>
+            {showPassModal && (
+              <motion.div
+                className="modalBackground"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <motion.div
+                  className="modalWrapper"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.7 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                >
+                  <ConfirmationModal
+                    onClose={() => setShowPassModal(false)}
+                    icon={PasswordIcon}
+                    text="Change password?"
+                    onSubmit={handleChangePass}
+                  />
+                </motion.div>
+              </motion.div>
+            )}
+
+            {showGmailModal && (
+              <motion.div
+                className="modalBackground"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <motion.div
+                  className="modalWrapper"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.7 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                >
+                  <ConfirmationModal
+                    onClose={() => setShowGmailModal(false)}
+                    icon={GmailIcon}
+                    text="Change email address?"
+                    onSubmit={handleChangeEmail}
+                  />
+                </motion.div>
+              </motion.div>
+            )}
+
+            {showLogoutModal && (
+              <motion.div
+                className="modalBackground"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <motion.div
+                  className="modalWrapper"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.7 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                >
+                  <ConfirmationModal
+                    onClose={() => setShowLogoutModal(false)}
+                    icon={LogoutIcon}
+                    text="Do you want to logout?"
+                    onSubmit={handleLogout}
+                  />
+                </motion.div>
+              </motion.div>
+            )}
+
+            {showChangePassModal && (
+              <ChangePassModal
+                onClose={() => setshowChangePassModal(false)}
+                openModal={openVerificationModal}
               />
-            </div>
-            <p className="labels">Change Password</p>
-            <img src={ArrowIcon} alt="Arrow" className="arrowIcon" />
-          </div>
-          <hr />
+            )}
 
-          <div
-            className="settingControl"
-            onClick={() => setShowGmailModal(true)}
-          >
-            <div className="iconWrapper">
-              <img src={GmailIcon} alt="Gmail Icon" className="gmailIcon" />
-            </div>
-            <p className="labels">Change Email Address</p>
-            <img src={ArrowIcon} alt="Arrow" className="arrowIcon" />
-          </div>
-          <hr />
+            {showChangeEmailModal && (
+              <ChangeEmailModal
+                onClose={() => setshowChangeEmailModal(false)}
+                user={user}
+                token={token}
+                onEmailChanged={handleEmailChanged}
+              />
+            )}
 
-          <div
-            className="settingControl"
-            onClick={() => setShowLogoutModal(true)}
-          >
-            <div className="iconWrapper">
-              <img src={LogoutIcon} alt="Logout Icon" className="logoutIcon" />
-            </div>
-            <p className="labels">Logout</p>
-            <img src={ArrowIcon} alt="Arrow" className="arrowIcon" />
-          </div>
-          <hr />
+            {showEditProfileModal && (
+              <motion.div
+                className="modalBackground"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <motion.div
+                  className="modalWrapper"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.7 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                >
+                  <EditProfileModal
+                    closeModal={() => setshowEditProfileModal(false)}
+                  />
+                </motion.div>
+              </motion.div>
+            )}
 
-          <div className="settingControl">
-            <div className="iconWrapper">
-              <img src={AboutIcon} alt="About Icon" className="aboutIcon" />
-            </div>
-            <p className="labels">About Us</p>
-            <img src={ArrowIcon} alt="Arrow" className="arrowIcon" />
-          </div>
-        </div>
-
-        <div className="modalsContainer">
-          {/* Confirmation Modal for Change Password */}
-          {showPassModal && (
-            <ConfirmationModal
-              onClose={() => setShowPassModal(false)}
-              icon={PasswordIcon}
-              text={"Change password?"}
-              onSubmit={() => handleChangePass()}
-            />
-          )}
-
-          {/* Confirmation Modal for Change Email Address */}
-          {showGmailModal && (
-            <ConfirmationModal
-              onClose={() => setShowGmailModal(false)}
-              icon={GmailIcon}
-              text={"Change email address?"}
-              onSubmit={() => handleChangeEmail()}
-            />
-          )}
-
-          {/* Confirmation Modal for Logout*/}
-          {showLogoutModal && (
-            <ConfirmationModal
-              onClose={() => setShowLogoutModal(false)}
-              icon={LogoutIcon}
-              text={"Do you want to logout?"}
-              onSubmit={() => handleLogout()}
-            />
-          )}
-
-          {/* Modal for Change Password */}
-          {showChangePassModal && (
-            <ChangePassModal
-              onClose={() => setshowChangePassModal(false)}
-              openModal={() => openVerificationModal()}
-            />
-          )}
-
-          {/* Modal for Change Email Address */}
-          {showChangeEmailModal && (
-            <ChangeEmailModal
-              onClose={() => setshowChangeEmailModal(false)}
-              user={user}
-              token={token}
-              onEmailChanged={handleEmailChanged}
-            />
-          )}
-
-          {/* Modal for Edit Profile */}
-          {showEditProfileModal && (
-            <EditProfileModal
-              closeModal={() => setshowEditProfileModal(false)}
-            />
-          )}
-
-          {/* Modal for Forgot Password */}
-          {showForgotPassModal && (
-            <ForgotPassModal onClose={() => setShowForgotPassModal(false)} />
-          )}
+            {showForgotPassModal && (
+              <motion.div
+                className="modalBackground"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <motion.div
+                  className="modalWrapper"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.7 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                >
+                  <ForgotPassModal
+                    onClose={() => setShowForgotPassModal(false)}
+                  />
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
