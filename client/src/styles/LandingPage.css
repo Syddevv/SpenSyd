@@ -1,94 +1,139 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
 
-/* Ensure full height is available */
 html,
 body {
   height: 100%;
   margin: 0;
   padding: 0;
+  background: linear-gradient(135deg, #1e1d31, #3a2e5f);
+  font-family: "Poppins", sans-serif;
 }
 
 * {
-  font-family: "Poppins", sans-serif;
   box-sizing: border-box;
 }
 
-.body {
-  background-color: rgb(30, 29, 49);
+.landing-wrapper {
   display: flex;
-  align-items: center;
-  flex-direction: column;
   justify-content: center;
-  height: 100vh;
-  width: 100%;
-}
-
-.landingPage {
-  display: flex;
-  flex-direction: column;
   align-items: center;
+  height: 100vh;
   padding: 20px;
-  max-width: 400px;
-  width: 100%;
 }
 
-.icon {
-  margin-bottom: 30px;
-  max-width: 350px;
-  margin-left: 10px;
-}
-
-.pageName {
-  margin-top: 0;
-  margin-bottom: 0;
-  color: white;
-  font-size: 2.5rem;
-  font-weight: 700;
-}
-
-.description {
-  color: white;
-  font-weight: 500;
-  margin-top: 5px;
-  font-size: 1.3rem;
+.landing-container {
   text-align: center;
+  padding: 40px 28px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
-.buttons {
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+}
+
+.landing-icon {
+  width: 130px;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 0 10px rgba(212, 158, 248, 0.25));
+}
+
+.landing-title {
+  font-size: 2.7rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.landing-subtitle {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #d49ef8;
+  margin-top: 8px;
+  margin-bottom: 28px;
+}
+
+.landing-buttons {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  margin-top: 30px;
+  gap: 18px;
+  align-items: center;
 }
 
-.registerBTN {
-  background-color: rgb(181, 243, 248);
-  border: none;
-  width: 130px;
-  height: 45px;
-  border-radius: 7px;
-  font-weight: 500;
-  font-size: 0.9rem;
+.btn {
+  width: 140px;
+  padding: 12px 0;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.1s ease-in-out;
-}
-
-.registerBTN:hover {
-  background-color: hsl(184, 83%, 74%);
-}
-
-.loginBTN {
-  background-color: rgb(230, 215, 248);
   border: none;
-  width: 130px;
-  height: 45px;
-  border-radius: 7px;
-  font-weight: 500;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: background-color 0.1s ease-in-out;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-.loginBTN:hover {
-  background-color: hsl(267, 70%, 81%);
+.register {
+  background: linear-gradient(90deg, #b5f3f8, #c4f1f5);
+  color: #1c1b2e;
+}
+
+.register:hover {
+  background: linear-gradient(90deg, #c4f1f5, #b5f3f8);
+  transform: translateY(-2px);
+}
+
+.login {
+  background: linear-gradient(90deg, #e6d7f8, #d49ef8);
+  color: #1c1b2e;
+}
+
+.login:hover {
+  background: linear-gradient(90deg, #d49ef8, #e6d7f8);
+  transform: translateY(-2px);
+}
+
+.typewriter {
+  display: inline-block;
+  overflow: hidden;
+  border-right: 2px solid white;
+  white-space: nowrap;
+  width: 0;
+  animation: typing 1.8s steps(8, end) forwards, blink 0.7s step-end infinite;
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 8ch; /* Adjust to the number of characters */
+  }
+}
+
+@keyframes blink {
+  50% {
+    border-color: transparent;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .landing-container {
+    padding: 28px 20px;
+  }
+
+  .landing-title {
+    font-size: 2.2rem;
+  }
+
+  .landing-subtitle {
+    font-size: 1rem;
+  }
+
+  .btn {
+    width: 100%;
+  }
 }
