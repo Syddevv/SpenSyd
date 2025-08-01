@@ -76,7 +76,7 @@ export const EditProfileModal = ({ closeModal }) => {
           onClick={closeModal}
         />
         <img
-          src={preview || fallbackImage}
+          src={preview || user?.profilePicture || fallbackImage}
           alt="preview"
           className="profilePicModal"
         />
