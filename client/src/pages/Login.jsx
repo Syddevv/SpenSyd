@@ -5,6 +5,7 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/ContextProvider";
 import { EnterEmailModal } from "../components/EnterEmailModal";
+import { AnimatePresence, motion } from "framer-motion";
 
 const Login = () => {
   const [identifier, setIdentifier] = useState("");
@@ -50,13 +51,30 @@ const Login = () => {
   };
 
   return (
-    <div className="login-wrapper">
-      <div>
-        <img src={SpenSyd_Icon} alt="SpenSyd Icon" className="login-icon" />
-        <h1 className="pageName-login">SpenSyd</h1>
-      </div>
+    <motion.div
+      className="login-wrapper"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.4 }}
+    >
+      <motion.div
+        initial={{ opacity: 0, y: -40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
+      >
+        <div>
+          <img src={SpenSyd_Icon} alt="SpenSyd Icon" className="login-icon" />
+          <h1 className="pageName-login">SpenSyd</h1>
+        </div>
+      </motion.div>
 
-      <div className="loginPage">
+      <motion.div
+        className="loginPage"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
+      >
         <h2 className="description-login">Login</h2>
         <form onSubmit={handleSubmit} className="login-form">
           <div className="email-wrapper">
@@ -130,14 +148,32 @@ const Login = () => {
             <span className="link">Register</span>
           </Link>
         </p>
-      </div>
+      </motion.div>
 
       <div>
-        {showEmailModal && (
-          <EnterEmailModal onClose={() => setShowEmailModal(false)} />
-        )}
+        <AnimatePresence>
+          {showEmailModal && (
+            <motion.div
+              className="modalBackground"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <motion.div
+                className="modal-wrapper"
+                initial={{ opacity: 0, scale: 0.7 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.7 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+              >
+                <EnterEmailModal onClose={() => setShowEmailModal(false)} />{" "}
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

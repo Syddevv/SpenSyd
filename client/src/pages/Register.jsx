@@ -5,6 +5,7 @@ import axios from "axios";
 import "../styles/Register.css";
 import VerificationModal from "../components/VerificationModal";
 import { toast } from "react-toastify";
+import { motion } from "framer-motion";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -72,13 +73,34 @@ const Register = () => {
   };
 
   return (
-    <div className="register-wrapper">
-      <div>
-        <img src={SpenSyd_Icon} alt="SpenSyd Icon" className="register-icon" />
-        <h1 className="pageName-register">SpenSyd</h1>
-      </div>
+    <motion.div
+      className="register-wrapper"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.4 }}
+    >
+      <motion.div
+        initial={{ opacity: 0, y: -40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
+      >
+        <div>
+          <img
+            src={SpenSyd_Icon}
+            alt="SpenSyd Icon"
+            className="register-icon"
+          />
+          <h1 className="pageName-register">SpenSyd</h1>
+        </div>
+      </motion.div>
 
-      <div className="registerPage">
+      <motion.div
+        className="registerPage"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
+      >
         <h2 className="description-register">Register</h2>
 
         <form onSubmit={handleSubmit} className="register-form">
@@ -159,7 +181,7 @@ const Register = () => {
             <span className="link">Login</span>
           </Link>
         </p>
-      </div>
+      </motion.div>
 
       <div>
         {showModal && (
@@ -172,7 +194,7 @@ const Register = () => {
           />
         )}
       </div>
-    </div>
+    </motion.div>
   );
 };
 
