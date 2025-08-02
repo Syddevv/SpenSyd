@@ -85,7 +85,7 @@ const Settings = () => {
   // In Settings.jsx
   const handleVerificationSuccess = async (code) => {
     try {
-      const res = await fetch(`${BASE_URL}api/auth/verify-reset-code`, {
+      const res = await fetch(`${BASE_URL}/api/auth/verify-reset-code`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

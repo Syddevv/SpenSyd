@@ -42,7 +42,7 @@ const Register = () => {
     }
 
     try {
-      const res = await axios.post(`${BASE_URL}api/auth/send-code`, {
+      const res = await axios.post(`${BASE_URL}/api/auth/send-code`, {
         username,
         email,
         password,
