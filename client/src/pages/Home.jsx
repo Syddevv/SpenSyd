@@ -66,17 +66,65 @@ const Home = () => {
     "Others",
   ];
 
-  const pushRecentActivity = (activity, type) => {
-    const newAct = { ...activity, type };
-    const updated = [newAct, ...recentActivities].slice(0, 3);
-    setRecentActivities(updated);
-    if (user && user.username) {
-      localStorage.setItem(
-        `recentActivities_${user.username}`,
-        JSON.stringify(updated)
+  // Update your pushRecentActivity function
+  const pushRecentActivity = async (activity, type) => {
+    console.log("Creating activity for:", type, activity); // Add this
+    try {
+      await axios.post(
+        "http://localhost:5000/api/activity/add",
+        { activity: { ...activity, type } },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
       );
+      console.log("Activity created successfully"); // Add this
+      fetchRecentActivities();
+    } catch (error) {
+      console.log("Error saving activity:", error.message);
     }
   };
+
+  // Add this function to fetch activities
+  const fetchRecentActivities = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/activity/recent", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      if (res.data.success) {
+        setRecentActivities(res.data.activities);
+      }
+    } catch (error) {
+      console.log("Error fetching activities:", error.message);
+    }
+  };
+
+  // Update your useEffect to fetch activities
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = localStorage.getItem("token");
+
+      // Fetch expenses
+      const expenseRes = await axios.get(
+        "http://localhost:5000/api/expense/getExpenses",
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setExpenses(expenseRes.data.expenses);
+
+      // Fetch balances
+      const balanceRes = await axios.get(
+        "http://localhost:5000/api/balance/getBalances",
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setBalances(balanceRes.data.balances);
+
+      // Fetch recent activities
+      await fetchRecentActivities();
+    };
+
+    fetchData();
+  }, [refresh]);
 
   const addExpense = async (expense) => {
     try {
@@ -125,12 +173,17 @@ const Home = () => {
           date: balance.date,
         };
         setBalances((prev) => [newBalance, ...prev]);
-        pushRecentActivity(newBalance, "income");
         setShowBalanceModal(false);
+        fetchRecentActivities(); // Refresh activities list
         setRefresh((r) => !r);
       }
+      return res.data;
     } catch (error) {
-      console.log("Error adding balance:", error.message);
+      console.error(
+        "Add balance error:",
+        error.response?.data || error.message
+      );
+      throw error;
     }
   };
 
@@ -157,15 +210,6 @@ const Home = () => {
 
     fetchData();
   }, [refresh]);
-
-  useEffect(() => {
-    if (user && user.username) {
-      const saved = localStorage.getItem(`recentActivities_${user.username}`);
-      if (saved) {
-        setRecentActivities(JSON.parse(saved));
-      }
-    }
-  }, [user]);
 
   return (
     <motion.div

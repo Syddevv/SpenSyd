@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../styles/Modal.css";
+import { toast } from "react-toastify";
 
 const Modal = ({ title, onClose, onSubmit, categories, currentBalance }) => {
   const [category, setCategory] = useState(categories[0]?.toLowerCase() || "");
@@ -8,7 +9,7 @@ const Modal = ({ title, onClose, onSubmit, categories, currentBalance }) => {
 
   const handleSave = () => {
     if (!amount || !date) {
-      alert("Please fill out all fields");
+      toast.error("Please fill out all fields");
       return;
     }
 
@@ -16,7 +17,7 @@ const Modal = ({ title, onClose, onSubmit, categories, currentBalance }) => {
       (title === "New Expense" || title.toLowerCase().includes("expense")) &&
       parseFloat(amount) > currentBalance
     ) {
-      alert("Not enough balance");
+      toast.error("Not enough balance");
       return;
     }
 
