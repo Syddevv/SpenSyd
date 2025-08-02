@@ -16,6 +16,7 @@ import { EditProfileModal } from "../components/EditProfileModal";
 import { ForgotPassModal } from "../components/ForgotPassModal";
 import { VerifyCodeModal } from "../components/VerifyCodeModal";
 import { AnimatePresence, motion } from "framer-motion";
+import { AboutUsModal } from "../components/AboutUsModal";
 
 const Settings = () => {
   const [showPassModal, setShowPassModal] = useState(false);
@@ -26,6 +27,7 @@ const Settings = () => {
   const [showEditProfileModal, setshowEditProfileModal] = useState(false);
   const [showForgotPassModal, setShowForgotPassModal] = useState(false);
   const [showVerifyCodeModal, setShowVerifyCodeModal] = useState(false);
+  const [showAboutModal, setShowAboutModal] = useState(false);
 
   const navigate = useNavigate();
   const { logout, user, token, setUser } = useAuth(); // Make sure token and setUser are available
@@ -201,11 +203,14 @@ const Settings = () => {
               </div>
               <hr />
 
-              <div className="settingControl">
+              <div
+                className="settingControl"
+                onClick={() => setShowAboutModal(true)}
+              >
                 <div className="iconWrapper">
                   <img src={AboutIcon} alt="About Icon" className="aboutIcon" />
                 </div>
-                <p className="labels">About Us</p>
+                <p className="labels">About SpenSyd</p>
                 <img src={ArrowIcon} alt="Arrow" className="arrowIcon" />
               </div>
             </div>
@@ -345,6 +350,10 @@ const Settings = () => {
                   />
                 </motion.div>
               </motion.div>
+            )}
+
+            {showAboutModal && (
+              <AboutUsModal onClose={() => setShowAboutModal(false)} />
             )}
           </AnimatePresence>
         </div>

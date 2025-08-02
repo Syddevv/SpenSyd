@@ -1,0 +1,203 @@
+.aboutUsContent {
+  background-color: white;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 340px;
+  border-radius: 16px;
+  position: relative;
+  padding: 10px;
+  height: 420px;
+  overflow-y: auto;
+}
+
+.aboutUsWrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.aboutUsText {
+  text-align: center;
+  background-color: #1e1d31;
+  color: white;
+  border-radius: 12px;
+  font-size: 12px;
+  width: 300px;
+  padding: 20px;
+  border: 2px solid #8986bd;
+}
+
+.title {
+  font-weight: 600;
+}
+
+.closeIcon {
+  width: 23px;
+  position: absolute;
+  top: 8px;
+  right: 9px;
+}
+
+.whyText {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.whyText img,
+.bulbIcon {
+  width: 23px;
+}
+
+.whyText p {
+  font-weight: 600;
+}
+
+.featuresContainer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, auto);
+  gap: 10px;
+}
+
+.features {
+  display: flex;
+  flex-direction: column;
+  background-color: #f2f6ff;
+  width: 90px;
+  align-items: center;
+  padding: 10px;
+  border-radius: 10px;
+  height: 120px;
+}
+
+.whyDesc {
+  font-weight: 600;
+  font-size: 9px;
+  text-align: center;
+  color: #2b52a8;
+  margin-top: 0px;
+}
+
+.whyIcon {
+  width: 50px;
+  padding: 5px;
+  margin-bottom: 0px;
+}
+
+/* ICONS */
+
+.addViewIcon {
+  background-color: #d7e3ff;
+  border-radius: 5px;
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.categorizeIcon {
+  background-color: #817eb4;
+  border-radius: 5px;
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.analyticsIcon {
+  background-color: #e6c2ff;
+  border-radius: 5px;
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.editProfileIcon {
+  background-color: #bfffdc;
+  border-radius: 5px;
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.passwordRecoIcon {
+  background-color: #a8c4ff;
+  border-radius: 5px;
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.dashboardIcon {
+  background-color: #f6b2b3;
+  border-radius: 5px;
+  display: flex;
+  margin-bottom: 10px;
+}
+
+/* MISSION */
+
+.missionContainer {
+  display: flex;
+  flex-direction: column;
+  background-color: #f8edff;
+  width: 300px;
+  align-items: center;
+  margin-top: 20px;
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  margin-bottom: 0px;
+}
+
+.divTitle {
+  font-size: 15px;
+}
+
+.missionContainer p {
+  text-align: center;
+  font-size: 12px;
+}
+
+/* SOCIALS */
+
+.socials {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  align-items: center;
+  justify-content: center;
+}
+
+.socialsIcon {
+  width: 20px;
+}
+
+/* ABOUT DEV */
+
+.aboutDev img {
+  width: 30px;
+}
+
+.aboutDev {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  align-items: center;
+  width: 300px;
+  margin-top: 20px;
+}
+
+.aboutDev p {
+  text-align: center;
+  font-weight: 600;
+  font-size: 11px;
+}
