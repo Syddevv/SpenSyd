@@ -160,15 +160,9 @@ const Login = () => {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <motion.div
-                className="modal-wrapper"
-                initial={{ opacity: 0, scale: 0.7 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.7 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-              >
-                <EnterEmailModal onClose={() => setShowEmailModal(false)} />{" "}
-              </motion.div>
+              <div className="modal-wrapper">
+                <EnterEmailModal onClose={() => setShowEmailModal(false)} />
+              </div>
             </motion.div>
           )}
         </AnimatePresence>

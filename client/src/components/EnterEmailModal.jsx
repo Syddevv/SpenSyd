@@ -5,6 +5,7 @@ import "../styles/EnterEmailModal.css";
 import { ForgotPassModal } from "./ForgotPassModal";
 import { VerifyCodeModal } from "./VerifyCodeModal";
 import { useAuth } from "../context/ContextProvider";
+import { motion } from "framer-motion";
 
 export const EnterEmailModal = ({ onClose, isLoggedIn = false }) => {
   const { user } = useAuth(); // Get user from auth context
@@ -138,7 +139,13 @@ export const EnterEmailModal = ({ onClose, isLoggedIn = false }) => {
   // Original email input for non-logged-in users
   return (
     <div className="enterEmailModalWrapper">
-      <div className="enterEmailModalContent">
+      <motion.div
+        className="enterEmailModalContent"
+        initial={{ scale: 0.7, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.7, opacity: 0 }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
+      >
         <div>
           <img src={GmailIcon} alt="gmail-icon" className="gmail-icon" />
           <img
@@ -175,7 +182,7 @@ export const EnterEmailModal = ({ onClose, isLoggedIn = false }) => {
             {isLoading ? "Sending..." : "Confirm Email"}
           </button>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };
