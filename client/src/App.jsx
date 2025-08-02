@@ -5,7 +5,7 @@ import Register from "./pages/Register";
 import LandingPage from "./pages/LandingPage";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
-import Records from "./pages/expensesRecord";
+import Records from "./pages/ExpensesRecord";
 import IncomesRecord from "./pages/IncomesRecord";
 import Settings from "./pages/Settings";
 
