@@ -66,32 +66,14 @@ const Home = () => {
     "Others",
   ];
 
-  // Update your pushRecentActivity function
-  const pushRecentActivity = async (activity, type) => {
-    console.log("Creating activity for:", type, activity); // Add this
-    try {
-      await axios.post(
-        "http://localhost:5000/api/activity/add",
-        { activity: { ...activity, type } },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-      console.log("Activity created successfully"); // Add this
-      fetchRecentActivities();
-    } catch (error) {
-      console.log("Error saving activity:", error.message);
-    }
-  };
-
-  // Add this function to fetch activities
   const fetchRecentActivities = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/activity/recent", {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const res = await axios.get(
+        "http://localhost:5000/api/activity/recent", // ✅ Full URL
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
       if (res.data.success) {
         setRecentActivities(res.data.activities);
       }
@@ -100,7 +82,26 @@ const Home = () => {
     }
   };
 
-  // Update your useEffect to fetch activities
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = localStorage.getItem("token");
+
+      const [expensesRes, balancesRes] = await Promise.all([
+        axios.get("http://localhost:5000/api/expense/getExpenses", {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+        axios.get("http://localhost:5000/api/balance/getBalances", {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+      ]);
+
+      setExpenses(expensesRes.data.expenses);
+      setBalances(balancesRes.data.balances);
+      await fetchRecentActivities();
+    };
+    fetchData();
+  }, [refresh]);
+
   useEffect(() => {
     const fetchData = async () => {
       const token = localStorage.getItem("token");
@@ -137,20 +138,13 @@ const Home = () => {
           },
         }
       );
-
       if (res.data.success) {
-        const newExpense = {
-          ...expense,
-          amount: Number(expense.amount),
-          date: expense.date,
-        };
-        setExpenses((prev) => [newExpense, ...prev]);
-        pushRecentActivity(newExpense, "expense");
+        setExpenses((prev) => [res.data.data, ...prev]);
+        setRefresh((r) => !r); // Triggers useEffect to reload recent activities
         setShowExpenseModal(false);
-        setRefresh((r) => !r);
       }
     } catch (error) {
-      console.log("Error adding expense:", error.message);
+      console.error("Error adding expense:", error);
     }
   };
 
@@ -165,25 +159,13 @@ const Home = () => {
           },
         }
       );
-
       if (res.data.success) {
-        const newBalance = {
-          ...balance,
-          amount: Number(balance.amount),
-          date: balance.date,
-        };
-        setBalances((prev) => [newBalance, ...prev]);
+        setBalances((prev) => [res.data.data, ...prev]);
+        setRefresh((r) => !r); // Refresh recent activities
         setShowBalanceModal(false);
-        fetchRecentActivities(); // Refresh activities list
-        setRefresh((r) => !r);
       }
-      return res.data;
     } catch (error) {
-      console.error(
-        "Add balance error:",
-        error.response?.data || error.message
-      );
-      throw error;
+      console.error("Error adding balance:", error);
     }
   };
 
