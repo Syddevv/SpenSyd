@@ -11,6 +11,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 function getCurrentMonth() {
   const now = new Date();
   return now.toLocaleString("default", { month: "long" });
@@ -78,12 +80,9 @@ const IncomesRecord = () => {
     const fetchIncomes = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get(
-          "http://localhost:5000/api/balance/getBalances",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const res = await axios.get(`${BASE_URL}/api/balance/getBalances`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
         setIncomes(res.data.balances);
       } catch (error) {
