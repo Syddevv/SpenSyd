@@ -33,6 +33,12 @@ const Register = () => {
     e.preventDefault();
     setLoadingCode(true);
 
+    if (password.length < 8) {
+      setErrorMessage("Password must be at least 8 characters");
+      setLoadingCode(false);
+      return;
+    }
+
     try {
       const res = await axios.post("http://localhost:5000/api/auth/send-code", {
         username,
