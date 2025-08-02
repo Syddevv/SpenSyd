@@ -17,6 +17,7 @@ import { ForgotPassModal } from "../components/ForgotPassModal";
 import { VerifyCodeModal } from "../components/VerifyCodeModal";
 import { AnimatePresence, motion } from "framer-motion";
 import { AboutUsModal } from "../components/AboutUsModal";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const Settings = () => {
   const [showPassModal, setShowPassModal] = useState(false);
@@ -51,7 +52,7 @@ const Settings = () => {
 
     try {
       const res = await fetch(
-        "http://localhost:5000/api/auth/send-reset-code/logged-in",
+        `${BASE_URL}/api/auth/send-reset-code/logged-in`,
         {
           method: "POST",
           headers: {
@@ -65,7 +66,7 @@ const Settings = () => {
 
       const data = await res.json();
       if (data.success) {
-        setShowVerificationModal(true);
+        setShowVerifyCodeModal(true);
         setshowChangePassModal(false);
       } else {
         alert(data.message || "Failed to send verification code.");
@@ -84,20 +85,17 @@ const Settings = () => {
   // In Settings.jsx
   const handleVerificationSuccess = async (code) => {
     try {
-      const res = await fetch(
-        "http://localhost:5000/api/auth/verify-reset-code",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Add auth token for logged-in flow
-          },
-          body: JSON.stringify({
-            email: user.email,
-            code,
-          }),
-        }
-      );
+      const res = await fetch(`${BASE_URL}api/auth/verify-reset-code`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Add auth token for logged-in flow
+        },
+        body: JSON.stringify({
+          email: user.email,
+          code,
+        }),
+      });
 
       const data = await res.json();
       if (data.success) {

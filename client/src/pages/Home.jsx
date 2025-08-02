@@ -13,8 +13,9 @@ import { useAuth } from "../context/ContextProvider";
 import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const Home = () => {
-  const { user } = useAuth();
   const [showExpenseModal, setShowExpenseModal] = useState(false);
   const [showBalanceModal, setShowBalanceModal] = useState(false);
   const [expenses, setExpenses] = useState([]);
@@ -69,7 +70,7 @@ const Home = () => {
   const fetchRecentActivities = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:5000/api/activity/recent", // ✅ Full URL
+        `${BASE_URL}/api/activity/recent`, // ✅ Full URL
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
@@ -87,10 +88,10 @@ const Home = () => {
       const token = localStorage.getItem("token");
 
       const [expensesRes, balancesRes] = await Promise.all([
-        axios.get("http://localhost:5000/api/expense/getExpenses", {
+        axios.get(`${BASE_URL}/api/expense/getExpenses`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        axios.get("http://localhost:5000/api/balance/getBalances", {
+        axios.get(`${BASE_URL}/api/balance/getBalances`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
       ]);
@@ -108,14 +109,14 @@ const Home = () => {
 
       // Fetch expenses
       const expenseRes = await axios.get(
-        "http://localhost:5000/api/expense/getExpenses",
+        `${BASE_URL}/api/expense/getExpenses`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setExpenses(expenseRes.data.expenses);
 
       // Fetch balances
       const balanceRes = await axios.get(
-        "http://localhost:5000/api/balance/getBalances",
+        `${BASE_URL}/api/balance/getBalances`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setBalances(balanceRes.data.balances);
@@ -130,7 +131,7 @@ const Home = () => {
   const addExpense = async (expense) => {
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/expense/addExpense",
+        `${BASE_URL}/api/expense/addExpense`,
         { expense },
         {
           headers: {
@@ -151,7 +152,7 @@ const Home = () => {
   const addBalance = async (balance) => {
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/balance/addBalance",
+        `${BASE_URL}/api/balance/addBalance`,
         { balance },
         {
           headers: {
@@ -174,7 +175,7 @@ const Home = () => {
       const token = localStorage.getItem("token");
 
       const expenseRes = await axios.get(
-        "http://localhost:5000/api/expense/getExpenses",
+        `${BASE_URL}/api/expense/getExpenses`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -182,7 +183,7 @@ const Home = () => {
       setExpenses(expenseRes.data.expenses);
 
       const balanceRes = await axios.get(
-        "http://localhost:5000/api/balance/getBalances",
+        `${BASE_URL}/api/balance/getBalances`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

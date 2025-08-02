@@ -7,6 +7,8 @@ import { toast } from "react-toastify";
 import ClipLoader from "react-spinners/ClipLoader";
 import { motion } from "framer-motion";
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 export const ChangePassModal = ({ onClose, openModal }) => {
   const [currentPass, setCurrentPass] = useState("");
   const [newPass, setNewPass] = useState("");
@@ -37,7 +39,7 @@ export const ChangePassModal = ({ onClose, openModal }) => {
     const token = localStorage.getItem("token");
     try {
       const res = await axios.put(
-        "http://localhost:5000/api/auth/change-password",
+        `${BASE_URL}/api/auth/change-password`,
         {
           currentPassword: currentPass,
           newPassword: newPass,

@@ -2,6 +2,8 @@ import { useState } from "react";
 import CloseIcon from "../assets/close-btn.png";
 import "../styles/VerifyCodeModal.css";
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 export const VerifyCodeModal = ({ onClose, onVerified, email }) => {
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
@@ -13,20 +15,17 @@ export const VerifyCodeModal = ({ onClose, onVerified, email }) => {
       // Always get email from localStorage for consistency
       const verificationEmail = localStorage.getItem("resetEmail") || email;
 
-      const res = await fetch(
-        "http://localhost:5000/api/auth/verify-reset-code",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`, // Add if logged in
-          },
-          body: JSON.stringify({
-            email: verificationEmail,
-            code,
-          }),
-        }
-      );
+      const res = await fetch(`${BASE_URL}/api/auth/verify-reset-code`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // Add if logged in
+        },
+        body: JSON.stringify({
+          email: verificationEmail,
+          code,
+        }),
+      });
 
       const data = await res.json();
       console.log("Verification response:", data); // Debug log

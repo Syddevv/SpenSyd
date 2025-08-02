@@ -5,6 +5,8 @@ import GmailIcon from "../assets/gmail.png";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 export const ChangeEmailModal = ({ onClose, user, token, onEmailChanged }) => {
   const [step, setStep] = useState(1);
   const [code, setCode] = useState("");
@@ -17,7 +19,7 @@ export const ChangeEmailModal = ({ onClose, user, token, onEmailChanged }) => {
   const sendCurrentCode = async () => {
     setLoading(true);
     const res = await fetch(
-      "http://localhost:5000/api/auth/change-email/send-current-code",
+      `${BASE_URL}/api/auth/change-email/send-current-code`,
       {
         method: "POST",
         headers: {
@@ -36,7 +38,7 @@ export const ChangeEmailModal = ({ onClose, user, token, onEmailChanged }) => {
     setLoading(true);
     setErrorMessage("");
     const res = await fetch(
-      "http://localhost:5000/api/auth/change-email/verify-current-code",
+      `${BASE_URL}/api/auth/change-email/verify-current-code`,
       {
         method: "POST",
         headers: {
@@ -54,17 +56,14 @@ export const ChangeEmailModal = ({ onClose, user, token, onEmailChanged }) => {
   // Step 3: Send code to new email
   const sendNewEmailCode = async () => {
     setLoading(true);
-    const res = await fetch(
-      "http://localhost:5000/api/auth/change-email/send-new-code",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ newEmail }),
-      }
-    );
+    const res = await fetch(`${BASE_URL}/api/auth/change-email/send-new-code`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ newEmail }),
+    });
     setLoading(false);
     if ((await res.json()).success) setStep(4);
     else setErrorMessage("Email in use. Try another.");
@@ -75,7 +74,7 @@ export const ChangeEmailModal = ({ onClose, user, token, onEmailChanged }) => {
     setErrorMessage("");
     setLoading(true);
     const res = await fetch(
-      "http://localhost:5000/api/auth/change-email/verify-new-code",
+      `${BASE_URL}/api/auth/change-email/verify-new-code`,
       {
         method: "POST",
         headers: {

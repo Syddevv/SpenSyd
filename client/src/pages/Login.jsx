@@ -7,6 +7,8 @@ import { useAuth } from "../context/ContextProvider";
 import { EnterEmailModal } from "../components/EnterEmailModal";
 import { AnimatePresence, motion } from "framer-motion";
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const Login = () => {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
@@ -31,7 +33,7 @@ const Login = () => {
     setErrorMessage(""); // clear previous error
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", {
+      const res = await axios.post(`${BASE_URL}/api/auth/login`, {
         identifier,
         password,
       });

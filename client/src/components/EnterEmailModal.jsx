@@ -7,6 +7,8 @@ import { VerifyCodeModal } from "./VerifyCodeModal";
 import { useAuth } from "../context/ContextProvider";
 import { motion } from "framer-motion";
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 export const EnterEmailModal = ({ onClose, isLoggedIn = false }) => {
   const { user } = useAuth(); // Get user from auth context
   const [email, setEmail] = useState("");
@@ -37,7 +39,7 @@ export const EnterEmailModal = ({ onClose, isLoggedIn = false }) => {
         ? "/api/auth/send-reset-code/logged-in"
         : "/api/auth/send-reset-code";
 
-      const res = await fetch(`http://localhost:5000${endpoint}`, {
+      const res = await fetch(`${BASE_URL}${endpoint}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

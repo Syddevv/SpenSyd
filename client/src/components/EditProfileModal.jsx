@@ -6,6 +6,7 @@ import fallbackImage from "../assets/default-profile.png";
 import { useAuth } from "../context/ContextProvider";
 import { toast } from "react-toastify";
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export const EditProfileModal = ({ closeModal }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -39,7 +40,7 @@ export const EditProfileModal = ({ closeModal }) => {
 
     try {
       const res = await axios.put(
-        `http://localhost:5000/api/auth/updateProfile/${user._id}`,
+        `${BASE_URL}/api/auth/updateProfile/${user._id}`,
         formData,
         {
           headers: {

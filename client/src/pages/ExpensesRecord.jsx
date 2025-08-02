@@ -14,6 +14,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 function getCurrentMonth() {
   const now = new Date();
   return now.toLocaleString("default", { month: "long" });
@@ -34,12 +36,9 @@ const ExpensesRecord = () => {
     const fetchExpenses = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get(
-          "http://localhost:5000/api/expense/getExpenses",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const res = await axios.get(`${BASE_URL}/api/expense/getExpenses`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setExpenses(res.data.expenses);
       } catch (error) {
         console.log("Error in Fetching Expenses", error.message);
