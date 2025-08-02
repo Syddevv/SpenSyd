@@ -12,7 +12,7 @@ import Settings from "./pages/Settings";
 function App() {
   return (
     <div>
-      <BrowserRouter basename="/SpenSyd">
+      <BrowserRouter>
         <Routes>
           <Route path="/register" element={<Register />} />
           <Route path="/" element={<LandingPage />} />
