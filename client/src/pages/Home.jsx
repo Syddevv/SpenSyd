@@ -42,12 +42,21 @@ const Home = () => {
   });
 
   const totalExpenses = filteredExpenses.reduce(
-    (sum, item) => sum + item.amount,
+    (sum, item) => sum + Number(item.amount || 0),
     0
   );
-  const totalBalances = balances.reduce((sum, item) => sum + item.amount, 0);
-  const overallExpenses = expenses.reduce((sum, item) => sum + item.amount, 0);
-  const currentBalance = totalBalances - overallExpenses;
+  const totalBalances = balances.reduce(
+    (sum, item) => sum + Number(item.amount || 0),
+    0
+  );
+  const overallExpenses = expenses.reduce(
+    (sum, item) => sum + Number(item.amount || 0),
+    0
+  );
+
+  const currentBalance = isNaN(totalBalances - overallExpenses)
+    ? 0
+    : totalBalances - overallExpenses;
 
   const expenseCategories = [
     "Foods",
