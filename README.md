@@ -19,4 +19,4 @@ and easy-to-use income/expense categorization, SpenSyd gives you the control to 
 
 - **Frontend**: React, React Router, Framer Motion, CSS
 - **Backend**: Node.js, Express
-- **Database**: MongoDB (if applicable)
+- **Database**: MongoDB
