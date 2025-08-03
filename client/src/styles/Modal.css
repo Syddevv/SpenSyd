@@ -51,6 +51,7 @@
 .inputGroup {
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .inputGroup label {
@@ -70,14 +71,14 @@
 }
 
 .inputGroup select {
-  padding-right: 30px; /* space between text and arrow */
+  padding-right: 30px;
   background-color: #3b3665;
   border: none;
   border-radius: 10px;
   padding: 10px;
   color: white;
   font-size: 14px;
-  appearance: none; /* removes default arrow */
+  appearance: none;
   background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg width='14' height='14' viewBox='0 0 24 24' fill='white' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5H7z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 10px center;
@@ -104,6 +105,11 @@
   background-color: #d06be2;
 }
 
+.inputGroup input,
+.inputGroup select {
+  height: 42px;
+}
+
 .inputGroup input[type="date"] {
   background-color: #3b3665;
   border: none;
@@ -113,23 +119,16 @@
   font-size: 14px;
   outline: none;
   width: 100%;
-
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-
   background-image: url("../assets/calendar.png");
   background-repeat: no-repeat;
   background-position: right 10px center;
   background-size: 17px 17px;
 }
 
-.inputGroup input,
-.inputGroup select {
-  height: 42px;
-}
-
-input[type="date"]::-webkit-calendar-picker-indicator {
+.inputGroup input[type="date"]::-webkit-calendar-picker-indicator {
   opacity: 0;
   position: absolute;
   right: 10px;
@@ -138,13 +137,21 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
 }
 
-input[type="date"]::-moz-calendar-picker-indicator {
+.inputGroup input[type="date"]::-moz-calendar-picker-indicator {
   opacity: 0;
 }
 
-.inputGroup input[type="date"] {
-  background-image: url("../assets/calendar.png");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  background-size: 17px 17px;
+.inputGroup input[type="date"]::before {
+  content: attr(data-placeholder);
+  position: absolute;
+  left: 12px;
+  top: 10px;
+  color: #aaa;
+  pointer-events: none;
+  font-size: 14px;
+}
+
+.inputGroup input[type="date"]:focus::before,
+.inputGroup input[type="date"]:valid::before {
+  content: "";
 }

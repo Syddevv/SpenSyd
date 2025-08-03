@@ -73,6 +73,7 @@ const Modal = ({ title, onClose, onSubmit, categories, currentBalance }) => {
             id="inputDate"
             value={date}
             onChange={(e) => setDate(e.target.value)}
+            data-placeholder="mm/dd/yyyy"
           />
         </div>
 
