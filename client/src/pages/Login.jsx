@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/ContextProvider";
 import { EnterEmailModal } from "../components/EnterEmailModal";
 import { AnimatePresence, motion } from "framer-motion";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -15,6 +16,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -30,8 +32,8 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage(""); // clear previous error
-
+    setErrorMessage("");
+    setLoading(true);
     try {
       const res = await axios.post(`${BASE_URL}/api/auth/login`, {
         identifier,
@@ -43,7 +45,7 @@ const Login = () => {
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("user", JSON.stringify(res.data.user));
         navigate("/home");
-        window.location.reload();
+        setLoading(false);
       }
     } catch (error) {
       setErrorMessage(
@@ -135,7 +137,7 @@ const Login = () => {
           )}
 
           <button className="login-button" type="submit">
-            Login
+            {loading ? <ClipLoader color="#fff" size={20} /> : "Login"}
           </button>
         </form>
 

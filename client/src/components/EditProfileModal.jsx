@@ -20,6 +20,12 @@ export const EditProfileModal = ({ closeModal }) => {
     setPreview(URL.createObjectURL(file));
   };
 
+  const refreshPage = () => {
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000);
+  };
+
   const handleSubmit = async () => {
     const token = localStorage.getItem("token");
     let user = null;
@@ -59,7 +65,7 @@ export const EditProfileModal = ({ closeModal }) => {
       localStorage.setItem("user", JSON.stringify(updatedUser));
 
       closeModal();
-      window.location.reload();
+      refreshPage();
       toast.success("Profile updated sucessfully.");
     } catch (err) {
       console.error("Update error:", err);
