@@ -68,6 +68,8 @@ export const EditProfileModal = ({ closeModal }) => {
       refreshPage();
       toast.success("Profile updated sucessfully.");
     } catch (err) {
+      toast.error("Error updating profile");
+      setLoading(false);
       console.error("Update error:", err);
     }
   };
