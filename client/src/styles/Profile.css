@@ -28,12 +28,13 @@
 }
 
 .editBtn {
-  background-color: #3e3b77;
+  background: linear-gradient(to right, #6b5bcc, #9e7fff);
   color: white;
   border: none;
-  font-size: 15px;
-  padding: 7px 20px;
-  border-radius: 6px;
+  padding: 8px 24px;
+  font-size: 14px;
   font-weight: 500;
+  border-radius: 20px;
   cursor: pointer;
+  transition: transform 0.2s ease;
 }
