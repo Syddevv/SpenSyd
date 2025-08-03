@@ -80,7 +80,7 @@ const Chart = ({ expenses, balances }) => {
     backgroundColor: "rgb(30, 29, 49)",
     width: "350px",
     padding: "20px",
-    borderRadius: "7px",
+    borderRadius: "14px",
     border: "3px solid #332F55",
     color: "white",
     display: "flex",

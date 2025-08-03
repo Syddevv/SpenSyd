@@ -22,7 +22,6 @@ const NavBar = () => {
     fetchUser();
   }, []);
 
-  // Animation variants
   const menuVariants = {
     open: {
       opacity: 1,
@@ -50,7 +49,7 @@ const NavBar = () => {
     <div>
       <nav
         style={{
-          backgroundColor: "rgb(30, 29, 49)",
+          background: "linear-gradient(135deg, #2b274a, #1f1c39)",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -62,33 +61,36 @@ const NavBar = () => {
           zIndex: 1000,
         }}
       >
-        {/* Your original profile section - completely preserved */}
-        <div className="userProfile">
+        <div
+          className="userProfile"
+          style={{ display: "flex", alignItems: "center" }}
+        >
           <img
-            src={user?.profilePicture ? user.profilePicture : defaultProfile}
+            src={user?.profilePicture || defaultProfile}
             alt="profile"
             className="profilePic"
             style={{
               borderRadius: "50%",
               objectFit: "cover",
-              width: "40px",
-              height: "40px",
+              width: "45px",
+              height: "45px",
+              border: "none",
             }}
           />
           <p
             className="usernameProfile"
             style={{
               color: "white",
-              marginLeft: "7px",
+              marginLeft: "10px",
               fontSize: "16px",
-              fontWeight: "500",
+              fontWeight: "600",
+              letterSpacing: "0.3px",
             }}
           >
             {user?.username || ""}
           </p>
         </div>
 
-        {/* Animated Menu Button */}
         <motion.button
           style={{
             background: "none",
@@ -104,14 +106,12 @@ const NavBar = () => {
           whileTap={{ scale: 0.9 }}
         >
           <svg width="30" height="30" viewBox="0 0 24 24" fill="white">
-            {/* Burger bars (visible when closed) */}
             <motion.path
               d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
               variants={pathVariants}
               initial="closed"
               animate={isOpen ? "closed" : "open"}
             />
-            {/* Close icon (visible when open) */}
             <motion.path
               d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
               variants={pathVariants}
@@ -146,9 +146,9 @@ const NavBar = () => {
                 position: "fixed",
                 top: "75px",
                 right: 0,
-                backgroundColor: "#3f3d56",
+                backgroundColor: "#2e2b47",
                 width: "100%",
-                boxShadow: "0 10px 20px rgba(0,0,0,0.3)",
+                boxShadow: "0 10px 25px rgba(0,0,0,0.3)",
                 zIndex: 1000,
               }}
               initial="closed"
@@ -156,60 +156,25 @@ const NavBar = () => {
               exit="closed"
               variants={menuVariants}
             >
-              <Link
-                to="/home"
-                style={{
-                  display: "block",
-                  padding: "15px 20px",
-                  color: "white",
-                  textDecoration: "none",
-                  fontWeight: "bold",
-                  borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
-                  transition: "background 0.3s",
-                  ":hover": {
-                    backgroundColor: "rgba(255, 255, 255, 0.1)",
-                  },
-                }}
-                onClick={() => setIsOpen(false)}
-              >
-                Home
-              </Link>
-              <Link
-                to="/records"
-                style={{
-                  display: "block",
-                  padding: "15px 20px",
-                  color: "white",
-                  textDecoration: "none",
-                  fontWeight: "bold",
-                  borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
-                  transition: "background 0.3s",
-                  ":hover": {
-                    backgroundColor: "rgba(255, 255, 255, 0.1)",
-                  },
-                }}
-                onClick={() => setIsOpen(false)}
-              >
-                Records
-              </Link>
-              <Link
-                to="/settings"
-                style={{
-                  display: "block",
-                  padding: "15px 20px",
-                  color: "white",
-                  textDecoration: "none",
-                  fontWeight: "bold",
-                  borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
-                  transition: "background 0.3s",
-                  ":hover": {
-                    backgroundColor: "rgba(255, 255, 255, 0.1)",
-                  },
-                }}
-                onClick={() => setIsOpen(false)}
-              >
-                Settings
-              </Link>
+              {["Home", "Records", "Settings"].map((text) => (
+                <Link
+                  key={text}
+                  to={`/${text.toLowerCase()}`}
+                  style={{
+                    display: "block",
+                    padding: "15px 20px",
+                    color: "white",
+                    textDecoration: "none",
+                    fontWeight: "600",
+                    fontSize: "15px",
+                    letterSpacing: "0.5px",
+                    borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
+                  }}
+                  onClick={() => setIsOpen(false)}
+                >
+                  {text}
+                </Link>
+              ))}
             </motion.div>
           </>
         )}

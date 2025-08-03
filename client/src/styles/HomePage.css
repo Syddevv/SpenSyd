@@ -5,7 +5,7 @@
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  padding-bottom: 20px; /* space at bottom to avoid cutoff */
+  padding-bottom: 20px;
 }
 
 .statCard {
@@ -13,13 +13,6 @@
   align-items: center;
   justify-content: center;
   gap: 15px;
-}
-
-.userGreetings {
-  color: white;
-  font-size: 20px;
-  margin-bottom: 0px;
-  margin-left: 15px;
 }
 
 .recent_Controls {

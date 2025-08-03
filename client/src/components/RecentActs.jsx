@@ -5,7 +5,7 @@ const RecentActs = ({ icon, amount, type }) => {
     justifyContent: "space-evenly",
     backgroundColor: "#D7E3FF",
     width: "180px",
-    borderRadius: "5px",
+    borderRadius: "12px",
   };
 
   const actsStyle = {
@@ -13,16 +13,18 @@ const RecentActs = ({ icon, amount, type }) => {
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    height: "75px",
+    height: "70px",
   };
 
-  const color = type === "expense" ? "#FF6D70" : "#359C39";
+  const color = type === "expense" ? "#FF6D70" : "#4CAF50";
 
   return (
     <div style={recentActsStyle}>
       <img src={icon} style={{ width: "40px" }} />
       <div style={actsStyle}>
-        <h2 style={{ marginBottom: "0px", color }}>₱{amount}</h2>
+        <h2 style={{ marginBottom: "0px", color, fontSize: "22px" }}>
+          ₱{amount}
+        </h2>
         <h5
           style={{
             marginTop: "0px",

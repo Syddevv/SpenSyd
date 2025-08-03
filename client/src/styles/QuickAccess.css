@@ -11,7 +11,7 @@
   width: 120px;
   height: 270px;
   margin-top: 0px;
-  border-radius: 7px;
+  border-radius: 14px;
   align-items: center;
   justify-content: center;
   gap: 20px;
@@ -19,20 +19,27 @@
 
 .newExpense,
 .addBalance {
-  background-color: #262626;
+  background-color: #303030;
   width: 95px;
   height: 105px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 7px;
+  border-radius: 10px;
   flex-direction: column;
   cursor: pointer;
 }
 
-.quickAccessIcon {
+.newExpenseIcon {
   width: 60px;
   background-color: #ff8c8c;
+  padding: 10px;
+  border-radius: 30px;
+}
+
+.newBalanceIcon {
+  width: 60px;
+  background-color: #8cffc0;
   padding: 10px;
   border-radius: 30px;
 }

@@ -51,7 +51,7 @@ const ExpenseStat = ({ totalExpenses }) => {
       <p
         style={{
           color: "white",
-          fontSize: "13px",
+          fontSize: "11px",
           fontWeight: "500",
           marginTop: "0px",
         }}

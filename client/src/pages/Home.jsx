@@ -241,7 +241,7 @@ const Home = () => {
                 onClick={() => setShowExpenseModal(true)}
               >
                 <div>
-                  <img src={newExpenseIcon} className="quickAccessIcon" />
+                  <img src={newExpenseIcon} className="newExpenseIcon" />
                 </div>
                 <p className="label">+ New Expense</p>
               </motion.div>
@@ -253,7 +253,7 @@ const Home = () => {
                 onClick={() => setShowBalanceModal(true)}
               >
                 <div>
-                  <img src={addBalanceIcon} className="quickAccessIcon" />
+                  <img src={addBalanceIcon} className="newBalanceIcon" />
                 </div>
                 <p className="label">+ Balance</p>
               </motion.div>
