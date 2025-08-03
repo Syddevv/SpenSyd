@@ -30,7 +30,7 @@ export const ChangePassModal = ({ onClose, openModal }) => {
 
     if (newPass !== confirmPass)
       return showTemporaryError("Passwords don't match");
-    if (newPass.length < 6) return showTemporaryError("Min 6 characters");
+    if (newPass.length < 8) return showTemporaryError("Min 8 characters");
     if (newPass === currentPass)
       return showTemporaryError("Must differ from current");
 
