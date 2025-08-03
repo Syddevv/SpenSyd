@@ -51,12 +51,14 @@ const NavBar = () => {
         {/* Your original profile section - completely preserved */}
         <div className="userProfile">
           <img
-            src={user?.profilePicture || defaultProfile}
+            src={user?.profilePicture ? user.profilePicture : defaultProfile}
             alt="profile"
             className="profilePic"
             style={{
               borderRadius: "50%",
               objectFit: "cover",
+              width: "40px",
+              height: "40px",
             }}
           />
           <p
@@ -68,7 +70,7 @@ const NavBar = () => {
               fontWeight: "500",
             }}
           >
-            {user?.username}
+            {user?.username || ""}
           </p>
         </div>
 
