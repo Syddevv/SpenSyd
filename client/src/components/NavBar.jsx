@@ -1,12 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/ContextProvider";
 import defaultProfile from "../assets/default-profile.png";
 import { motion, AnimatePresence } from "framer-motion";
+import axios from "axios";
+
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { user } = useAuth();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(`${BASE_URL}/api/auth/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setUser(res.data.user);
+    };
+    fetchUser();
+  }, []);
 
   // Animation variants
   const menuVariants = {
