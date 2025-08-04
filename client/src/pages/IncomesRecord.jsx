@@ -10,6 +10,7 @@ import Allowance from "../assets/allowance icon.png";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
+import Sidebar from "../components/Sidebar";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -18,13 +19,13 @@ function getCurrentMonth() {
   return now.toLocaleString("default", { month: "long" });
 }
 
-const IncomesRecord = () => {
+const Incomes = () => {
   const navigate = useNavigate();
   const [incomes, setIncomes] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState(getCurrentMonth());
 
   const navToExpense = () => {
-    navigate("/Records");
+    navigate("/Expenses");
   };
   const capitalizeFirst = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
@@ -100,8 +101,11 @@ const IncomesRecord = () => {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.4 }}
     >
-      <div>
+      <div className="topNav">
         <NavBar />
+      </div>
+      <div className="sideNav">
+        <Sidebar />
       </div>
 
       <div style={{ paddingTop: "70px" }}></div>
@@ -246,4 +250,4 @@ const IncomesRecord = () => {
   );
 };
 
-export default IncomesRecord;
+export default Incomes;

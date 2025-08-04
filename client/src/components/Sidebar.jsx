@@ -32,7 +32,7 @@ const Sidebar = () => {
       </div>
 
       <nav className="sidebar__nav">
-        {["Home", "Records", "Settings"].map((text) => (
+        {["Home", "Expenses", "Incomes", "Settings"].map((text) => (
           <Link
             key={text}
             to={`/${text.toLowerCase()}`}

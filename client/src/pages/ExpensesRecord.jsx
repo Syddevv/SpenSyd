@@ -22,13 +22,13 @@ function getCurrentMonth() {
   return now.toLocaleString("default", { month: "long" });
 }
 
-const ExpensesRecord = () => {
+const Expenses = () => {
   const navigate = useNavigate();
   const [expenses, setExpenses] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState(getCurrentMonth());
 
   const navToIncome = () => {
-    navigate("/IncomesRecord");
+    navigate("/Incomes");
   };
 
   const capitalizeFirst = (str) => str.charAt(0).toUpperCase() + str.slice(1);
@@ -253,4 +253,4 @@ const ExpensesRecord = () => {
   );
 };
 
-export default ExpensesRecord;
+export default Expenses;

@@ -107,3 +107,14 @@
 .recordsTable th:last-child {
   border-top-right-radius: 12px;
 }
+
+@media (min-width: 768px) {
+  .categoryControl {
+    display: none;
+  }
+
+  .controls {
+    justify-content: right;
+    margin-right: 40px;
+  }
+}

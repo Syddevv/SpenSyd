@@ -156,7 +156,7 @@ const NavBar = () => {
               exit="closed"
               variants={menuVariants}
             >
-              {["Home", "Records", "Settings"].map((text) => (
+              {["Home", "Expenses", "Incomes", "Settings"].map((text) => (
                 <Link
                   key={text}
                   to={`/${text.toLowerCase()}`}
