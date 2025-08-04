@@ -49,3 +49,15 @@
   color: rgb(201, 201, 201);
   font-weight: 600;
 }
+
+@media (min-width: 768px) {
+  .homePage {
+    padding-left: 260px; /* same as sidebar width */
+  }
+}
+
+@media (min-width: 768px) {
+  .topNav {
+    display: none;
+  }
+}

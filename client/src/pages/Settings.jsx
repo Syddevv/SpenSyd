@@ -17,6 +17,8 @@ import { ForgotPassModal } from "../components/ForgotPassModal";
 import { VerifyCodeModal } from "../components/VerifyCodeModal";
 import { AnimatePresence, motion } from "framer-motion";
 import { AboutUsModal } from "../components/AboutUsModal";
+import Sidebar from "../components/Sidebar";
+
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const Settings = () => {
@@ -134,8 +136,11 @@ const Settings = () => {
       transition={{ duration: 0.4 }}
     >
       <div>
-        <div>
+        <div className="topNav">
           <NavBar />
+        </div>
+        <div className="sideNav">
+          <Sidebar />
         </div>
 
         <div className="contents">

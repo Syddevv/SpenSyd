@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, animate } from "framer-motion";
 import IncomeIcon from "../assets/income icon.png";
+import "../styles/StatCard.css";
 
 const IncomeStat = ({ currentBalance }) => {
   const [animatedValue, setAnimatedValue] = useState(0);
@@ -18,40 +19,19 @@ const IncomeStat = ({ currentBalance }) => {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      style={{
-        backgroundColor: "rgb(30, 29, 49)",
-        width: "170px",
-        height: "170px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        borderRadius: "14px",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
-      }}
+      className="stat-container"
     >
-      <img src={IncomeIcon} style={{ width: "60px", marginTop: "10px" }} />
-      <h1
-        style={{
-          color: "#7EFB82",
-          fontSize: "25px",
-          marginBottom: "0px",
-          fontWeight: "600",
-        }}
-      >
-        <span style={{ fontSize: "30px" }}>₱</span>{" "}
-        {Math.floor(animatedValue).toLocaleString()}
-      </h1>
-      <p
-        style={{
-          color: "white",
-          fontSize: "13px",
-          fontWeight: "500",
-          marginTop: "0px",
-        }}
-      >
-        Balance
-      </p>
+      <div className="stat-icon">
+        <img src={IncomeIcon} alt="Income" />
+      </div>
+
+      <div className="stat-content">
+        <h1 className="stat-amount income-amount">
+          <span className="currency-symbol">₱</span>
+          {Math.floor(animatedValue).toLocaleString()}
+        </h1>
+        <p className="stat-label">Balance</p>
+      </div>
     </motion.div>
   );
 };

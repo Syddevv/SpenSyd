@@ -13,6 +13,7 @@ import Others from "../assets/others icon.png";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
+import Sidebar from "../components/Sidebar";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -105,8 +106,11 @@ const ExpensesRecord = () => {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.4 }}
     >
-      <div>
+      <div className="topNav">
         <NavBar />
+      </div>
+      <div className="sideNav">
+        <Sidebar />
       </div>
 
       <div style={{ paddingTop: "70px" }}></div>
