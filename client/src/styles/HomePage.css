@@ -54,6 +54,10 @@
   .homePage {
     padding-left: 260px; /* same as sidebar width */
   }
+
+  .recent_Controls {
+    gap: 0px;
+  }
 }
 
 @media (min-width: 768px) {

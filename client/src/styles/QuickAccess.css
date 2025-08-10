@@ -60,3 +60,24 @@
   margin-top: 8px;
   font-weight: 500;
 }
+
+@media (min-width: 768px) {
+  .controlsWrapper {
+    min-width: 270px;
+    min-height: 320px;
+  }
+
+  .newExpense,
+  .addBalance {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    min-width: 200px;
+    border-radius: 14px;
+  }
+
+  .label {
+    font-size: 14px; /* slightly bigger for desktop */
+  }
+}

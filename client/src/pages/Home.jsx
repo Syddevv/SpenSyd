@@ -249,7 +249,7 @@ const Home = () => {
                 <div>
                   <img src={newExpenseIcon} className="newExpenseIcon" />
                 </div>
-                <p className="label">+ New Expense</p>
+                <p className="label">+ Expense</p>
               </motion.div>
 
               <motion.div
