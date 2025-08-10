@@ -12,24 +12,9 @@ import Salary from "../assets/salary icon.png";
 import Loan from "../assets/loan icon.png";
 import Freelance from "../assets/freelance icon.png";
 import Allowance from "../assets/allowance icon.png";
+import "../styles/RecentActWrapper.css";
 
 const RecentActWrapper = ({ recentActivities }) => {
-  const wrapperStyle = {
-    display: "flex",
-    flexDirection: "column",
-    backgroundColor: "rgb(30, 29, 49)",
-    height: "270px",
-    width: "220px",
-    borderRadius: "16px",
-    border: "3px solid #332F55",
-    alignItems: "center",
-    position: "relative",
-    justifyContent: "center",
-    gap: "12px",
-    padding: "8px",
-    overflowY: "auto",
-  };
-
   const icons = {
     grocery: Grocery,
     clothes: Clothes,
@@ -46,10 +31,12 @@ const RecentActWrapper = ({ recentActivities }) => {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
-      <div style={wrapperStyle}>
+    <div className="recent-wrapper">
+      <div className="recent-activity-box">
         {recentActivities.length === 0 ? (
-          <p style={{ color: "#bbb", fontSize: "14px" }}>No recent activity</p>
+          <p style={{ color: "#bbb", fontSize: "14px", gridColumn: "1 / -1" }}>
+            No recent activity
+          </p>
         ) : (
           <AnimatePresence initial={false}>
             {recentActivities.map((activity, index) => (
@@ -71,18 +58,7 @@ const RecentActWrapper = ({ recentActivities }) => {
         )}
       </div>
 
-      <p
-        style={{
-          color: "white",
-          fontSize: "13px",
-          textAlign: "center",
-          width: "220px",
-          marginTop: "8px",
-          fontWeight: "500",
-        }}
-      >
-        Recent Activities
-      </p>
+      <p className="recent-title">Recent Activities</p>
     </div>
   );
 };

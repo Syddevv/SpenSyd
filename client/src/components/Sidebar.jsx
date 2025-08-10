@@ -3,12 +3,19 @@ import { Link, useLocation } from "react-router-dom";
 import defaultProfile from "../assets/default-profile.png";
 import "../styles/Sidebar.css";
 import axios from "axios";
+import ExpensesIcon from "../assets/expenses icon.png";
+import IncomesIcon from "../assets/income icon.png";
+import HomeIcon from "../assets/home.png";
+import SettingsIcon from "../assets/account-settings.png";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const Sidebar = () => {
   const [user, setUser] = useState(null);
   const location = useLocation();
+
+  const navigation = ["Home", "Expenses", "Incomes", "Settings"];
+  const navIcons = [HomeIcon, ExpensesIcon, IncomesIcon, SettingsIcon];
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -32,7 +39,7 @@ const Sidebar = () => {
       </div>
 
       <nav className="sidebar__nav">
-        {["Home", "Expenses", "Incomes", "Settings"].map((text) => (
+        {navigation.map((text, index) => (
           <Link
             key={text}
             to={`/${text.toLowerCase()}`}
@@ -40,7 +47,14 @@ const Sidebar = () => {
               location.pathname.includes(text.toLowerCase()) ? "active" : ""
             }`}
           >
-            <span>{text}</span>
+            <div className="nav-buttons">
+              <img
+                src={navIcons[index]}
+                alt={`${text} icon`}
+                className="nav-icon"
+              />
+              <span>{text}</span>
+            </div>
           </Link>
         ))}
       </nav>

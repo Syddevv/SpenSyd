@@ -62,7 +62,7 @@
   align-items: center;
   color: #dddddd;
   text-decoration: none;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 500;
   padding: 10px 14px;
   border-radius: 12px;
@@ -101,6 +101,16 @@
 
 .desktopOnly {
   display: none;
+}
+
+.nav-icon {
+  width: 22px;
+}
+
+.nav-buttons {
+  display: flex;
+  gap: 15px;
+  align-items: center;
 }
 
 @media (min-width: 768px) {
