@@ -74,3 +74,9 @@ hr {
   border-top: 1px solid #3f3c5c;
   margin: 0;
 }
+
+@media (min-width: 768px) {
+  .settingsWrapper {
+    padding-left: 150px;
+  }
+}

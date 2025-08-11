@@ -19,45 +19,58 @@
 
 .newExpense,
 .addBalance {
-  background-color: #303030;
-  width: 95px;
-  height: 105px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-radius: 10px;
-  flex-direction: column;
+  padding: 10px;
+  border-radius: 12px;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.newExpenseIcon {
-  width: 60px;
-  background-color: #ff8c8c;
-  padding: 10px;
-  border-radius: 30px;
+.newExpense {
+  background-color: rgba(255, 109, 112, 0.15);
+  border: 2px solid rgba(255, 109, 112, 0.3);
 }
 
+.addBalance {
+  background-color: rgba(76, 175, 80, 0.15);
+  border: 2px solid rgba(76, 175, 80, 0.3);
+}
+
+.newExpense:hover {
+  background-color: rgba(255, 109, 112, 0.25);
+  border-color: rgba(255, 109, 112, 0.5);
+  transform: translateY(-2px);
+}
+
+.addBalance:hover {
+  background-color: rgba(76, 175, 80, 0.25);
+  border-color: rgba(76, 175, 80, 0.5);
+  transform: translateY(-2px);
+}
+
+.newExpenseIcon,
 .newBalanceIcon {
-  width: 60px;
-  background-color: #8cffc0;
-  padding: 10px;
-  border-radius: 30px;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 8px;
 }
 
 .label {
-  margin-top: 0px;
-  margin-bottom: 0px;
   color: white;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 500;
+  margin: 0;
+  text-align: center;
 }
 
 .groupLabel {
   color: white;
   font-size: 13px;
   text-align: center;
-  width: 120px;
-  margin-top: 8px;
+  margin-top: 10px;
   font-weight: 500;
 }
 
