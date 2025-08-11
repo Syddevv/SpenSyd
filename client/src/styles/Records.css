@@ -1,17 +1,42 @@
-.expensesWrapper {
+.incomesWrapper {
   background-color: rgb(18, 18, 18);
   min-height: 100vh;
   width: 100%;
-  display: flex;
-  flex-direction: column;
+  position: relative;
 }
 
+.topNav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.sideNav {
+  position: fixed;
+  top: 70px; /* Height of NavBar */
+  left: 0;
+  height: calc(100vh - 70px);
+  z-index: 999;
+}
+
+.main-content {
+  margin-left: 280px;
+  transition: margin-left 0.3s ease;
+  padding-right: 20px;
+}
+
+/* Controls */
 .controls {
   margin-top: 20px;
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
   margin-bottom: 0px;
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .categoryControl {
@@ -48,8 +73,7 @@
   background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg width='25' height='25' viewBox='0 0 24 24' fill='black' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5H7z'/%3E%3C/svg%3E");
 }
 
-/** TABLE */
-
+/* Table */
 .tableWrapper {
   width: 95%;
   max-height: 305px;
@@ -100,21 +124,200 @@
   border-bottom: none;
 }
 
-.recordsTable th:first-child {
-  border-top-left-radius: 12px;
+/* Stats */
+.statsLabel {
+  color: white;
+  margin-top: 17px;
+  text-align: center;
 }
 
-.recordsTable th:last-child {
-  border-top-right-radius: 12px;
+.statsWrapper {
+  width: 100%;
 }
 
-@media (min-width: 768px) {
+.statsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.total-stats-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  align-items: stretch;
+}
+
+.totalDesktop {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #1e1d31;
+  min-width: 240px;
+  border-radius: 14px;
+  padding: 20px;
+  box-sizing: border-box;
+  height: auto;
+}
+
+.totalDesktop img {
+  width: 90px;
+  height: auto;
+  margin: 0px;
+  margin-bottom: 10px;
+}
+
+.month-total {
+  color: #7efb82;
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0px;
+  margin-bottom: 10px;
+}
+
+.month-label {
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin: 0px;
+}
+
+.month-name {
+  color: #fb7eef;
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0px;
+}
+
+.spacing {
+  padding-top: 70px;
+}
+
+/* Responsive breakpoints */
+
+/* Large screens - desktop layout */
+@media (min-width: 943px) {
   .categoryControl {
     display: none;
   }
 
+  .spacing {
+    padding-top: 20px;
+  }
+
   .controls {
-    justify-content: right;
-    margin-right: 40px;
+    justify-content: flex-end;
+    width: calc(45% + 240px + 20px);
+    max-width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .tableWrapper {
+    width: calc(
+      45% + 240px + 20px
+    ); /* statsWrapper width + totalDesktop min-width + gap */
+    max-width: 95%;
+  }
+
+  .statsWrapper {
+    width: 45%;
+  }
+
+  .total-stats-wrapper {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .totalDesktop {
+    min-width: 240px;
+    flex: 0 0 auto;
+  }
+
+  .totalMobile {
+    display: none;
+  }
+}
+
+/* Medium screens - column layout */
+@media (max-width: 942px) and (min-width: 769px) {
+  .categoryControl {
+    display: none;
+  }
+
+  .spacing {
+    padding-top: 20px;
+  }
+
+  .controls {
+    justify-content: flex-end;
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .main-content {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+
+  .tableWrapper {
+    width: 95%;
+  }
+
+  .statsWrapper {
+    width: 95%;
+  }
+
+  .total-stats-wrapper {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .totalDesktop {
+    display: none;
+  }
+}
+
+/* Small screens - mobile layout */
+@media (max-width: 768px) {
+  .sideNav {
+    display: none;
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding-right: 2px;
+    padding-left: 2px;
+  }
+
+  .controls {
+    justify-content: space-between;
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .tableWrapper {
+    width: 95%;
+  }
+
+  .statsWrapper {
+    width: 95%;
+  }
+
+  .total-stats-wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .totalDesktop {
+    display: none;
+  }
+
+  .totalMobile {
+    display: block;
   }
 }

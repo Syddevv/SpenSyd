@@ -10,6 +10,7 @@ import Entertainment from "../assets/entertainment icon.png";
 import Education from "../assets/education icon.png";
 import Bills from "../assets/bills icon.png";
 import Others from "../assets/others icon.png";
+import Expense from "../assets/expenses icon.png";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
@@ -33,21 +34,6 @@ const Expenses = () => {
 
   const capitalizeFirst = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
-  useEffect(() => {
-    const fetchExpenses = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const res = await axios.get(`${BASE_URL}/api/expense/getExpenses`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setExpenses(res.data.expenses);
-      } catch (error) {
-        console.log("Error in Fetching Expenses", error.message);
-      }
-    };
-    fetchExpenses();
-  }, []);
-
   const icons = {
     grocery: Grocery,
     clothes: Clothes,
@@ -56,9 +42,10 @@ const Expenses = () => {
     entertainment: Entertainment,
     education: Education,
     bills: Bills,
+    others: Others,
   };
 
-  // ⬇️ Filter expenses by selected month
+  // Filter expenses by selected month
   const filteredExpenses = expenses.filter((expense) => {
     const expenseMonth = new Date(expense.date).toLocaleString("default", {
       month: "long",
@@ -66,7 +53,7 @@ const Expenses = () => {
     return expenseMonth === selectedMonth;
   });
 
-  // ⬇️ Total for current month
+  // Total for current month
   const getTotalForMonth = () => {
     return filteredExpenses.reduce(
       (total, expense) => total + Number(expense.amount),
@@ -74,7 +61,7 @@ const Expenses = () => {
     );
   };
 
-  // ⬇️ Top 3 stats
+  // Top 3 expense stats
   function getTop3Expenses(expenses) {
     const categoryTotals = {};
     for (const expense of expenses) {
@@ -98,9 +85,24 @@ const Expenses = () => {
     }));
   }
 
+  useEffect(() => {
+    const fetchExpenses = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await axios.get(`${BASE_URL}/api/expense/getExpenses`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setExpenses(res.data.expenses);
+      } catch (error) {
+        console.log("Error in Fetching Expenses", error.message);
+      }
+    };
+    fetchExpenses();
+  }, []);
+
   return (
     <motion.div
-      className="expensesWrapper"
+      className="incomesWrapper"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -109,146 +111,173 @@ const Expenses = () => {
       <div className="topNav">
         <NavBar />
       </div>
+
       <div className="sideNav">
         <Sidebar />
       </div>
 
-      <div style={{ paddingTop: "70px" }}></div>
+      <div className="main-content">
+        <div className="spacing"></div>
 
-      <motion.div
-        className="controls"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.5 }}
-      >
-        <div className="categoryControl">
-          <p
-            className="expenses"
-            style={{
-              color: "white",
-              backgroundColor: "#1e1d31",
-              padding: "10px 20px",
-              borderRadius: "30px",
-            }}
-          >
-            Expenses
-          </p>
-          <p className="income" onClick={() => navToIncome()}>
-            Income
-          </p>
-        </div>
-
-        <div className="dateWrapper">
-          <select
-            id="date"
-            onChange={(e) => setSelectedMonth(e.target.value)}
-            value={selectedMonth}
-          >
-            {[
-              "January",
-              "February",
-              "March",
-              "April",
-              "May",
-              "June",
-              "July",
-              "August",
-              "September",
-              "October",
-              "November",
-              "December",
-            ].map((month) => (
-              <option key={month} value={month}>
-                {month}
-              </option>
-            ))}
-          </select>
-        </div>
-      </motion.div>
-
-      <motion.div
-        className="tableWrapper"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3, duration: 0.5 }}
-      >
-        <table className="recordsTable">
-          <thead>
-            <tr>
-              <th>Category</th>
-              <th>Date</th>
-              <th>Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredExpenses.length === 0 ? (
-              <tr>
-                <td colSpan="3" style={{ textAlign: "center" }}>
-                  No Records
-                </td>
-              </tr>
-            ) : (
-              filteredExpenses.map((expense, index) => (
-                <tr key={index}>
-                  <td>{capitalizeFirst(expense.category)}</td>
-                  <td>{new Date(expense.date).toLocaleDateString()}</td>
-                  <td>₱ {Number(expense.amount).toLocaleString()}</td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4, duration: 0.5 }}
-      >
-        <h2 className="statsLabel">Statistics - Top 3 Expenses</h2>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5, duration: 0.5 }}
-      >
-        <div className="statsWrapper">
-          <div className="statsContainer">
-            {expenses.length === 0 ? (
-              <p style={{ textAlign: "center", fontWeight: "600" }}>
-                No Expenses
-              </p>
-            ) : (
-              getTop3Expenses(filteredExpenses).map((item, index) => (
-                <TopExpenses
-                  key={index}
-                  img={icons[item.category] || Others}
-                  category={capitalizeFirst(item.category)}
-                  percentage={item.percentage}
-                  total={item.total}
-                />
-              ))
-            )}
+        <motion.div
+          className="controls"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        >
+          <div className="categoryControl">
+            <p
+              className="expenses"
+              style={{
+                color: "white",
+                backgroundColor: "#1e1d31",
+                padding: "10px 20px",
+                borderRadius: "30px",
+              }}
+            >
+              Expenses
+            </p>
+            <p
+              className="income"
+              style={{ paddingRight: "10px" }}
+              onClick={() => navToIncome()}
+            >
+              Income
+            </p>
           </div>
-        </div>
-      </motion.div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6, duration: 0.5 }}
-      >
-        {" "}
-        <div>
-          <p style={{ color: "white", textAlign: "center", fontSize: "18px" }}>
-            <span style={{ color: "rgb(251, 126, 239)", fontWeight: "bold" }}>
-              {selectedMonth.toUpperCase()}
-            </span>{" "}
-            Total Expenses = ₱ {getTotalForMonth().toLocaleString()}
-          </p>
+          <div className="dateWrapper">
+            <select
+              id="date"
+              onChange={(e) => setSelectedMonth(e.target.value)}
+              value={selectedMonth}
+            >
+              <option value="January">January</option>
+              <option value="February">February</option>
+              <option value="March">March</option>
+              <option value="April">April</option>
+              <option value="May">May</option>
+              <option value="June">June</option>
+              <option value="July">July</option>
+              <option value="August">August</option>
+              <option value="September">September</option>
+              <option value="October">October</option>
+              <option value="November">November</option>
+              <option value="December">December</option>
+            </select>
+          </div>
+        </motion.div>
+
+        <div className="contentWrapper">
+          <motion.div
+            className="tableWrapper"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+          >
+            <table className="recordsTable">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Date</th>
+                  <th>Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredExpenses.length === 0 ? (
+                  <tr>
+                    <td colSpan="3" style={{ textAlign: "center" }}>
+                      No Records
+                    </td>
+                  </tr>
+                ) : (
+                  filteredExpenses.map((expense, index) => (
+                    <tr key={index}>
+                      <td>{capitalizeFirst(expense.category)}</td>
+                      <td>{new Date(expense.date).toLocaleDateString()}</td>
+                      <td>₱ {expense.amount.toLocaleString()}</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+          >
+            <h2 className="statsLabel">Statistics - Top 3 Expenses</h2>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ delay: 0.5, duration: 0.5 }}
+          >
+            <div className="total-stats-wrapper">
+              <div className="statsWrapper">
+                <div className="statsContainer">
+                  {filteredExpenses.length === 0 ? (
+                    <p style={{ textAlign: "center", fontWeight: "600" }}>
+                      No Expenses
+                    </p>
+                  ) : (
+                    getTop3Expenses(filteredExpenses).map((item, index) => (
+                      <TopExpenses
+                        key={index}
+                        img={icons[item.category] || Others}
+                        category={item.category}
+                        percentage={item.percentage}
+                        total={item.total}
+                      />
+                    ))
+                  )}
+                </div>
+              </div>
+
+              <div className="totalDesktop">
+                <img src={Expense} alt="Expense Icon" />
+                <p className="month-total">
+                  ₱ {getTotalForMonth().toLocaleString()}
+                </p>
+                <p className="month-label">Total Expenses - </p>
+                <span className="month-name">
+                  {selectedMonth.toUpperCase()}
+                </span>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ delay: 0.6, duration: 0.5 }}
+          >
+            <div className="totalMobile">
+              <p
+                style={{
+                  color: "white",
+                  textAlign: "center",
+                  fontSize: "18px",
+                }}
+              >
+                <span
+                  style={{ color: "rgb(251, 126, 239)", fontWeight: "bold" }}
+                >
+                  {selectedMonth.toUpperCase()}
+                </span>{" "}
+                Total Expenses = ₱ {getTotalForMonth().toLocaleString()}
+              </p>
+            </div>
+          </motion.div>
         </div>
-      </motion.div>
+      </div>
     </motion.div>
   );
 };

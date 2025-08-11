@@ -7,6 +7,7 @@ import Salary from "../assets/salary icon.png";
 import Loan from "../assets/loan icon.png";
 import Freelance from "../assets/freelance icon.png";
 import Allowance from "../assets/allowance icon.png";
+import Income from "../assets/income icon.png";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
@@ -37,7 +38,7 @@ const Incomes = () => {
     freelance: Freelance,
   };
 
-  // ⬇️ Filter incomes by selected month
+  // Filter incomes by selected month
   const filteredIncomes = incomes.filter((income) => {
     const incomeMonth = new Date(income.date).toLocaleString("default", {
       month: "long",
@@ -45,7 +46,7 @@ const Incomes = () => {
     return incomeMonth === selectedMonth;
   });
 
-  // ⬇️ Total for current month
+  // Total for current month
   const getTotalForMonth = () => {
     return filteredIncomes.reduce(
       (total, income) => total + Number(income.amount),
@@ -53,7 +54,7 @@ const Incomes = () => {
     );
   };
 
-  // ⬇️ Top 3 income stats
+  // Top 3 income stats
   function getTop3Incomes(balances) {
     const categoryTotals = {};
     for (const income of balances) {
@@ -95,7 +96,7 @@ const Incomes = () => {
 
   return (
     <motion.div
-      className="expensesWrapper"
+      className="incomesWrapper"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -104,148 +105,173 @@ const Incomes = () => {
       <div className="topNav">
         <NavBar />
       </div>
+
       <div className="sideNav">
         <Sidebar />
       </div>
 
-      <div style={{ paddingTop: "70px" }}></div>
+      <div className="main-content">
+        <div className="spacing"></div>
 
-      <motion.div
-        className="controls"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.5 }}
-      >
-        <div className="categoryControl">
-          <p
-            className="expenses"
-            style={{ paddingLeft: "10px" }}
-            onClick={() => navToExpense()}
-          >
-            Expenses
-          </p>
-          <p
-            className="income"
-            style={{
-              color: "white",
-              backgroundColor: "#1e1d31",
-              padding: "10px 20px",
-              borderRadius: "30px",
-            }}
-          >
-            Income
-          </p>
-        </div>
-
-        <div className="dateWrapper">
-          <select
-            id="date"
-            onChange={(e) => setSelectedMonth(e.target.value)}
-            value={selectedMonth}
-          >
-            <option value="January">January</option>
-            <option value="February">February</option>
-            <option value="March">March</option>
-            <option value="April">April</option>
-            <option value="May">May</option>
-            <option value="June">June</option>
-            <option value="July">July</option>
-            <option value="August">August</option>
-            <option value="September">September</option>
-            <option value="October">October</option>
-            <option value="November">November</option>
-            <option value="December">December</option>
-          </select>
-        </div>
-      </motion.div>
-
-      <motion.div
-        className="tableWrapper"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0 }}
-        transition={{ delay: 0.3, duration: 0.5 }}
-      >
-        <table className="recordsTable">
-          <thead>
-            <tr>
-              <th>Category</th>
-              <th>Date</th>
-              <th>Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredIncomes.length === 0 ? (
-              <tr>
-                <td colSpan="3" style={{ textAlign: "center" }}>
-                  No Records
-                </td>
-              </tr>
-            ) : (
-              filteredIncomes.map((income, index) => (
-                <tr key={index}>
-                  <td>{capitalizeFirst(income.category)}</td>
-                  <td>{new Date(income.date).toLocaleDateString()}</td>
-                  <td>₱ {income.amount.toLocaleString()}</td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0 }}
-        transition={{ delay: 0.4, duration: 0.5 }}
-      >
-        <h2 className="statsLabel">Statistics - Top 3 Incomes</h2>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0 }}
-        transition={{ delay: 0.5, duration: 0.5 }}
-      >
-        {" "}
-        <div className="statsWrapper">
-          <div className="statsContainer">
-            {filteredIncomes.length === 0 ? (
-              <p style={{ textAlign: "center", fontWeight: "600" }}>
-                No Incomes
-              </p>
-            ) : (
-              getTop3Incomes(filteredIncomes).map((item, index) => (
-                <TopIncomes
-                  key={index}
-                  img={icons[item.category] || Others}
-                  category={item.category}
-                  percentage={item.percentage}
-                  total={item.total}
-                />
-              ))
-            )}
+        <motion.div
+          className="controls"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        >
+          <div className="categoryControl">
+            <p
+              className="expenses"
+              style={{ paddingLeft: "10px" }}
+              onClick={() => navToExpense()}
+            >
+              Expenses
+            </p>
+            <p
+              className="income"
+              style={{
+                color: "white",
+                backgroundColor: "#1e1d31",
+                padding: "10px 20px",
+                borderRadius: "30px",
+              }}
+            >
+              Income
+            </p>
           </div>
-        </div>
-      </motion.div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0 }}
-        transition={{ delay: 0.6, duration: 0.5 }}
-      >
-        <div>
-          <p style={{ color: "white", textAlign: "center", fontSize: "18px" }}>
-            <span style={{ color: "rgb(251, 126, 239)", fontWeight: "bold" }}>
-              {selectedMonth.toUpperCase()}
-            </span>{" "}
-            Total Incomes = ₱ {getTotalForMonth().toLocaleString()}
-          </p>
+          <div className="dateWrapper">
+            <select
+              id="date"
+              onChange={(e) => setSelectedMonth(e.target.value)}
+              value={selectedMonth}
+            >
+              <option value="January">January</option>
+              <option value="February">February</option>
+              <option value="March">March</option>
+              <option value="April">April</option>
+              <option value="May">May</option>
+              <option value="June">June</option>
+              <option value="July">July</option>
+              <option value="August">August</option>
+              <option value="September">September</option>
+              <option value="October">October</option>
+              <option value="November">November</option>
+              <option value="December">December</option>
+            </select>
+          </div>
+        </motion.div>
+
+        <div className="contentWrapper">
+          <motion.div
+            className="tableWrapper"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+          >
+            <table className="recordsTable">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Date</th>
+                  <th>Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredIncomes.length === 0 ? (
+                  <tr>
+                    <td colSpan="3" style={{ textAlign: "center" }}>
+                      No Records
+                    </td>
+                  </tr>
+                ) : (
+                  filteredIncomes.map((income, index) => (
+                    <tr key={index}>
+                      <td>{capitalizeFirst(income.category)}</td>
+                      <td>{new Date(income.date).toLocaleDateString()}</td>
+                      <td>₱ {income.amount.toLocaleString()}</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+          >
+            <h2 className="statsLabel">Statistics - Top 3 Incomes</h2>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ delay: 0.5, duration: 0.5 }}
+          >
+            <div className="total-stats-wrapper">
+              <div className="statsWrapper">
+                <div className="statsContainer">
+                  {filteredIncomes.length === 0 ? (
+                    <p style={{ textAlign: "center", fontWeight: "600" }}>
+                      No Incomes
+                    </p>
+                  ) : (
+                    getTop3Incomes(filteredIncomes).map((item, index) => (
+                      <TopIncomes
+                        key={index}
+                        img={icons[item.category] || Others}
+                        category={item.category}
+                        percentage={item.percentage}
+                        total={item.total}
+                      />
+                    ))
+                  )}
+                </div>
+              </div>
+
+              <div className="totalDesktop">
+                <img src={Income} alt="Income Icon" />
+                <p className="month-total">
+                  ₱ {getTotalForMonth().toLocaleString()}
+                </p>
+                <p className="month-label">Total Incomes - </p>
+                <span className="month-name">
+                  {selectedMonth.toUpperCase()}
+                </span>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ delay: 0.6, duration: 0.5 }}
+          >
+            <div className="totalMobile">
+              <p
+                style={{
+                  color: "white",
+                  textAlign: "center",
+                  fontSize: "18px",
+                }}
+              >
+                <span
+                  style={{ color: "rgb(251, 126, 239)", fontWeight: "bold" }}
+                >
+                  {selectedMonth.toUpperCase()}
+                </span>{" "}
+                Total Incomes = ₱ {getTotalForMonth().toLocaleString()}
+              </p>
+            </div>
+          </motion.div>
         </div>
-      </motion.div>
+      </div>
     </motion.div>
   );
 };

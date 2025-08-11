@@ -3,19 +3,26 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  max-width: 100%;
 }
 
 .statsLabel {
-  margin-left: 10px;
   color: white;
   font-size: 16px;
   font-weight: 600;
+  margin-bottom: 15px;
+  text-align: center;
 }
 
 .statsContainer {
   background-color: #d7e3ff;
-  width: 95%;
+  width: 100%;
   border-radius: 14px;
+  margin-top: 0px;
+  overflow: hidden;
+  word-wrap: break-word;
+  padding: 10px 0;
+  box-sizing: border-box;
 }
 
 .imgWrapper {
@@ -38,14 +45,16 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 2px 30px;
+  padding: 2px 20px;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .imgCategory {
   display: flex;
   align-items: center;
   gap: 20px;
-  min-width: 170px;
+  min-width: 0;
 }
 
 .categoryPercent {
@@ -53,12 +62,16 @@
   flex-direction: column;
   justify-content: center;
   font-weight: 500;
+  overflow: hidden;
 }
 
 .category {
   font-weight: 600;
   margin-bottom: 0px;
   font-size: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .percentage {
@@ -71,7 +84,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  min-width: 80px;
+  min-width: 60px;
 }
 
 .amount {
@@ -85,4 +98,21 @@
   margin-top: 5px;
   font-size: 15px;
   font-weight: 500;
+}
+
+@media (min-width: 768px) {
+  .imgWrapper img {
+    width: 45px;
+    height: 45px;
+  }
+
+  .imgWrapper {
+    width: 80px;
+    height: 80px;
+    border-radius: 40px;
+  }
+
+  .statsContainer {
+    padding: 15px 0px;
+  }
 }
