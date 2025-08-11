@@ -19,7 +19,7 @@ const IncomeStat = ({ currentBalance }) => {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="stat-container"
+      className="stat-container-income"
     >
       <div className="stat-icon">
         <img src={IncomeIcon} alt="Income" />

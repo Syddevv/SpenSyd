@@ -11,6 +11,22 @@
   transition: all 0.3s ease;
   gap: 8px; /* ensures consistent spacing */
   height: 170px; /* fixed height for card alignment */
+  width: 190px;
+}
+
+.stat-container-income {
+  background-color: rgb(30, 29, 49);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  border-radius: 14px;
+  padding: 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+  gap: 8px; /* ensures consistent spacing */
+  height: 170px; /* fixed height for card alignment */
+  width: 150px;
 }
 
 .stat-icon {
@@ -44,10 +60,16 @@
   font-size: 30px;
 }
 
-.stat-label,
-.stat-label-expense {
+.stat-label {
   color: white;
   font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.stat-label-expense {
+  font-size: 12px;
+  color: white;
   font-weight: 500;
   margin: 0;
 }
@@ -81,5 +103,13 @@
   .stat-label,
   .stat-label-expense {
     font-size: 18px;
+  }
+
+  .stat-container-income {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 30px 40px;
+    width: 350px; /* was auto */
+    min-height: 180px; /* new height */
   }
 }
