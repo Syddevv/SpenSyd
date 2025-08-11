@@ -12,15 +12,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 25px;
+  gap: 20px;
 }
 
 .recent_Controls {
   display: flex;
   flex-direction: row;
   margin-top: 20px;
-  gap: 13px;
+  gap: 15px;
   justify-content: center;
+  padding: 0 20px; /* Mobile padding */
 }
 
 .chart {
@@ -28,6 +29,7 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  padding: 0 20px; /* Mobile padding */
 }
 
 .userProfile img {
@@ -50,17 +52,31 @@
   font-weight: 600;
 }
 
+/* Tablet and Desktop styles */
 @media (min-width: 768px) {
   .homePage {
     padding-left: 260px; /* same as sidebar width */
   }
 
-  .recent_Controls {
-    gap: 0px;
+  .statCard {
+    margin-left: 40px; /* Add margin from sidebar */
+    margin-right: 40px; /* Add right margin for centering */
+    padding: 0; /* Remove mobile padding */
   }
-}
 
-@media (min-width: 768px) {
+  .recent_Controls {
+    gap: 25px;
+    margin-left: 40px; /* Add margin from sidebar */
+    margin-right: 40px; /* Add right margin for centering */
+    padding: 0; /* Remove mobile padding */
+  }
+
+  .chart {
+    margin-left: 40px; /* Add margin from sidebar */
+    margin-right: 40px; /* Add right margin for centering */
+    padding: 0; /* Remove mobile padding */
+  }
+
   .topNav {
     display: none;
   }
