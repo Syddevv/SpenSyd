@@ -6,6 +6,8 @@
   flex-direction: column;
   overflow-y: auto;
   padding-bottom: 20px;
+  justify-content: center;
+  align-items: center;
 }
 
 .statCard {
@@ -52,6 +54,10 @@
   font-weight: 600;
 }
 
+.stat-recent {
+  padding-top: 90px;
+}
+
 /* Tablet and Desktop styles */
 @media (min-width: 768px) {
   .homePage {
@@ -79,5 +85,9 @@
 
   .topNav {
     display: none;
+  }
+
+  .stat-recent {
+    padding-top: 0px;
   }
 }

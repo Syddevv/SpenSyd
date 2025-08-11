@@ -219,7 +219,7 @@ const Home = () => {
         <Sidebar />
       </div>
 
-      <div style={{ paddingTop: "95px" }}>
+      <div className="stat-recent">
         <motion.div
           className="statCard"
           initial={{ opacity: 0, y: 20 }}

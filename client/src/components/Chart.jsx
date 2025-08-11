@@ -4,6 +4,7 @@ import { Chart as ChartJS } from "chart.js/auto";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "../styles/DatePicker.css";
+import "../styles/Chart.css";
 
 const Chart = ({ expenses, balances }) => {
   const [viewMode, setViewMode] = useState("past"); // "past", "future", "custom"
@@ -76,20 +77,8 @@ const Chart = ({ expenses, balances }) => {
     viewMode
   );
 
-  const chartStyle = {
-    backgroundColor: "rgb(30, 29, 49)",
-    width: "350px",
-    padding: "20px",
-    borderRadius: "14px",
-    border: "3px solid #332F55",
-    color: "white",
-    display: "flex",
-    flexDirection: "column",
-    gap: "10px",
-  };
-
   return (
-    <div style={chartStyle}>
+    <div className="chartWrapper">
       {/* View Mode Selector */}
       <div
         style={{

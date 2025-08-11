@@ -1,0 +1,17 @@
+.chartWrapper {
+  background-color: rgb(30, 29, 49);
+  width: 350px;
+  padding: 20px;
+  border-radius: 14px;
+  border: 3px solid #332f55;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+@media (min-width: 768px) {
+  .chartWrapper {
+    width: 450px;
+  }
+}
