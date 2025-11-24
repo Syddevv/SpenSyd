@@ -18,11 +18,11 @@ and easy-to-use income/expense categorization, SpenSyd gives you the control to 
 ---
 ## 📸 Screenshots
 
-<img width="391" height="857" alt="Screenshot 2025-11-23 160638" src="https://github.com/user-attachments/assets/9715d6ee-2a05-4610-96b9-568df54a6079" />
-<img width="384" height="860" alt="Screenshot 2025-11-23 160706" src="https://github.com/user-attachments/assets/d5170aa4-e264-450e-9f2b-eb670d865ede" />
-<img width="392" height="863" alt="Screenshot 2025-11-23 161224" src="https://github.com/user-attachments/assets/c8f39b38-0855-45a3-bc9e-7582d1b692ec" />
-<img width="381" height="859" alt="Screenshot 2025-11-23 160717" src="https://github.com/user-attachments/assets/89dee585-a61f-46c8-b87e-6ba0e8d81203" />
-
+<img width="1902" height="950" alt="Screenshot 2025-11-24 210241" src="https://github.com/user-attachments/assets/91714a0d-b112-4a74-81d7-da44b90d274b" />
+<img width="1910" height="951" alt="Screenshot 2025-11-24 210340" src="https://github.com/user-attachments/assets/fcc00795-1638-406c-9c19-409c05074bdd" />
+<img width="1907" height="953" alt="Screenshot 2025-11-24 210357" src="https://github.com/user-attachments/assets/c8f7da0e-a384-471b-8e74-3e9bf3cef902" />
+<img width="1910" height="954" alt="Screenshot 2025-11-24 210408" src="https://github.com/user-attachments/assets/32a304f5-7e3a-4c64-9a0c-dcb41a30a76c" />
+<img width="1912" height="954" alt="Screenshot 2025-11-24 210417" src="https://github.com/user-attachments/assets/58b5edec-d221-4aea-8336-3684177b63c6" />
 
 ## 🔧 Tech Stack
 
