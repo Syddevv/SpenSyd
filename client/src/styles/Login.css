@@ -1,221 +1,167 @@
-html,
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  background: linear-gradient(135deg, #1e1d31 0%, #3a2e5f 100%);
+/* client/src/styles/Login.css */
+
+.auth-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--bg-dark);
 }
 
-* {
-  font-family: "Poppins", sans-serif;
-  box-sizing: border-box;
+/* Left Side - Visual */
+.auth-visual {
+  flex: 1;
+  background: linear-gradient(135deg, #1e1b4b 0%, var(--bg-dark) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px;
+  position: relative;
+  overflow: hidden;
 }
 
-.login-wrapper {
-  min-height: 100vh;
+/* Abstract Circles Background */
+.auth-visual::before {
+  content: "";
+  position: absolute;
+  top: -20%;
+  left: -20%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(
+    circle,
+    rgba(139, 92, 246, 0.2) 0%,
+    transparent 70%
+  );
+  border-radius: 50%;
+}
+
+.auth-visual::after {
+  content: "";
+  position: absolute;
+  bottom: -10%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(
+    circle,
+    rgba(16, 185, 129, 0.1) 0%,
+    transparent 70%
+  );
+  border-radius: 50%;
+}
+
+.visual-content {
+  position: relative;
+  z-index: 2;
+  max-width: 480px;
+}
+
+.visual-logo {
+  width: 60px;
+  margin-bottom: 30px;
+}
+
+.visual-heading {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+.visual-text {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* Right Side - Form */
+.auth-form-container {
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: transparent;
-  padding: 20px 10px;
-  flex-direction: column;
-  gap: 20px;
+  padding: 40px;
+  background-color: var(--bg-dark);
 }
 
-.loginPage {
-  background: rgba(40, 38, 66, 0.98);
-  border-radius: 18px;
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 40px 32px;
-  max-width: 370px;
+.auth-card {
   width: 100%;
-  gap: 18px;
+  max-width: 420px;
+  padding: 40px;
 }
 
-.login-icon {
-  max-width: 140px;
-  margin-bottom: 10px;
-  filter: drop-shadow(0 2px 8px rgba(212, 158, 248, 0.15));
-}
-
-.pageName-login {
-  margin: 0;
-  color: white;
-  font-size: 2.1rem;
-  font-weight: 700;
-  letter-spacing: 1px;
-}
-
-.description-login {
-  color: rgb(212, 158, 248);
-  font-weight: 600;
-  margin-top: 2px;
-  font-size: 1.2rem;
+.auth-header {
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 32px;
 }
 
-.login-form {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  width: 100%;
-  gap: 16px;
-}
-
-.login-form label {
-  color: #e0e0e0;
-  font-size: 13px;
-  margin-bottom: 5px;
-  font-weight: 500;
-}
-
-.email-wrapper,
-.password-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.password-input,
-.username-input {
-  width: 100%;
-  padding: 12px;
-  border-radius: 7px;
-  border: 1px solid #3a2e5f;
-  background: #23213a;
-  color: #fff;
-  margin-bottom: 0;
-  font-size: 0.9rem;
-  transition: border 0.2s, box-shadow 0.2s;
-  font-weight: 500;
-}
-
-.email-input:focus,
-.password-input:focus {
-  outline: none;
-  border: 1.5px solid rgb(212, 158, 248);
-  box-shadow: 0 0 0 2px rgba(212, 158, 248, 0.15);
-}
-
-.login-button {
-  background: linear-gradient(
-    90deg,
-    rgb(212, 158, 248) 0%,
-    rgb(230, 215, 248) 100%
-  );
-  border: none;
-  width: 100%;
-  height: 45px;
-  border-radius: 7px;
+.auth-header h2 {
+  font-size: 2rem;
   font-weight: 600;
-  font-size: 1.1rem;
-  color: #2d1e3f;
-  cursor: pointer;
-  margin-top: 10px;
+  color: var(--text-main);
   margin-bottom: 8px;
-  transition: background 0.15s, transform 0.1s;
-  box-shadow: 0 2px 8px rgba(212, 158, 248, 0.08);
 }
 
-.login-button:hover,
-.login-button:focus {
-  background: linear-gradient(
-    90deg,
-    rgb(230, 215, 248) 0%,
-    rgb(212, 158, 248) 100%
-  );
-  transform: translateY(-2px) scale(1.03);
+.auth-header p {
+  color: var(--text-muted);
 }
 
-.backToSettings {
-  color: #bda6e7;
-  font-size: 0.98rem;
-  text-align: center;
-  margin: 10px 0 0 0;
-  cursor: pointer;
-  transition: color 0.15s;
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
   font-weight: 500;
 }
 
-.backToSettings:hover {
-  color: #d49ef8;
-  text-decoration: underline;
-}
-
-.line {
-  border: none;
-  border-top: 1px solid #3a2e5f;
-  margin: 6px 0 0 0;
-  width: 100%;
-}
-
-.link-wrapper {
-  color: #e0e0e0;
-  font-size: 0.98rem;
-  margin-top: 0px;
+.auth-footer {
+  margin-top: 24px;
   text-align: center;
+  color: var(--text-muted);
+  font-size: 0.9rem;
 }
 
-.link {
-  color: rgb(212, 158, 248);
-  cursor: pointer;
+.auth-link {
+  color: var(--primary);
   font-weight: 600;
-  transition: color 0.15s;
+  cursor: pointer;
+  margin-left: 5px;
+  transition: color 0.2s;
 }
 
-.link:hover {
-  color: #fff;
+.auth-link:hover {
+  color: var(--primary-hover);
   text-decoration: underline;
 }
 
-.underline {
-  border: none;
-  border-top: 2px solid;
-  margin: 0;
-  width: 100%;
-  color: rgb(212, 158, 248);
+.error-message {
+  color: var(--danger);
+  font-size: 0.85rem;
+  margin-bottom: 16px;
+  text-align: center;
+  background: rgba(244, 63, 94, 0.1);
+  padding: 8px;
+  border-radius: 8px;
 }
 
-.forgotPass {
-  font-size: 11px;
-  font-weight: 600;
-  color: rgb(212, 158, 248);
-  margin-bottom: 0px;
+.forgot-pass {
+  display: block;
+  text-align: right;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 8px;
   cursor: pointer;
-  margin-top: 0px;
 }
 
-/* 🔁 Mobile Responsiveness */
-@media screen and (max-width: 480px) {
-  .loginPage {
-    padding: 32px 20px;
-    max-width: 95%;
-    border-radius: 12px;
-  }
-
-  .pageName-login {
-    font-size: 1.8rem;
-  }
-
-  .description-login {
-    font-size: 1.5rem;
-  }
-
-  .login-button {
-    font-size: 1rem;
-    height: 42px;
-  }
-
-  .login-icon {
-    max-width: 120px;
-  }
-
-  .link-wrapper,
-  .backToSettings {
-    font-size: 0.9rem;
+/* Mobile Responsiveness */
+@media (max-width: 900px) {
+  .auth-visual {
+    display: none;
   }
 }
