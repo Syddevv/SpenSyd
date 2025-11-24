@@ -85,7 +85,7 @@ export const ChangeEmailModal = ({ onClose, user, token, onEmailChanged }) => {
           />
         </button>
 
-        <div className="emailInputs">
+        <div className="email-inputs">
           <div className="input-group">
             <input
               type="email"

@@ -75,7 +75,7 @@
   margin-top: 0;
 }
 
-.emailInputs {
+.email-inputs {
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -83,14 +83,14 @@
   width: 100%;
 }
 
-.inputGroup {
+.input-group {
   position: relative;
   display: flex;
   align-items: center;
   width: 100%;
 }
 
-.inputGroup input {
+.input-group input {
   background: rgba(15, 23, 42, 0.6);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
