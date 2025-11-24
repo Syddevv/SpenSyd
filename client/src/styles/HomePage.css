@@ -1,93 +1,281 @@
-.homePage {
-  background-color: rgb(18, 18, 18);
-  min-height: 100vh;
+/* client/src/styles/HomePage.css */
+
+.dashboard-container {
   width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
-  padding-bottom: 20px;
-  justify-content: center;
-  align-items: center;
+  gap: 24px;
+  animation: fadeIn 0.5s ease-out;
 }
 
-.statCard {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
+.welcome-section {
+  margin-bottom: 8px;
 }
 
-.recent_Controls {
-  display: flex;
-  flex-direction: row;
-  margin-top: 20px;
-  gap: 15px;
-  justify-content: center;
-  padding: 0 20px; /* Mobile padding */
+.welcome-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-main);
 }
 
-.chart {
+.welcome-subtitle {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+/* --- Top Row: Stats Cards --- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.stat-card {
+  padding: 24px;
   display: flex;
-  align-items: center;
-  justify-content: center;
   flex-direction: column;
-  padding: 0 20px; /* Mobile padding */
+  justify-content: space-between;
+  min-height: 140px;
+  position: relative;
+  overflow: hidden;
 }
 
-.userProfile img {
-  width: 45px;
-  height: 45px;
-  border: 2px solid #89e88c;
-  object-fit: cover;
+/* Gradient accents for cards */
+.stat-card.balance {
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.15),
+    rgba(30, 41, 59, 0.7)
+  );
+}
+.stat-card.income {
+  background: linear-gradient(
+    135deg,
+    rgba(16, 185, 129, 0.15),
+    rgba(30, 41, 59, 0.7)
+  );
+}
+.stat-card.expense {
+  background: linear-gradient(
+    135deg,
+    rgba(244, 63, 94, 0.15),
+    rgba(30, 41, 59, 0.7)
+  );
 }
 
-.userProfile {
+.stat-header {
   display: flex;
-  flex-direction: row;
   align-items: center;
-  justify-content: left;
-  gap: 10px;
+  gap: 12px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 16px;
 }
 
-.usernameProfile {
-  color: rgb(201, 201, 201);
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.stat-trend {
+  font-size: 0.85rem;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.trend-up {
+  color: var(--success);
+}
+.trend-down {
+  color: var(--danger);
+}
+
+/* --- Middle Row: Chart & Actions --- */
+.main-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr; /* 2/3 and 1/3 split */
+  gap: 24px;
+}
+
+.chart-section {
+  padding: 24px;
+  min-height: 350px;
+  display: flex;
+  flex-direction: column;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: 1.1rem;
   font-weight: 600;
+  color: var(--text-main);
 }
 
-.stat-recent {
-  padding-top: 90px;
+.actions-section {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-/* Tablet and Desktop styles */
-@media (min-width: 768px) {
-  .homePage {
-    padding-left: 260px; /* same as sidebar width */
+.action-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.2s;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.action-btn.add-income {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--success);
+  border-color: rgba(16, 185, 129, 0.2);
+}
+
+.action-btn.add-income:hover {
+  background: rgba(16, 185, 129, 0.2);
+  transform: translateY(-2px);
+}
+
+.action-btn.add-expense {
+  background: rgba(244, 63, 94, 0.1);
+  color: var(--danger);
+  border-color: rgba(244, 63, 94, 0.2);
+}
+
+.action-btn.add-expense:hover {
+  background: rgba(244, 63, 94, 0.2);
+  transform: translateY(-2px);
+}
+
+/* --- Bottom Row: Recent Transactions --- */
+.recent-section {
+  padding: 24px;
+}
+
+.transaction-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.transaction-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-md);
+  transition: background 0.2s;
+}
+
+.transaction-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.t-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.t-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.t-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.t-category {
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.t-date {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.t-amount {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.t-amount.income {
+  color: var(--success);
+}
+.t-amount.expense {
+  color: var(--danger);
+}
+
+/* --- Loading State --- */
+.loading-container {
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* --- Responsive --- */
+@media (max-width: 1024px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
   }
 
-  .statCard {
-    margin-left: 40px; /* Add margin from sidebar */
-    margin-right: 40px; /* Add right margin for centering */
-    padding: 0; /* Remove mobile padding */
+  .main-grid {
+    grid-template-columns: 1fr;
   }
 
-  .recent_Controls {
-    gap: 25px;
-    margin-left: 40px; /* Add margin from sidebar */
-    margin-right: 40px; /* Add right margin for centering */
-    padding: 0; /* Remove mobile padding */
+  .chart-section {
+    min-height: 300px;
   }
 
-  .chart {
-    margin-left: 40px; /* Add margin from sidebar */
-    margin-right: 40px; /* Add right margin for centering */
-    padding: 0; /* Remove mobile padding */
+  .actions-section {
+    flex-direction: row;
+    height: auto;
   }
+}
 
-  .topNav {
-    display: none;
+@media (max-width: 600px) {
+  .actions-section {
+    flex-direction: column;
   }
+}
 
-  .stat-recent {
-    padding-top: 0px;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
