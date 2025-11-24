@@ -4,7 +4,6 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import ClipLoader from "react-spinners/ClipLoader";
-import VerificationModal from "../components/VerificationModal";
 import SpenSyd_Icon from "../assets/SpenSyd Icon.png";
 import "../styles/Login.css"; // Import base auth styles
 import "../styles/Register.css"; // Import specific register overrides
@@ -20,11 +19,6 @@ const Register = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
-  // Verification Modal State
-  const [showVerifyModal, setShowVerifyModal] = useState(false);
-  const [pendingUser, setPendingUser] = useState(null);
-  const [verifyError, setVerifyError] = useState("");
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -43,31 +37,16 @@ const Register = () => {
     }
 
     try {
-      const res = await axios.post(`${BASE_URL}/api/auth/send-code`, formData);
+      const res = await axios.post(`${BASE_URL}/api/auth/register`, formData);
+
       if (res.data.success) {
-        setPendingUser(formData);
-        setShowVerifyModal(true);
-      }
-    } catch (err) {
-      setError(err.response?.data?.message || "Registration failed");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleVerify = async (code) => {
-    try {
-      const verifyRes = await axios.post(`${BASE_URL}/api/auth/verify-email`, {
-        email: pendingUser.email,
-        code,
-      });
-
-      if (verifyRes.data.success) {
         toast.success("Account created successfully! Please login.");
         navigate("/login");
       }
     } catch (err) {
-      setVerifyError("Invalid or expired verification code");
+      setError(err.response?.data?.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -162,17 +141,6 @@ const Register = () => {
           </div>
         </motion.div>
       </div>
-
-      {/* Verification Modal */}
-      {showVerifyModal && (
-        <VerificationModal
-          email={pendingUser?.email}
-          onSubmitCode={handleVerify}
-          onClose={() => setShowVerifyModal(false)}
-          errorMessage={verifyError}
-          clearError={() => setVerifyError("")}
-        />
-      )}
     </div>
   );
 };
