@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/ContextProvider";
 import "../styles/Sidebar.css";
+import { ConfirmationModal } from "./ConfirmationModal"; // Ensure correct import path
 
 // Assets
 import Logo from "../assets/SpenSyd Icon.png";
@@ -15,10 +16,16 @@ import DefaultProfile from "../assets/default-profile.png";
 const Sidebar = ({ isOpen, onClose }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
-  const handleLogout = () => {
+  const handleLogoutClick = () => {
+    setShowLogoutModal(true);
+  };
+
+  const confirmLogout = () => {
     logout();
     navigate("/login");
+    setShowLogoutModal(false);
   };
 
   // Navigation Config
@@ -76,12 +83,22 @@ const Sidebar = ({ isOpen, onClose }) => {
             </div>
           </div>
 
-          <button className="logout-btn" onClick={handleLogout}>
+          <button className="logout-btn" onClick={handleLogoutClick}>
             <img src={LogoutIcon} alt="Logout" className="logout-icon" />
             Logout
           </button>
         </div>
       </aside>
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutModal && (
+        <ConfirmationModal
+          onClose={() => setShowLogoutModal(false)}
+          icon={LogoutIcon}
+          text="Are you sure you want to logout?"
+          onSubmit={confirmLogout}
+        />
+      )}
     </>
   );
 };
