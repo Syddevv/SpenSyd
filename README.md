@@ -3,6 +3,8 @@
 **SpenSyd** is a modern web application built to help users track their spending and income efficiently. With a clean UI, helpful features like email verification and password recovery, 
 and easy-to-use income/expense categorization, SpenSyd gives you the control to manage your finances with confidence.
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Visit%20Site-FF5722?style=for-the-badge&logo=google-chrome&logoColor=white)](https://spensyd.vercel.app/)
+
 ## ✨ Features
 
 - ✅ Add **Expenses** with categories
