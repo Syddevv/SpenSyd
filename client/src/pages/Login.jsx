@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/ContextProvider";
 import axios from "axios";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { EnterEmailModal } from "../components/EnterEmailModal";
 import ClipLoader from "react-spinners/ClipLoader";
 import SpenSyd_Icon from "../assets/SpenSyd Icon.png";
@@ -17,7 +17,6 @@ const Login = () => {
   const [formData, setFormData] = useState({ identifier: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [showEmailModal, setShowEmailModal] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -96,12 +95,6 @@ const Login = () => {
                 onChange={handleChange}
                 required
               />
-              <span
-                className="forgot-pass"
-                onClick={() => setShowEmailModal(true)}
-              >
-                Forgot Password?
-              </span>
             </div>
 
             <button
@@ -122,22 +115,6 @@ const Login = () => {
           </div>
         </motion.div>
       </div>
-
-      {/* Modals */}
-      <AnimatePresence>
-        {showEmailModal && (
-          <motion.div
-            className="modalBackground"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <div className="modal-wrapper">
-              <EnterEmailModal onClose={() => setShowEmailModal(false)} />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 };
