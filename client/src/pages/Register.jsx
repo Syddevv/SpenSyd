@@ -5,7 +5,6 @@ import axios from "axios";
 import "../styles/Register.css";
 import VerificationModal from "../components/VerificationModal";
 import { toast } from "react-toastify";
-import { motion } from "framer-motion";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -72,8 +71,9 @@ const Register = () => {
       } else {
         toast.error("Invalid Verification");
       }
-    } catch (err) {
+    } catch (error) {
       setModalErrorMessage("Invalid or expired code");
+      console.error(error.message);
     }
   };
 

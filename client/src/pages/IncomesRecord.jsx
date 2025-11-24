@@ -10,7 +10,7 @@ import Allowance from "../assets/allowance icon.png";
 import Income from "../assets/income icon.png";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { motion } from "framer-motion";
+
 import Sidebar from "../components/Sidebar";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;

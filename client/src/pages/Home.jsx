@@ -9,9 +9,7 @@ import Modal from "../components/Modal";
 import newExpenseIcon from "../assets/add expenses icon.png";
 import addBalanceIcon from "../assets/add income icon.png";
 import "../styles/QuickAccess.css";
-import { useAuth } from "../context/ContextProvider";
 import axios from "axios";
-import { AnimatePresence, motion } from "framer-motion";
 import Sidebar from "../components/Sidebar";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
