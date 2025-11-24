@@ -1,82 +1,14 @@
 import React, { useEffect, useState } from "react";
-import NavBar from "../components/NavBar";
-import "../styles/Records.css";
-import TopIncomes from "../components/TopIncomes";
-import Others from "../assets/others icon.png";
-import Salary from "../assets/salary icon.png";
-import Loan from "../assets/loan icon.png";
-import Freelance from "../assets/freelance icon.png";
-import Allowance from "../assets/allowance icon.png";
-import Income from "../assets/income icon.png";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Sidebar from "../components/Sidebar";
-import { motion } from "framer-motion";
+import "../styles/Records.css"; // Reusing the shared styles
+import ClipLoader from "react-spinners/ClipLoader";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-function getCurrentMonth() {
-  const now = new Date();
-  return now.toLocaleString("default", { month: "long" });
-}
-
-const Incomes = () => {
-  const navigate = useNavigate();
+const IncomesRecord = () => {
   const [incomes, setIncomes] = useState([]);
-  const [selectedMonth, setSelectedMonth] = useState(getCurrentMonth());
-
-  const navToExpense = () => {
-    navigate("/Expenses");
-  };
-  const capitalizeFirst = (str) => str.charAt(0).toUpperCase() + str.slice(1);
-
-  const icons = {
-    others: Others,
-    salary: Salary,
-    loan: Loan,
-    allowance: Allowance,
-    freelance: Freelance,
-  };
-
-  // Filter incomes by selected month
-  const filteredIncomes = incomes.filter((income) => {
-    const incomeMonth = new Date(income.date).toLocaleString("default", {
-      month: "long",
-    });
-    return incomeMonth === selectedMonth;
-  });
-
-  // Total for current month
-  const getTotalForMonth = () => {
-    return filteredIncomes.reduce(
-      (total, income) => total + Number(income.amount),
-      0
-    );
-  };
-
-  // Top 3 income stats
-  function getTop3Incomes(balances) {
-    const categoryTotals = {};
-    for (const income of balances) {
-      const cat = income.category.toLowerCase();
-      if (!categoryTotals[cat]) categoryTotals[cat] = 0;
-      categoryTotals[cat] += Number(income.amount);
-    }
-
-    const totalsArray = Object.keys(categoryTotals).map((cat) => ({
-      category: cat,
-      total: categoryTotals[cat],
-    }));
-
-    totalsArray.sort((a, b) => b.total - a.total);
-    const top3 = totalsArray.slice(0, 3);
-    const overall = top3.reduce((sum, item) => sum + item.total, 0);
-
-    return top3.map((item) => ({
-      ...item,
-      percentage: overall ? Math.round((item.total / overall) * 100) : 0,
-    }));
-  }
+  const [loading, setLoading] = useState(true);
+  const [filterMonth, setFilterMonth] = useState(new Date().getMonth());
 
   useEffect(() => {
     const fetchIncomes = async () => {
@@ -85,195 +17,116 @@ const Incomes = () => {
         const res = await axios.get(`${BASE_URL}/api/balance/getBalances`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-
         setIncomes(res.data.balances);
       } catch (error) {
-        console.log("Error in Fetching Incomes", error.message);
+        console.error("Error fetching incomes", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchIncomes();
   }, []);
 
+  const filteredIncomes = incomes.filter((item) => {
+    const itemDate = new Date(item.date);
+    return itemDate.getMonth() === parseInt(filterMonth);
+  });
+
+  const totalAmount = filteredIncomes.reduce(
+    (acc, curr) => acc + curr.amount,
+    0
+  );
+
+  if (loading)
+    return (
+      <div className="flex-center" style={{ height: "80vh" }}>
+        <ClipLoader color="#8b5cf6" />
+      </div>
+    );
+
   return (
-    <motion.div
-      className="incomesWrapper"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.4 }}
-    >
-      <div className="topNav">
-        <NavBar />
-      </div>
+    <div className="records-container">
+      <header className="records-header">
+        <h2 className="records-title">Income Records</h2>
+      </header>
 
-      <div className="sideNav">
-        <Sidebar />
-      </div>
-
-      <div className="main-content">
-        <div className="spacing"></div>
-
-        <motion.div
-          className="controls"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
+      <div className="filters-bar">
+        <div className="filter-group">
+          <label className="filter-label">Month:</label>
+          <select
+            className="filter-select"
+            value={filterMonth}
+            onChange={(e) => setFilterMonth(e.target.value)}
+          >
+            <option value="0">January</option>
+            <option value="1">February</option>
+            <option value="2">March</option>
+            <option value="3">April</option>
+            <option value="4">May</option>
+            <option value="5">June</option>
+            <option value="6">July</option>
+            <option value="7">August</option>
+            <option value="8">September</option>
+            <option value="9">October</option>
+            <option value="10">November</option>
+            <option value="11">December</option>
+          </select>
+        </div>
+        <div
+          className="total-badge"
+          style={{
+            borderColor: "rgba(16, 185, 129, 0.3)",
+            color: "var(--success)",
+          }}
         >
-          <div className="categoryControl">
-            <p
-              className="expenses"
-              style={{ paddingLeft: "10px" }}
-              onClick={() => navToExpense()}
-            >
-              Expenses
-            </p>
-            <p
-              className="income"
-              style={{
-                color: "white",
-                backgroundColor: "#1e1d31",
-                padding: "10px 20px",
-                borderRadius: "30px",
-              }}
-            >
-              Income
-            </p>
-          </div>
-
-          <div className="dateWrapper">
-            <select
-              id="date"
-              onChange={(e) => setSelectedMonth(e.target.value)}
-              value={selectedMonth}
-            >
-              <option value="January">January</option>
-              <option value="February">February</option>
-              <option value="March">March</option>
-              <option value="April">April</option>
-              <option value="May">May</option>
-              <option value="June">June</option>
-              <option value="July">July</option>
-              <option value="August">August</option>
-              <option value="September">September</option>
-              <option value="October">October</option>
-              <option value="November">November</option>
-              <option value="December">December</option>
-            </select>
-          </div>
-        </motion.div>
-
-        <div className="contentWrapper">
-          <motion.div
-            className="tableWrapper"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-          >
-            <table className="recordsTable">
-              <thead>
-                <tr>
-                  <th>Category</th>
-                  <th>Date</th>
-                  <th>Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredIncomes.length === 0 ? (
-                  <tr>
-                    <td colSpan="3" style={{ textAlign: "center" }}>
-                      No Records
-                    </td>
-                  </tr>
-                ) : (
-                  filteredIncomes.map((income, index) => (
-                    <tr key={index}>
-                      <td>{capitalizeFirst(income.category)}</td>
-                      <td>{new Date(income.date).toLocaleDateString()}</td>
-                      <td>₱ {income.amount.toLocaleString()}</td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
-          >
-            <h2 className="statsLabel">Statistics - Top 3 Incomes</h2>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ delay: 0.5, duration: 0.5 }}
-          >
-            <div className="total-stats-wrapper">
-              <div className="statsWrapper">
-                <div className="statsContainer">
-                  {filteredIncomes.length === 0 ? (
-                    <p style={{ textAlign: "center", fontWeight: "600" }}>
-                      No Incomes
-                    </p>
-                  ) : (
-                    getTop3Incomes(filteredIncomes).map((item, index) => (
-                      <TopIncomes
-                        key={index}
-                        img={icons[item.category] || Others}
-                        category={item.category}
-                        percentage={item.percentage}
-                        total={item.total}
-                      />
-                    ))
-                  )}
-                </div>
-              </div>
-
-              <div className="totalDesktop">
-                <img src={Income} alt="Income Icon" />
-                <p className="month-total">
-                  ₱ {getTotalForMonth().toLocaleString()}
-                </p>
-                <p className="month-label">Total Incomes - </p>
-                <span className="month-name">
-                  {selectedMonth.toUpperCase()}
-                </span>
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ delay: 0.6, duration: 0.5 }}
-          >
-            <div className="totalMobile">
-              <p
-                style={{
-                  color: "white",
-                  textAlign: "center",
-                  fontSize: "18px",
-                }}
-              >
-                <span
-                  style={{ color: "rgb(251, 126, 239)", fontWeight: "bold" }}
-                >
-                  {selectedMonth.toUpperCase()}
-                </span>{" "}
-                Total Incomes = ₱ {getTotalForMonth().toLocaleString()}
-              </p>
-            </div>
-          </motion.div>
+          Total: ₱ {totalAmount.toLocaleString()}
         </div>
       </div>
-    </motion.div>
+
+      <div className="table-container glass-panel">
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th>Source</th>
+              <th>Date</th>
+              <th>Description</th>
+              <th style={{ textAlign: "right" }}>Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredIncomes.length > 0 ? (
+              filteredIncomes.map((item) => (
+                <tr key={item._id}>
+                  <td>
+                    <span className="category-tag tag-green">
+                      {item.category}
+                    </span>
+                  </td>
+                  <td>{new Date(item.date).toLocaleDateString()}</td>
+                  <td>{item.description || "-"}</td>
+                  <td
+                    style={{
+                      textAlign: "right",
+                      fontWeight: "bold",
+                      color: "var(--success)",
+                    }}
+                  >
+                    + ₱ {item.amount.toLocaleString()}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colspan="4" className="no-data">
+                  No records found for this month.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 };
 
-export default Incomes;
+export default IncomesRecord;
