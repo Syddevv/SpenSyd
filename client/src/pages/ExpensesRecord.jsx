@@ -97,7 +97,7 @@ const ExpensesRecord = () => {
             <tr>
               <th>Category</th>
               <th>Date</th>
-              <th>Description</th>
+              {/* Removed Description Header */}
               <th style={{ textAlign: "right" }}>Amount</th>
             </tr>
           </thead>
@@ -115,7 +115,7 @@ const ExpensesRecord = () => {
                     </span>
                   </td>
                   <td>{new Date(item.date).toLocaleDateString()}</td>
-                  <td>{item.description || "-"}</td>
+                  {/* Removed Description Cell */}
                   <td
                     style={{
                       textAlign: "right",
@@ -129,7 +129,8 @@ const ExpensesRecord = () => {
               ))
             ) : (
               <tr>
-                <td colspan="4" className="no-data">
+                {/* Adjusted colspan from 4 to 3 since one column was removed */}
+                <td colSpan="3" className="no-data">
                   No records found for this month.
                 </td>
               </tr>

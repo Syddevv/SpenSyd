@@ -89,7 +89,6 @@ const IncomesRecord = () => {
             <tr>
               <th>Source</th>
               <th>Date</th>
-              <th>Description</th>
               <th style={{ textAlign: "right" }}>Amount</th>
             </tr>
           </thead>
@@ -103,7 +102,6 @@ const IncomesRecord = () => {
                     </span>
                   </td>
                   <td>{new Date(item.date).toLocaleDateString()}</td>
-                  <td>{item.description || "-"}</td>
                   <td
                     style={{
                       textAlign: "right",

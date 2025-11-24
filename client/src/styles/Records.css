@@ -8,6 +8,7 @@
   flex-direction: column;
   gap: 20px;
   animation: fadeIn 0.4s ease-out;
+  overflow-x: hidden;
 }
 
 .records-header {
@@ -32,6 +33,7 @@
   border: 1px solid var(--border-glass);
   border-radius: var(--radius-md);
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .filter-group {
@@ -63,21 +65,23 @@
   font-weight: 600;
   color: var(--text-main);
   border: 1px solid var(--border-glass);
+  white-space: nowrap;
 }
 
-/* --- Data Grid Table --- */
+/* --- Data Grid Table (Desktop Default) --- */
 .table-container {
-  overflow-x: auto;
   background: var(--bg-glass);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-glass);
   box-shadow: var(--shadow-lg);
+  width: 100%;
+  overflow-x: auto;
 }
 
 .data-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 600px;
+  min-width: 600px; /* Desktop min-width */
 }
 
 .data-table th {
@@ -90,6 +94,7 @@
   letter-spacing: 0.5px;
   border-bottom: 1px solid var(--border-subtle);
   background: rgba(255, 255, 255, 0.02);
+  white-space: nowrap;
 }
 
 .data-table td {
@@ -97,6 +102,7 @@
   color: var(--text-main);
   font-size: 0.95rem;
   border-bottom: 1px solid var(--border-subtle);
+  white-space: nowrap;
 }
 
 .data-table tr:last-child td {
@@ -107,7 +113,7 @@
   background: rgba(255, 255, 255, 0.02);
 }
 
-/* Category Badge in Table */
+/* Category Badge */
 .category-tag {
   display: inline-block;
   padding: 4px 12px;
@@ -145,12 +151,105 @@
   color: var(--text-muted);
 }
 
-/* Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
   }
   to {
     opacity: 1;
+  }
+}
+
+/* --- Mobile Responsive: Card View Transformation --- */
+@media (max-width: 768px) {
+  .filters-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .filter-group {
+    justify-content: space-between;
+  }
+
+  .total-badge {
+    margin-left: 0;
+    text-align: center;
+    width: 100%;
+  }
+
+  /* Reset Table Container styles for mobile */
+  .table-container {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    overflow-x: visible;
+  }
+
+  .data-table {
+    display: block;
+    min-width: 0;
+  }
+
+  /* Hide Table Header */
+  .data-table thead {
+    display: none;
+  }
+
+  .data-table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* Transform Row into Card */
+  .data-table tr {
+    display: grid;
+    grid-template-columns: 1fr auto; /* Left: Info, Right: Amount */
+    grid-template-rows: auto auto;
+    background: var(
+      --bg-glass
+    ); /* Use the glass background on the row itself */
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .data-table td {
+    display: block;
+    padding: 0;
+    border: none;
+    white-space: normal;
+  }
+
+  /* 1. Category (Top Left) */
+  .data-table td:nth-child(1) {
+    grid-column: 1;
+    grid-row: 1;
+    margin-bottom: 4px;
+  }
+
+  /* 2. Date (Bottom Left) */
+  .data-table td:nth-child(2) {
+    grid-column: 1;
+    grid-row: 2;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+
+  /* 3. Amount (Right Side - Vertically Centered) */
+  .data-table td:nth-child(3) {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: center;
+    text-align: right !important;
+    font-size: 1.1rem;
+  }
+
+  /* Slightly larger tags on mobile for touch targets/readability */
+  .category-tag {
+    font-size: 0.85rem;
+    padding: 5px 10px;
   }
 }
