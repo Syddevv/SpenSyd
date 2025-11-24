@@ -70,7 +70,7 @@
   /* Removed drop-shadow filter which might look blurry on small icons */
 }
 
-.modalTop {
+.modal-top {
   font-size: 1.25rem;
   font-weight: 700;
   margin-bottom: 24px;
@@ -80,7 +80,7 @@
   margin-top: 0;
 }
 
-.passInputs {
+.pass-inputs {
   display: flex;
   flex-direction: column;
   gap: 16px;

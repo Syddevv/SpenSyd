@@ -75,7 +75,7 @@ export const ChangePassModal = ({ onClose }) => {
         exit={{ opacity: 0, scale: 0.9 }}
         transition={{ duration: 0.2, ease: "easeOut" }}
       >
-        <h3 className="modalTop">Change Password</h3>
+        <h3 className="modal-top">Change Password</h3>
 
         <button className="closeButton" onClick={onClose}>
           <img
@@ -85,7 +85,7 @@ export const ChangePassModal = ({ onClose }) => {
           />
         </button>
 
-        <div className="passInputs">
+        <div className="pass-inputs">
           <div className="inputWithToggle">
             <input
               type={showCurrent ? "text" : "password"}

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import CloseBTN from "../assets/close-btn.png";
 import "../styles/ChangeEmailModal.css";
-import GmailIcon from "../assets/gmail.png";
+import CloseBTN from "../assets/close-btn.png";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
 import ClipLoader from "react-spinners/ClipLoader";
@@ -31,7 +30,6 @@ export const ChangeEmailModal = ({ onClose, user, token, onEmailChanged }) => {
 
     setLoading(true);
     try {
-      // Call the new direct update endpoint
       const res = await fetch(`${BASE_URL}/api/auth/change-email/direct`, {
         method: "PUT",
         headers: {
@@ -45,9 +43,9 @@ export const ChangeEmailModal = ({ onClose, user, token, onEmailChanged }) => {
 
       if (data.success) {
         toast.success("Email updated successfully");
-        onEmailChanged(newEmail); // Update parent state/context
+        if (onEmailChanged) onEmailChanged(newEmail);
 
-        // Update local storage user object
+        // Update local storage
         const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
         storedUser.email = newEmail;
         localStorage.setItem("user", JSON.stringify(storedUser));
@@ -55,7 +53,7 @@ export const ChangeEmailModal = ({ onClose, user, token, onEmailChanged }) => {
         setTimeout(() => {
           onClose();
           window.location.reload();
-        }, 1500);
+        }, 1000);
       } else {
         setError(data.message || "Failed to update email");
       }
@@ -72,49 +70,40 @@ export const ChangeEmailModal = ({ onClose, user, token, onEmailChanged }) => {
       <motion.div
         className="changeEmailModalContent"
         onClick={(e) => e.stopPropagation()}
-        initial={{ opacity: 0, scale: 0.7 }}
+        initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.7 }}
-        transition={{ duration: 0.35, ease: "easeOut" }}
+        exit={{ opacity: 0, scale: 0.9 }}
+        transition={{ duration: 0.2, ease: "easeOut" }}
       >
-        <img
-          src={CloseBTN}
-          alt="Close"
-          className="closeButton"
-          onClick={onClose}
-        />
-        <img src={GmailIcon} alt="Gmail" className="gmailIcon" />
+        <h3 className="modal-top">Change Email</h3>
 
-        <p className="modalTitle">Change Email Address</p>
-        <p className="modalDesc">Enter your new email address below.</p>
+        <button className="closeButton" onClick={onClose}>
+          <img
+            src={CloseBTN}
+            alt="Close"
+            style={{ width: "100%", height: "100%" }}
+          />
+        </button>
 
-        <input
-          type="email"
-          placeholder="New Email Address"
-          className="newEmail"
-          value={newEmail}
-          onChange={(e) => {
-            setNewEmail(e.target.value);
-            setError("");
-          }}
-        />
+        <div className="emailInputs">
+          <div className="input-group">
+            <input
+              type="email"
+              placeholder="New Email Address"
+              value={newEmail}
+              onChange={(e) => {
+                setNewEmail(e.target.value);
+                setError("");
+              }}
+              autoFocus
+            />
+          </div>
+        </div>
 
-        {error && (
-          <p
-            style={{
-              color: "var(--danger)",
-              marginTop: "0px",
-              marginBottom: "10px",
-              textAlign: "center",
-              fontSize: "14px",
-            }}
-          >
-            {error}
-          </p>
-        )}
+        {error && <p className="errorMsg">{error}</p>}
 
         <button
-          className="changeEmailBTN"
+          className="changeEmailBtn"
           onClick={handleUpdateEmail}
           disabled={loading}
         >
