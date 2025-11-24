@@ -115,7 +115,7 @@ const IncomesRecord = () => {
               ))
             ) : (
               <tr>
-                <td colspan="4" className="no-data">
+                <td colSpan="4" className="no-data">
                   No records found for this month.
                 </td>
               </tr>
