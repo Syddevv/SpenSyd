@@ -1,60 +1,57 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import SpenSyd_Icon from "../assets/SpenSyd Icon.png";
 import axios from "axios";
-import "../styles/Register.css";
-import VerificationModal from "../components/VerificationModal";
+import { motion } from "framer-motion";
 import { toast } from "react-toastify";
+import ClipLoader from "react-spinners/ClipLoader";
+import VerificationModal from "../components/VerificationModal";
+import SpenSyd_Icon from "../assets/SpenSyd Icon.png";
+import "../styles/Login.css"; // Import base auth styles
+import "../styles/Register.css"; // Import specific register overrides
+
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const Register = () => {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  const [showModal, setShowModal] = useState(false);
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  // Verification Modal State
+  const [showVerifyModal, setShowVerifyModal] = useState(false);
   const [pendingUser, setPendingUser] = useState(null);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [loadingCode, setLoadingCode] = useState(false);
-  const [modalErrorMessage, setModalErrorMessage] = useState(false);
+  const [verifyError, setVerifyError] = useState("");
 
-  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
-  useEffect(() => {
-    if (errorMessage) {
-      const timer = setTimeout(() => {
-        setErrorMessage("");
-      }, 2000); // Clear after 2 seconds
-
-      return () => clearTimeout(timer);
-    }
-  }, [errorMessage]);
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setError("");
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoadingCode(true);
+    setLoading(true);
+    setError("");
 
-    if (password.length < 8) {
-      setErrorMessage("Password must be at least 8 characters");
-      setLoadingCode(false);
+    if (formData.password.length < 8) {
+      setError("Password must be at least 8 characters");
+      setLoading(false);
       return;
     }
 
     try {
-      const res = await axios.post(`${BASE_URL}/api/auth/send-code`, {
-        username,
-        email,
-        password,
-      });
-
+      const res = await axios.post(`${BASE_URL}/api/auth/send-code`, formData);
       if (res.data.success) {
-        setPendingUser({ username, email, password });
-        setShowModal(true);
-        setLoadingCode(false);
+        setPendingUser(formData);
+        setShowVerifyModal(true);
       }
-    } catch (error) {
-      setErrorMessage(error.response?.data?.message || "Something went wrong");
-      setLoadingCode(false);
+    } catch (err) {
+      setError(err.response?.data?.message || "Registration failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -66,140 +63,117 @@ const Register = () => {
       });
 
       if (verifyRes.data.success) {
-        toast.success("Account Created Successfully");
+        toast.success("Account created successfully! Please login.");
         navigate("/login");
-      } else {
-        toast.error("Invalid Verification");
       }
-    } catch (error) {
-      setModalErrorMessage("Invalid or expired code");
-      console.error(error.message);
+    } catch (err) {
+      setVerifyError("Invalid or expired verification code");
     }
   };
 
   return (
-    <motion.div
-      className="register-wrapper"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.4 }}
-    >
-      <motion.div
-        initial={{ opacity: 0, y: -40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.5 }}
-      >
-        <div>
-          <img
-            src={SpenSyd_Icon}
-            alt="SpenSyd Icon"
-            className="register-icon"
-          />
-          <h1 className="pageName-register">SpenSyd</h1>
+    <div className="auth-container">
+      {/* Left Side - Visual */}
+      <div className="auth-visual register-visual">
+        <div className="visual-content">
+          <img src={SpenSyd_Icon} alt="Logo" className="visual-logo" />
+          <h1 className="visual-heading">Join the SpenSyd Community.</h1>
+          <p className="visual-text">
+            Start your journey towards financial freedom today. Create an
+            account to access professional tracking tools.
+          </p>
         </div>
-      </motion.div>
+      </div>
 
-      <motion.div
-        className="registerPage"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.5 }}
-      >
-        <h2 className="description-register">Register</h2>
-
-        <form onSubmit={handleSubmit} className="register-form">
-          <div className="username-wrapper">
-            <label htmlFor="username">Username</label>
-            <input
-              className="username-input"
-              placeholder="Enter a username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-            />
+      {/* Right Side - Form */}
+      <div className="auth-form-container">
+        <motion.div
+          className="auth-card glass-panel"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="auth-header">
+            <h2>Create Account</h2>
+            <p>Get started with your free account</p>
           </div>
 
-          <div className="email-wrapper">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              className="email-input"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
+          {error && <div className="error-message">{error}</div>}
 
-          <div className="password-wrapper">
-            <label htmlFor="password">Password</label>
-            <div style={{ position: "relative" }}>
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label>Username</label>
               <input
-                type={showPassword ? "text" : "password"}
-                className="password-input"
-                placeholder="Create a password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                type="text"
+                name="username"
+                className="input-field"
+                placeholder="johndoe"
+                value={formData.username}
+                onChange={handleChange}
                 required
               />
-              <span
-                onClick={() => setShowPassword(!showPassword)}
-                style={{
-                  position: "absolute",
-                  right: 12,
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  cursor: "pointer",
-                  color: "#aaa",
-                  fontSize: "0.85rem",
-                  userSelect: "none",
-                }}
-              >
-                {showPassword ? "Hide" : "Show"}
-              </span>
             </div>
-          </div>
 
-          {errorMessage && (
-            <p
-              style={{
-                color: "red",
-                marginTop: "0px",
-                marginBottom: "0px",
-                textAlign: "center",
-                fontSize: "15px",
-              }}
+            <div className="form-group">
+              <label>Email Address</label>
+              <input
+                type="email"
+                name="email"
+                className="input-field"
+                placeholder="name@company.com"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Password</label>
+              <input
+                type="password"
+                name="password"
+                className="input-field"
+                placeholder="Create a strong password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="btn-primary"
+              style={{ width: "100%" }}
+              disabled={loading}
             >
-              {errorMessage}
-            </p>
-          )}
+              {loading ? (
+                <ClipLoader color="#fff" size={20} />
+              ) : (
+                "Create Account"
+              )}
+            </button>
+          </form>
 
-          <button className="register-button" type="submit">
-            {loadingCode ? "Please wait ..." : "Register"}
-          </button>
-        </form>
-
-        <p className="link-wrapper">
-          Already have an account?{" "}
-          <Link to="/login" style={{ textDecoration: "none" }}>
-            <span className="link">Login</span>
-          </Link>
-        </p>
-      </motion.div>
-
-      <div>
-        {showModal && (
-          <VerificationModal
-            email={email}
-            onSubmitCode={handleVerify}
-            onClose={() => setShowModal(false)}
-            errorMessage={modalErrorMessage}
-            clearError={() => setModalErrorMessage("")}
-          />
-        )}
+          <div className="auth-footer">
+            Already have an account?
+            <Link to="/login" className="auth-link">
+              Sign In
+            </Link>
+          </div>
+        </motion.div>
       </div>
-    </motion.div>
+
+      {/* Verification Modal */}
+      {showVerifyModal && (
+        <VerificationModal
+          email={pendingUser?.email}
+          onSubmitCode={handleVerify}
+          onClose={() => setShowVerifyModal(false)}
+          errorMessage={verifyError}
+          clearError={() => setVerifyError("")}
+        />
+      )}
+    </div>
   );
 };
 
