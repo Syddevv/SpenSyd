@@ -29,6 +29,8 @@
   gap: 24px;
   padding: 32px;
   margin-bottom: 32px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .profile-img-large {
@@ -37,16 +39,29 @@
   border-radius: 50%;
   object-fit: cover;
   border: 4px solid rgba(139, 92, 246, 0.3);
+  flex-shrink: 0; /* Prevent image from squishing */
+}
+
+.profile-info-large {
+  flex: 1; /* Take remaining width */
+  min-width: 0; /* Critical for text wrapping in flex containers */
 }
 
 .profile-info-large h3 {
   font-size: 1.5rem;
   color: var(--text-main);
   margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .profile-info-large p {
   color: var(--text-muted);
+  /* Force long emails to wrap to the next line */
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.4;
 }
 
 /* Controls Grid */
@@ -121,4 +136,29 @@
 .confirmationModalContent {
   background: var(--bg-surface);
   border: 1px solid var(--border-glass);
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 480px) {
+  .profile-section {
+    flex-direction: column;
+    text-align: center;
+    padding: 24px 16px;
+    gap: 16px;
+  }
+
+  .profile-info-large {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .profile-info-large p {
+    font-size: 0.9rem;
+  }
+
+  .setting-item {
+    padding: 16px;
+  }
 }
