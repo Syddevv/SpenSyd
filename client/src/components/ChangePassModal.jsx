@@ -22,17 +22,22 @@ export const ChangePassModal = ({ onClose, openModal }) => {
 
   const showTemporaryError = (message) => {
     setError(message);
-    setTimeout(() => setError(""), 2000);
+    setTimeout(() => setError(""), 3000);
   };
 
   const handleSubmit = async () => {
     setError("");
 
+    if (!currentPass || !newPass || !confirmPass)
+      return showTemporaryError("Please fill all fields");
+
     if (newPass !== confirmPass)
       return showTemporaryError("Passwords don't match");
+
     if (newPass.length < 8) return showTemporaryError("Min 8 characters");
+
     if (newPass === currentPass)
-      return showTemporaryError("Must differ from current");
+      return showTemporaryError("New password must differ from current");
 
     setLoading(true);
 
@@ -50,10 +55,12 @@ export const ChangePassModal = ({ onClose, openModal }) => {
       );
 
       toast.success(res.data.message || "Password updated!");
+
+      // Small delay before closing to show success state if button changed (optional, keeping simple here)
       setTimeout(() => {
         setLoading(false);
         onClose();
-      }, 1500);
+      }, 1000);
     } catch (err) {
       setLoading(false);
       showTemporaryError(err.response?.data?.message || "Error occurred");
@@ -69,7 +76,7 @@ export const ChangePassModal = ({ onClose, openModal }) => {
       <EnterEmailModal
         onClose={() => {
           setShowForgotPasswordFlow(false);
-          onClose();
+          onClose(); // Close everything if they cancel the flow inside
         }}
         isLoggedIn={true}
       />
@@ -77,21 +84,24 @@ export const ChangePassModal = ({ onClose, openModal }) => {
   }
 
   return (
-    <div className="changePassModalWrapper">
+    <div className="changePassModalWrapper" onClick={onClose}>
       <motion.div
         className="changePassModalContent"
-        initial={{ opacity: 0, scale: 0.7 }}
+        onClick={(e) => e.stopPropagation()}
+        initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.7 }}
-        transition={{ duration: 0.35, ease: "easeOut" }}
+        exit={{ opacity: 0, scale: 0.9 }}
+        transition={{ duration: 0.2, ease: "easeOut" }}
       >
-        <p className="modalTop">CHANGE PASSWORD</p>
-        <img
-          src={CloseBTN}
-          alt="Close"
-          className="closeButton"
-          onClick={onClose}
-        />
+        <h3 className="modalTop">Change Password</h3>
+
+        <button className="closeButton" onClick={onClose}>
+          <img
+            src={CloseBTN}
+            alt="Close"
+            style={{ width: "100%", height: "100%" }}
+          />
+        </button>
 
         <div className="passInputs">
           <div className="inputWithToggle">
@@ -104,12 +114,13 @@ export const ChangePassModal = ({ onClose, openModal }) => {
                 setError("");
               }}
             />
-            <span
+            <button
+              type="button"
               className="toggleText"
               onClick={() => setShowCurrent((prev) => !prev)}
             >
               {showCurrent ? "Hide" : "Show"}
-            </span>
+            </button>
           </div>
 
           <div className="inputWithToggle">
@@ -122,12 +133,13 @@ export const ChangePassModal = ({ onClose, openModal }) => {
                 setError("");
               }}
             />
-            <span
+            <button
+              type="button"
               className="toggleText"
               onClick={() => setShowNew((prev) => !prev)}
             >
               {showNew ? "Hide" : "Show"}
-            </span>
+            </button>
           </div>
 
           <div className="inputWithToggle">
@@ -140,36 +152,25 @@ export const ChangePassModal = ({ onClose, openModal }) => {
                 setError("");
               }}
             />
-            <span
+            <button
+              type="button"
               className="toggleText"
               onClick={() => setShowConfirm((prev) => !prev)}
             >
               {showConfirm ? "Hide" : "Show"}
-            </span>
+            </button>
           </div>
         </div>
 
-        {error && (
-          <p
-            className="errorMsg"
-            style={{ marginTop: "0px", color: "red", fontSize: "13px" }}
-          >
-            {error}
-          </p>
-        )}
+        {error && <p className="errorMsg">{error}</p>}
 
         <button
           className="changePassBtn"
           onClick={handleSubmit}
           disabled={loading}
         >
-          {loading ? <ClipLoader color="#fff" size={20} /> : "CHANGE PASSWORD"}
+          {loading ? <ClipLoader color="#fff" size={20} /> : "Update Password"}
         </button>
-
-        <div onClick={handleForgotPassword}>
-          <p className="backToSettings">Forgot password?</p>
-          <hr className="line" />
-        </div>
       </motion.div>
     </div>
   );
