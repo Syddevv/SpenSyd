@@ -1,48 +1,40 @@
-import "../styles/EditProfileModal.css";
-import CloseBTN from "../assets/close-btn.png";
-import { useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import fallbackImage from "../assets/default-profile.png";
 import { useAuth } from "../context/ContextProvider";
 import { toast } from "react-toastify";
+import "../styles/EditProfileModal.css";
+
+// Assets
+import CloseBTN from "../assets/close-btn.png";
+import fallbackImage from "../assets/default-profile.png";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 export const EditProfileModal = ({ closeModal }) => {
+  const { user } = useAuth();
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState(user?.username || "");
   const [loading, setLoading] = useState(false);
-  const { user } = useAuth();
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    setSelectedFile(file);
-    setPreview(URL.createObjectURL(file));
-  };
-
-  const refreshPage = () => {
-    setTimeout(() => {
-      window.location.reload();
-    }, 2000);
+    if (file) {
+      setSelectedFile(file);
+      setPreview(URL.createObjectURL(file));
+    }
   };
 
   const handleSubmit = async () => {
-    const token = localStorage.getItem("token");
-    let user = null;
-    try {
-      user = JSON.parse(localStorage.getItem("user"));
-    } catch {
-      user = null;
-    }
-
-    if (!token || !user || !user._id) {
-      return;
-    }
+    if (!user || !user._id) return;
 
     setLoading(true);
     const formData = new FormData();
     if (selectedFile) formData.append("profilePicture", selectedFile);
-    if (username) formData.append("username", username);
+    if (username && username !== user.username)
+      formData.append("username", username);
+
+    const token = localStorage.getItem("token");
 
     try {
       const res = await axios.put(
@@ -64,32 +56,45 @@ export const EditProfileModal = ({ closeModal }) => {
       };
       localStorage.setItem("user", JSON.stringify(updatedUser));
 
-      closeModal();
-      refreshPage();
-      toast.success("Profile updated sucessfully.");
+      toast.success("Profile updated successfully");
+
+      // Close modal and refresh to reflect changes
+      setTimeout(() => {
+        closeModal();
+        window.location.reload();
+      }, 1000);
     } catch (err) {
-      toast.error("Error updating profile");
+      toast.error(err.response?.data?.message || "Error updating profile");
       setLoading(false);
-      console.error("Update error:", err);
     }
   };
 
   return (
-    <div className="editProfileModalWrapper">
-      <div className="editProfileModalContent">
-        <p className="modalName">EDIT PROFILE</p>
-        <img
-          src={CloseBTN}
-          alt="Close Button"
-          className="closeButton"
-          onClick={closeModal}
-        />
-        <img
-          src={preview || user?.profilePicture || fallbackImage}
-          alt="preview"
-          className="profilePicModal"
-        />
-        <div className="fileUploadWrapper">
+    <div className="editProfileModalWrapper" onClick={closeModal}>
+      {/* Stop propagation ensures clicking inside the modal doesn't close it */}
+      <div
+        className="editProfileModalContent"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="modalHeader">
+          <h3 className="modalTitle">Edit Profile</h3>
+          <img
+            src={CloseBTN}
+            alt="Close"
+            className="closeButton"
+            onClick={closeModal}
+          />
+        </div>
+
+        <div className="profile-upload-section">
+          <div className="image-container">
+            <img
+              src={preview || user?.profilePicture || fallbackImage}
+              alt="Profile Preview"
+              className="profilePicModal"
+            />
+          </div>
+
           <input
             type="file"
             id="profilePicture"
@@ -98,19 +103,22 @@ export const EditProfileModal = ({ closeModal }) => {
             style={{ display: "none" }}
           />
           <label htmlFor="profilePicture" className="uploadButton">
-            Update Picture
+            Change Photo
           </label>
         </div>
 
-        <div className="usernameInput">
-          <label htmlFor="profileUsername">Username</label>
-          <input
-            type="text"
-            placeholder={`@ ${user.username}`}
-            className="profileUsername"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
+        <div className="form-section">
+          <div className="usernameInput">
+            <label htmlFor="profileUsername">Username</label>
+            <input
+              type="text"
+              id="profileUsername"
+              placeholder="Enter username"
+              className="profileUsername"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
         </div>
 
         <button
@@ -118,7 +126,7 @@ export const EditProfileModal = ({ closeModal }) => {
           onClick={handleSubmit}
           disabled={loading}
         >
-          {loading ? "Saving..." : "SAVE CHANGES"}
+          {loading ? "Saving..." : "Save Changes"}
         </button>
       </div>
     </div>
