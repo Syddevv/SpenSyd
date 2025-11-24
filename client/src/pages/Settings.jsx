@@ -1,57 +1,58 @@
 import React, { useState } from "react";
-import NavBar from "../components/NavBar";
-import "../styles/Settings.css";
-import Profile from "../components/Profile";
-import PasswordIcon from "../assets/password.png";
-import ArrowIcon from "../assets/arrow icon.png";
-import GmailIcon from "../assets/gmail.png";
-import LogoutIcon from "../assets/logout.png";
-import AboutIcon from "../assets/about icon.png";
-import { ConfirmationModal } from "../components/ConfirmationModal";
+import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../context/ContextProvider";
 import { useNavigate } from "react-router-dom";
+
+import "../styles/Settings.css";
+
+// Modals
+import { ConfirmationModal } from "../components/ConfirmationModal";
 import { ChangePassModal } from "../components/ChangePassModal";
 import { ChangeEmailModal } from "../components/ChangeEmailModal";
 import { EditProfileModal } from "../components/EditProfileModal";
-import { ForgotPassModal } from "../components/ForgotPassModal";
-import { VerifyCodeModal } from "../components/VerifyCodeModal";
-import { AnimatePresence, motion } from "framer-motion";
 import { AboutUsModal } from "../components/AboutUsModal";
-import Sidebar from "../components/Sidebar";
+import { VerifyCodeModal } from "../components/VerifyCodeModal";
+import { ForgotPassModal } from "../components/ForgotPassModal";
+
+// Assets
+import DefaultProfile from "../assets/default-profile.png";
+import PasswordIcon from "../assets/password.png";
+import GmailIcon from "../assets/gmail.png";
+import LogoutIcon from "../assets/logout.png";
+import AboutIcon from "../assets/about icon.png";
+import ArrowIcon from "../assets/arrow icon.png";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const Settings = () => {
-  const [showPassModal, setShowPassModal] = useState(false);
-  const [showGmailModal, setShowGmailModal] = useState(false);
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
-  const [showChangePassModal, setshowChangePassModal] = useState(false);
-  const [showChangeEmailModal, setshowChangeEmailModal] = useState(false);
-  const [showEditProfileModal, setshowEditProfileModal] = useState(false);
-  const [showForgotPassModal, setShowForgotPassModal] = useState(false);
-  const [showVerifyCodeModal, setShowVerifyCodeModal] = useState(false);
-  const [showAboutModal, setShowAboutModal] = useState(false);
-
   const navigate = useNavigate();
-  const { logout, user, token, setUser } = useAuth(); // Make sure token and setUser are available
+  const { user, logout, token, setUser } = useAuth();
+
+  // Modal States
+  const [modalState, setModalState] = useState({
+    password: false,
+    email: false,
+    logout: false,
+    about: false,
+    editProfile: false,
+    changePassForm: false,
+    changeEmailForm: false,
+    verifyCode: false,
+    forgotPass: false,
+  });
+
+  const toggleModal = (key, value) => {
+    setModalState((prev) => ({ ...prev, [key]: value }));
+  };
+
   const handleLogout = () => {
     logout();
     navigate("/login");
   };
 
-  const handleChangeEmail = () => {
-    setshowChangeEmailModal(true);
-    setShowGmailModal(false);
-  };
-
-  const handleChangePass = () => {
-    setshowChangePassModal(true);
-    setShowPassModal(false);
-  };
-
-  const openVerificationModal = async () => {
-    if (!user?.email) return alert("No email found for this account.");
-
+  // Verification Flow for Sensitive Actions
+  const initVerification = async () => {
+    if (!user?.email) return alert("No email found.");
     try {
       const res = await fetch(
         `${BASE_URL}/api/auth/send-reset-code/logged-in`,
@@ -61,37 +62,28 @@ const Settings = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          // Don't need to send email - backend gets it from token
           body: JSON.stringify({}),
         }
       );
-
       const data = await res.json();
       if (data.success) {
-        setShowVerifyCodeModal(true);
-        setshowChangePassModal(false);
+        toggleModal("verifyCode", true);
+        toggleModal("changePassForm", false);
       } else {
-        alert(data.message || "Failed to send verification code.");
+        alert(data.message);
       }
     } catch (error) {
-      alert("Error sending verification code.");
       console.error(error);
     }
   };
 
-  const closeVerificationModal = () => {
-    setShowVerifyCodeModal(false);
-    setshowChangePassModal(false);
-  };
-
-  // In Settings.jsx
-  const handleVerificationSuccess = async (code) => {
+  const handleCodeVerified = async (code) => {
     try {
       const res = await fetch(`${BASE_URL}/api/auth/verify-reset-code`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Add auth token for logged-in flow
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           email: user.email,
@@ -101,8 +93,8 @@ const Settings = () => {
 
       const data = await res.json();
       if (data.success) {
-        setShowVerifyCodeModal(false);
-        setShowForgotPassModal(true);
+        toggleModal("verifyCode", false);
+        toggleModal("forgotPass", true);
       } else {
         alert(data.message || "Invalid code");
       }
@@ -111,257 +103,200 @@ const Settings = () => {
     }
   };
 
-  // When rendering the modal
-  {
-    showVerifyCodeModal && (
-      <VerifyCodeModal
-        email={user.email}
-        onVerified={handleVerificationSuccess}
-        onClose={() => closeVerificationModal()}
-      />
-    );
-  }
-
-  // When email is changed, update user context
-  const handleEmailChanged = (newEmail) => {
-    setUser({ ...user, email: newEmail });
-  };
-
   return (
-    <motion.div
-      className="settingsWrapper"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.4 }}
-    >
-      <div>
-        <div className="topNav">
-          <NavBar />
-        </div>
-        <div className="sideNav">
-          <Sidebar />
-        </div>
+    <div className="settings-container">
+      <div className="settings-header">
+        <h2 className="settings-title">Account Settings</h2>
+        <p className="settings-subtitle">
+          Manage your profile and security preferences.
+        </p>
+      </div>
 
-        <div className="contents">
-          <motion.div
-            className="profileWrapper"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
+      {/* Profile Section */}
+      <div className="profile-section glass-panel">
+        <img
+          src={user?.profilePicture || DefaultProfile}
+          alt="Profile"
+          className="profile-img-large"
+        />
+        <div className="profile-info-large">
+          <h3>@{user?.username}</h3>
+          <p>{user?.email}</p>
+          <button
+            className="btn-outline"
+            style={{
+              marginTop: "12px",
+              padding: "8px 16px",
+              fontSize: "0.85rem",
+            }}
+            onClick={() => toggleModal("editProfile", true)}
           >
-            <div>
-              <Profile openModal={() => setshowEditProfileModal(true)} />
-            </div>
-          </motion.div>
-
-          <motion.div
-            className="settingControlsWrapper"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-          >
-            <div>
-              <div
-                className="settingControl"
-                onClick={() => setShowPassModal(true)}
-              >
-                <div className="iconWrapper">
-                  <img
-                    src={PasswordIcon}
-                    alt="Password Icon"
-                    className="passwordIcon"
-                  />
-                </div>
-                <p className="labels">Change Password</p>
-                <img src={ArrowIcon} alt="Arrow" className="arrowIcon" />
-              </div>
-              <hr />
-
-              <div
-                className="settingControl"
-                onClick={() => setShowGmailModal(true)}
-              >
-                <div className="iconWrapper">
-                  <img src={GmailIcon} alt="Gmail Icon" className="gmailIcon" />
-                </div>
-                <p className="labels">Change Email Address</p>
-                <img src={ArrowIcon} alt="Arrow" className="arrowIcon" />
-              </div>
-              <hr />
-
-              <div
-                className="settingControl"
-                onClick={() => setShowLogoutModal(true)}
-              >
-                <div className="iconWrapper">
-                  <img
-                    src={LogoutIcon}
-                    alt="Logout Icon"
-                    className="logoutIcon"
-                  />
-                </div>
-                <p className="labels">Logout</p>
-                <img src={ArrowIcon} alt="Arrow" className="arrowIcon" />
-              </div>
-              <hr />
-
-              <div
-                className="settingControl"
-                onClick={() => setShowAboutModal(true)}
-              >
-                <div className="iconWrapper">
-                  <img src={AboutIcon} alt="About Icon" className="aboutIcon" />
-                </div>
-                <p className="labels">About SpenSyd</p>
-                <img src={ArrowIcon} alt="Arrow" className="arrowIcon" />
-              </div>
-            </div>
-          </motion.div>
-
-          <AnimatePresence>
-            {showPassModal && (
-              <motion.div
-                className="modalBackground"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                <motion.div
-                  className="modalWrapper"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.7 }}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
-                >
-                  <ConfirmationModal
-                    onClose={() => setShowPassModal(false)}
-                    icon={PasswordIcon}
-                    text="Change password?"
-                    onSubmit={handleChangePass}
-                  />
-                </motion.div>
-              </motion.div>
-            )}
-
-            {showGmailModal && (
-              <motion.div
-                className="modalBackground"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                <motion.div
-                  className="modalWrapper"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.7 }}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
-                >
-                  <ConfirmationModal
-                    onClose={() => setShowGmailModal(false)}
-                    icon={GmailIcon}
-                    text="Change email address?"
-                    onSubmit={handleChangeEmail}
-                  />
-                </motion.div>
-              </motion.div>
-            )}
-
-            {showLogoutModal && (
-              <motion.div
-                className="modalBackground"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                <motion.div
-                  className="modalWrapper"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.7 }}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
-                >
-                  <ConfirmationModal
-                    onClose={() => setShowLogoutModal(false)}
-                    icon={LogoutIcon}
-                    text="Do you want to logout?"
-                    onSubmit={handleLogout}
-                  />
-                </motion.div>
-              </motion.div>
-            )}
-
-            {showChangePassModal && (
-              <ChangePassModal
-                onClose={() => setshowChangePassModal(false)}
-                openModal={openVerificationModal}
-              />
-            )}
-
-            {showChangeEmailModal && (
-              <ChangeEmailModal
-                onClose={() => setshowChangeEmailModal(false)}
-                user={user}
-                token={token}
-                onEmailChanged={handleEmailChanged}
-              />
-            )}
-
-            {showEditProfileModal && (
-              <motion.div
-                className="modalBackground"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                <motion.div
-                  className="modalWrapper"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.7 }}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
-                >
-                  <EditProfileModal
-                    closeModal={() => setshowEditProfileModal(false)}
-                  />
-                </motion.div>
-              </motion.div>
-            )}
-
-            {showForgotPassModal && (
-              <motion.div
-                className="modalBackground"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                <motion.div
-                  className="modalWrapper"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.7 }}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
-                >
-                  <ForgotPassModal
-                    onClose={() => setShowForgotPassModal(false)}
-                  />
-                </motion.div>
-              </motion.div>
-            )}
-
-            {showAboutModal && (
-              <AboutUsModal onClose={() => setShowAboutModal(false)} />
-            )}
-          </AnimatePresence>
+            Edit Profile
+          </button>
         </div>
       </div>
-    </motion.div>
+
+      {/* Settings List */}
+      <div className="settings-grid">
+        <div
+          className="setting-item"
+          onClick={() => toggleModal("password", true)}
+        >
+          <div className="setting-left">
+            <div className="setting-icon-box">
+              <img src={PasswordIcon} className="setting-icon" alt="pass" />
+            </div>
+            <div className="setting-text">
+              <h4>Change Password</h4>
+              <p>Update your account password</p>
+            </div>
+          </div>
+          <img src={ArrowIcon} className="arrow-right" width={20} alt="arrow" />
+        </div>
+
+        <div
+          className="setting-item"
+          onClick={() => toggleModal("email", true)}
+        >
+          <div className="setting-left">
+            <div className="setting-icon-box">
+              <img src={GmailIcon} className="setting-icon" alt="email" />
+            </div>
+            <div className="setting-text">
+              <h4>Change Email</h4>
+              <p>Update your connected email address</p>
+            </div>
+          </div>
+          <img src={ArrowIcon} className="arrow-right" width={20} alt="arrow" />
+        </div>
+
+        <div
+          className="setting-item"
+          onClick={() => toggleModal("about", true)}
+        >
+          <div className="setting-left">
+            <div className="setting-icon-box">
+              <img src={AboutIcon} className="setting-icon" alt="about" />
+            </div>
+            <div className="setting-text">
+              <h4>About SpenSyd</h4>
+              <p>Version info and developer credits</p>
+            </div>
+          </div>
+          <img src={ArrowIcon} className="arrow-right" width={20} alt="arrow" />
+        </div>
+
+        <div
+          className="setting-item"
+          style={{ borderColor: "rgba(244, 63, 94, 0.3)" }}
+          onClick={() => toggleModal("logout", true)}
+        >
+          <div className="setting-left">
+            <div
+              className="setting-icon-box"
+              style={{ background: "rgba(244, 63, 94, 0.1)" }}
+            >
+              <img src={LogoutIcon} className="setting-icon" alt="logout" />
+            </div>
+            <div className="setting-text">
+              <h4 style={{ color: "var(--danger)" }}>Logout</h4>
+              <p>Sign out of your account</p>
+            </div>
+          </div>
+          <img src={ArrowIcon} className="arrow-right" width={20} alt="arrow" />
+        </div>
+      </div>
+
+      {/* --- Modals --- */}
+      <AnimatePresence>
+        {modalState.editProfile && (
+          <div className="modalBackground">
+            <EditProfileModal
+              closeModal={() => toggleModal("editProfile", false)}
+            />
+          </div>
+        )}
+
+        {/* Confirmation Modals */}
+        {modalState.password && (
+          <div className="modalBackground">
+            <ConfirmationModal
+              onClose={() => toggleModal("password", false)}
+              icon={PasswordIcon}
+              text="Change Password?"
+              onSubmit={() => {
+                toggleModal("password", false);
+                toggleModal("changePassForm", true);
+              }}
+            />
+          </div>
+        )}
+
+        {modalState.email && (
+          <div className="modalBackground">
+            <ConfirmationModal
+              onClose={() => toggleModal("email", false)}
+              icon={GmailIcon}
+              text="Change Email Address?"
+              onSubmit={() => {
+                toggleModal("email", false);
+                toggleModal("changeEmailForm", true);
+              }}
+            />
+          </div>
+        )}
+
+        {modalState.logout && (
+          <div className="modalBackground">
+            <ConfirmationModal
+              onClose={() => toggleModal("logout", false)}
+              icon={LogoutIcon}
+              text="Are you sure you want to logout?"
+              onSubmit={handleLogout}
+            />
+          </div>
+        )}
+
+        {/* Functional Modals */}
+        {modalState.changePassForm && (
+          <ChangePassModal
+            onClose={() => toggleModal("changePassForm", false)}
+            openModal={initVerification}
+          />
+        )}
+
+        {modalState.changeEmailForm && (
+          <ChangeEmailModal
+            onClose={() => toggleModal("changeEmailForm", false)}
+            user={user}
+            token={token}
+            onEmailChanged={(newEmail) => setUser({ ...user, email: newEmail })}
+          />
+        )}
+
+        {modalState.verifyCode && (
+          <VerifyCodeModal
+            email={user.email}
+            onVerified={handleCodeVerified}
+            onClose={() => toggleModal("verifyCode", false)}
+          />
+        )}
+
+        {modalState.forgotPass && (
+          <div className="modalBackground">
+            <div className="modalWrapper">
+              <ForgotPassModal
+                onClose={() => toggleModal("forgotPass", false)}
+              />
+            </div>
+          </div>
+        )}
+
+        {modalState.about && (
+          <AboutUsModal onClose={() => toggleModal("about", false)} />
+        )}
+      </AnimatePresence>
+    </div>
   );
 };
 
