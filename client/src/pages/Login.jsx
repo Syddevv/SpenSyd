@@ -12,7 +12,6 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
-
   const [formData, setFormData] = useState({ identifier: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
