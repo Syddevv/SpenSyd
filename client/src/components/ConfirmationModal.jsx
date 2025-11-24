@@ -1,10 +1,17 @@
+import React from "react";
 import "../styles/ConfirmationModal.css";
 
 export const ConfirmationModal = ({ onClose, icon, text, onSubmit }) => {
   return (
-    <div className="confirmationModalWrapper">
-      <div className="confirmationModalContent">
-        <img src={icon} alt="Confirmation Icon" className="passIcon" />
+    <div className="confirmationModalWrapper" onClick={onClose}>
+      <div
+        className="confirmationModalContent"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="confirmIconBox">
+          <img src={icon} alt="Icon" className="passIcon" />
+        </div>
+
         <p className="modalText">{text}</p>
 
         <div className="buttonsWrapper">
