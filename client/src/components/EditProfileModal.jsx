@@ -11,10 +11,10 @@ import fallbackImage from "../assets/default-profile.png";
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const EditProfileModal = ({ closeModal }) => {
-  const { user } = useAuth();
+  const { user: contextUser } = useAuth(); // Used for initial display
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
-  const [username, setUsername] = useState(user?.username || "");
+  const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleFileChange = (e) => {
@@ -25,16 +25,30 @@ export const EditProfileModal = ({ closeModal }) => {
     }
   };
 
+  const refreshPage = () => {
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000);
+  };
+
   const handleSubmit = async () => {
-    if (!user || !user._id) return;
+    const token = localStorage.getItem("token");
+    let user = null;
+    try {
+      user = JSON.parse(localStorage.getItem("user"));
+    } catch {
+      user = null;
+    }
+
+    if (!token || !user || !user._id) {
+      toast.error("Session error. Please log in again.");
+      return;
+    }
 
     setLoading(true);
     const formData = new FormData();
     if (selectedFile) formData.append("profilePicture", selectedFile);
-    if (username && username !== user.username)
-      formData.append("username", username);
-
-    const token = localStorage.getItem("token");
+    if (username) formData.append("username", username);
 
     try {
       const res = await axios.put(
@@ -56,22 +70,18 @@ export const EditProfileModal = ({ closeModal }) => {
       };
       localStorage.setItem("user", JSON.stringify(updatedUser));
 
-      toast.success("Profile updated successfully");
-
-      // Close modal and refresh to reflect changes
-      setTimeout(() => {
-        closeModal();
-        window.location.reload();
-      }, 1000);
+      closeModal();
+      refreshPage();
+      toast.success("Profile updated successfully.");
     } catch (err) {
-      toast.error(err.response?.data?.message || "Error updating profile");
+      toast.error("Error updating profile");
       setLoading(false);
+      console.error("Update error:", err);
     }
   };
 
   return (
     <div className="editProfileModalWrapper" onClick={closeModal}>
-      {/* Stop propagation ensures clicking inside the modal doesn't close it */}
       <div
         className="editProfileModalContent"
         onClick={(e) => e.stopPropagation()}
@@ -89,22 +99,24 @@ export const EditProfileModal = ({ closeModal }) => {
         <div className="profile-upload-section">
           <div className="image-container">
             <img
-              src={preview || user?.profilePicture || fallbackImage}
-              alt="Profile Preview"
+              src={preview || contextUser?.profilePicture || fallbackImage}
+              alt="preview"
               className="profilePicModal"
             />
           </div>
 
-          <input
-            type="file"
-            id="profilePicture"
-            accept="image/*"
-            onChange={handleFileChange}
-            style={{ display: "none" }}
-          />
-          <label htmlFor="profilePicture" className="uploadButton">
-            Change Photo
-          </label>
+          <div className="fileUploadWrapper">
+            <input
+              type="file"
+              id="profilePicture"
+              accept="image/*"
+              onChange={handleFileChange}
+              style={{ display: "none" }}
+            />
+            <label htmlFor="profilePicture" className="uploadButton">
+              Update Picture
+            </label>
+          </div>
         </div>
 
         <div className="form-section">
@@ -113,8 +125,8 @@ export const EditProfileModal = ({ closeModal }) => {
             <input
               type="text"
               id="profileUsername"
-              placeholder="Enter username"
               className="profileUsername"
+              placeholder={contextUser?.username || "Enter username"}
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
@@ -126,7 +138,7 @@ export const EditProfileModal = ({ closeModal }) => {
           onClick={handleSubmit}
           disabled={loading}
         >
-          {loading ? "Saving..." : "Save Changes"}
+          {loading ? "Saving..." : "SAVE CHANGES"}
         </button>
       </div>
     </div>
