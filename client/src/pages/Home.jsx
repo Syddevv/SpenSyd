@@ -253,15 +253,14 @@ const Home = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <div className="modalWrapper">
-              <Modal
-                title="Add Expense"
-                onClose={() => setShowExpenseModal(false)}
-                onSubmit={handleAddExpense}
-                categories={expenseCategories}
-                currentBalance={currentBalance}
-              />
-            </div>
+            {/* Removed redundant wrapper */}
+            <Modal
+              title="Add Expense"
+              onClose={() => setShowExpenseModal(false)}
+              onSubmit={handleAddExpense}
+              categories={expenseCategories}
+              currentBalance={currentBalance}
+            />
           </motion.div>
         )}
 
@@ -272,15 +271,14 @@ const Home = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <div className="modalWrapper">
-              <Modal
-                title="Add Income"
-                onClose={() => setShowIncomeModal(false)}
-                onSubmit={handleAddIncome}
-                categories={incomeCategories}
-                currentBalance={currentBalance}
-              />
-            </div>
+            {/* Removed redundant wrapper */}
+            <Modal
+              title="Add Income"
+              onClose={() => setShowIncomeModal(false)}
+              onSubmit={handleAddIncome}
+              categories={incomeCategories}
+              currentBalance={currentBalance}
+            />
           </motion.div>
         )}
       </AnimatePresence>
