@@ -64,9 +64,6 @@ const LandingPage = () => {
           <button className="btn-primary" onClick={() => navigate("/register")}>
             Create Free Account
           </button>
-          <button className="btn-outline" onClick={() => navigate("/login")}>
-            View Demo
-          </button>
         </motion.div>
       </header>
 
