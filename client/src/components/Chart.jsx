@@ -85,7 +85,8 @@ const Chart = ({ expenses, balances }) => {
           display: "flex",
           alignItems: "center",
           gap: "10px",
-          marginBottom: "0px",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
         }}
       >
         <select
@@ -93,85 +94,140 @@ const Chart = ({ expenses, balances }) => {
           value={viewMode}
           onChange={(e) => setViewMode(e.target.value)}
           style={{
-            backgroundColor: "#1E1D31",
+            backgroundColor: "rgba(255, 255, 255, 0.05)",
             color: "white",
-            border: "1px solid #332F55",
-            borderRadius: "5px",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
+            borderRadius: "6px",
             padding: "6px 10px",
-            fontSize: "13px",
+            fontSize: "0.85rem",
             cursor: "pointer",
+            outline: "none",
           }}
         >
           <option value="past">Last 7 Days</option>
           <option value="future">Next 7 Days</option>
           <option value="custom">Custom Range</option>
         </select>
+
+        {/* Date Pickers - Only show if custom */}
+        {viewMode === "custom" && (
+          <div
+            style={{
+              display: "flex",
+              gap: "8px",
+              alignItems: "center",
+              flexWrap: "wrap",
+            }}
+          >
+            <div style={{ width: "100px" }}>
+              <DatePicker
+                className="custom-datepicker"
+                selected={customStart}
+                onChange={(date) => setCustomStart(date)}
+                selectsStart
+                startDate={customStart}
+                endDate={customEnd}
+                dateFormat="MMM dd"
+              />
+            </div>
+            <span style={{ color: "#aaa" }}>-</span>
+            <div style={{ width: "100px" }}>
+              <DatePicker
+                className="custom-datepicker"
+                selected={customEnd}
+                onChange={(date) => setCustomEnd(date)}
+                selectsEnd
+                startDate={customStart}
+                endDate={customEnd}
+                minDate={customStart}
+                maxDate={new Date(new Date().setFullYear(2099))}
+                dateFormat="MMM dd"
+              />
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Date Pickers */}
-      {viewMode === "custom" && (
-        <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-          <DatePicker
-            className="custom-datepicker"
-            selected={customStart}
-            onChange={(date) => setCustomStart(date)}
-            selectsStart
-            startDate={customStart}
-            endDate={customEnd}
-            dateFormat="yyyy-MM-dd"
-          />
-          <DatePicker
-            className="custom-datepicker"
-            selected={customEnd}
-            onChange={(date) => setCustomEnd(date)}
-            selectsEnd
-            startDate={customStart}
-            endDate={customEnd}
-            minDate={customStart}
-            maxDate={new Date(new Date().setFullYear(2099))}
-            dateFormat="yyyy-MM-dd"
-          />
-        </div>
-      )}
-
-      {/* Chart */}
-      <Bar
-        data={{
-          labels,
-          datasets: [
-            {
-              label: "Income",
-              data: incomeData,
-              backgroundColor: "#D49EF8",
+      {/* Chart Container */}
+      <div className="chart-canvas-container">
+        <Bar
+          data={{
+            labels,
+            datasets: [
+              {
+                label: "Income",
+                data: incomeData,
+                backgroundColor: "#a78bfa",
+                borderRadius: 4,
+              },
+              {
+                label: "Expenses",
+                data: expenseData,
+                backgroundColor: "#f472b6",
+                borderRadius: 4,
+              },
+            ],
+          }}
+          options={{
+            responsive: true,
+            maintainAspectRatio: false,
+            layout: {
+              padding: {
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 0,
+              },
             },
-            {
-              label: "Expenses",
-              data: expenseData,
-              backgroundColor: "#B5F3F8",
+            plugins: {
+              legend: {
+                labels: {
+                  color: "#94a3b8",
+                  font: { family: "Inter", size: 11 },
+                  boxWidth: 12,
+                },
+                position: "top",
+                align: "end",
+              },
+              tooltip: {
+                backgroundColor: "#1e293b",
+                titleColor: "#f8fafc",
+                bodyColor: "#cbd5e1",
+                borderColor: "rgba(255,255,255,0.1)",
+                borderWidth: 1,
+                padding: 10,
+                cornerRadius: 8,
+                displayColors: true,
+              },
             },
-          ],
-        }}
-        options={{
-          responsive: true,
-          plugins: {
-            legend: {
-              labels: { color: "white" },
+            scales: {
+              x: {
+                grid: { display: false },
+                ticks: {
+                  color: "#94a3b8",
+                  font: { size: 10 },
+                  maxRotation: 0,
+                  minRotation: 0,
+                  autoSkip: true,
+                  maxTicksLimit: 7,
+                },
+                border: { display: false },
+              },
+              y: {
+                grid: { color: "rgba(255, 255, 255, 0.05)" },
+                ticks: {
+                  color: "#94a3b8",
+                  font: { size: 10 },
+                  padding: 0,
+                  maxTicksLimit: 5,
+                },
+                border: { display: false },
+                beginAtZero: true,
+              },
             },
-            tooltip: {
-              bodyColor: "white",
-              titleColor: "white",
-            },
-          },
-          scales: {
-            x: {
-              ticks: { color: "white" },
-            },
-            y: {
-              ticks: { color: "white" },
-            },
-          },
-        }}
-      />
+          }}
+        />
+      </div>
     </div>
   );
 };
