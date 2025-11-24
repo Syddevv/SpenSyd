@@ -11,7 +11,7 @@ import { ChangePassModal } from "../components/ChangePassModal";
 import { ChangeEmailModal } from "../components/ChangeEmailModal";
 import { EditProfileModal } from "../components/EditProfileModal";
 import { AboutUsModal } from "../components/AboutUsModal";
-import { VerifyCodeModal } from "../components/VerifyCodeModal";
+// Removed: VerifyCodeModal is no longer needed
 import { ForgotPassModal } from "../components/ForgotPassModal";
 
 // Assets
@@ -37,7 +37,7 @@ const Settings = () => {
     editProfile: false,
     changePassForm: false,
     changeEmailForm: false,
-    verifyCode: false,
+    // Removed: verifyCode
     forgotPass: false,
   });
 
@@ -48,59 +48,6 @@ const Settings = () => {
   const handleLogout = () => {
     logout();
     navigate("/login");
-  };
-
-  // Verification Flow for Sensitive Actions
-  const initVerification = async () => {
-    if (!user?.email) return alert("No email found.");
-    try {
-      const res = await fetch(
-        `${BASE_URL}/api/auth/send-reset-code/logged-in`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({}),
-        }
-      );
-      const data = await res.json();
-      if (data.success) {
-        toggleModal("verifyCode", true);
-        toggleModal("changePassForm", false);
-      } else {
-        alert(data.message);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleCodeVerified = async (code) => {
-    try {
-      const res = await fetch(`${BASE_URL}/api/auth/verify-reset-code`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          email: user.email,
-          code,
-        }),
-      });
-
-      const data = await res.json();
-      if (data.success) {
-        toggleModal("verifyCode", false);
-        toggleModal("forgotPass", true);
-      } else {
-        alert(data.message || "Invalid code");
-      }
-    } catch (error) {
-      alert("Error verifying code");
-    }
   };
 
   return (
@@ -261,7 +208,7 @@ const Settings = () => {
         {modalState.changePassForm && (
           <ChangePassModal
             onClose={() => toggleModal("changePassForm", false)}
-            openModal={initVerification}
+            // Removed openModal prop since verification is gone
           />
         )}
 
@@ -271,14 +218,6 @@ const Settings = () => {
             user={user}
             token={token}
             onEmailChanged={(newEmail) => setUser({ ...user, email: newEmail })}
-          />
-        )}
-
-        {modalState.verifyCode && (
-          <VerifyCodeModal
-            email={user.email}
-            onVerified={handleCodeVerified}
-            onClose={() => toggleModal("verifyCode", false)}
           />
         )}
 

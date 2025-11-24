@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/ContextProvider";
 import axios from "axios";
 import { motion } from "framer-motion";
-import { EnterEmailModal } from "../components/EnterEmailModal";
 import ClipLoader from "react-spinners/ClipLoader";
 import SpenSyd_Icon from "../assets/SpenSyd Icon.png";
 import "../styles/Login.css";

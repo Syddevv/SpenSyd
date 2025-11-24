@@ -2,20 +2,18 @@ import React, { useState } from "react";
 import "../styles/ChangePassModal.css";
 import CloseBTN from "../assets/close-btn.png";
 import axios from "axios";
-import { EnterEmailModal } from "./EnterEmailModal";
 import { toast } from "react-toastify";
 import ClipLoader from "react-spinners/ClipLoader";
 import { motion } from "framer-motion";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-export const ChangePassModal = ({ onClose, openModal }) => {
+export const ChangePassModal = ({ onClose }) => {
   const [currentPass, setCurrentPass] = useState("");
   const [newPass, setNewPass] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [showForgotPasswordFlow, setShowForgotPasswordFlow] = useState(false);
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -66,22 +64,6 @@ export const ChangePassModal = ({ onClose, openModal }) => {
       showTemporaryError(err.response?.data?.message || "Error occurred");
     }
   };
-
-  const handleForgotPassword = () => {
-    setShowForgotPasswordFlow(true);
-  };
-
-  if (showForgotPasswordFlow) {
-    return (
-      <EnterEmailModal
-        onClose={() => {
-          setShowForgotPasswordFlow(false);
-          onClose(); // Close everything if they cancel the flow inside
-        }}
-        isLoggedIn={true}
-      />
-    );
-  }
 
   return (
     <div className="changePassModalWrapper" onClick={onClose}>
