@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react"; // Import hooks
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import "../styles/LandingPage.css";
@@ -6,6 +6,21 @@ import SpenSyd_Icon from "../assets/SpenSyd Icon.png";
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const [isScrolled, setIsScrolled] = useState(false); // State for scroll detection
+
+  // Scroll listener
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Stagger container for the bento grid
   const container = {
@@ -25,32 +40,40 @@ const LandingPage = () => {
 
   return (
     <div className="landing-page">
-      <nav className="landing-nav">
-        <motion.div
-          className="nav-logo"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <img src={SpenSyd_Icon} alt="SpenSyd Logo" />
-          <span>SpenSyd</span>
-        </motion.div>
-        <motion.div
-          className="nav-links"
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <button className="btn-text" onClick={() => navigate("/login")}>
-            Sign In
-          </button>
-          <button className="btn-primary" onClick={() => navigate("/register")}>
-            Get Started
-          </button>
-        </motion.div>
+      {/* Added 'scrolled' class based on state */}
+      <nav className={`landing-nav ${isScrolled ? "scrolled" : ""}`}>
+        {/* Added wrapper to center content while background spans full width */}
+        <div className="nav-content">
+          <motion.div
+            className="nav-logo"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <img src={SpenSyd_Icon} alt="SpenSyd Logo" />
+            <span>SpenSyd</span>
+          </motion.div>
+          <motion.div
+            className="nav-links"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <button className="btn-text" onClick={() => navigate("/login")}>
+              Sign In
+            </button>
+            <button
+              className="btn-primary"
+              onClick={() => navigate("/register")}
+            >
+              Get Started
+            </button>
+          </motion.div>
+        </div>
       </nav>
 
       <header className="hero-section">
+        {/* ... rest of the component remains the same ... */}
         <motion.span
           className="hero-badge"
           initial={{ opacity: 0, y: -20 }}
@@ -106,6 +129,22 @@ const LandingPage = () => {
           whileInView="show"
           viewport={{ once: true, margin: "-50px" }}
         >
+          <motion.div
+            className="bento-item full-width ai-feature glass-panel"
+            variants={item}
+            whileHover={{ scale: 1.01 }}
+          >
+            <div className="bento-icon">🤖</div>
+            <div className="ai-content">
+              <h3 className="bento-title">Powered by SpenSyd AI</h3>
+              <p className="bento-desc">
+                Your personal financial assistant is here. Ask complex questions
+                like "How much did I spend on food last week?" or "What is my
+                highest expense?" and get instant, intelligent answers.
+              </p>
+            </div>
+          </motion.div>
+
           <motion.div
             className="bento-item large glass-panel"
             variants={item}
