@@ -1,19 +1,20 @@
 import React, { useState } from "react";
 import "../styles/Modal.css";
 import { toast } from "react-toastify";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const Modal = ({ title, onClose, onSubmit, categories, currentBalance }) => {
   const [category, setCategory] = useState(categories[0]?.toLowerCase() || "");
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!amount || !date) {
       toast.error("Please fill out all fields");
       return;
     }
 
-    // Validation logic...
     if (
       (title === "New Expense" || title.toLowerCase().includes("expense")) &&
       parseFloat(amount) > currentBalance
@@ -22,19 +23,24 @@ const Modal = ({ title, onClose, onSubmit, categories, currentBalance }) => {
       return;
     }
 
-    onSubmit({
-      category,
-      amount: parseFloat(amount),
-      date,
-    });
+    try {
+      setLoading(true);
 
-    onClose();
+      await onSubmit({
+        category,
+        amount: parseFloat(amount),
+        date,
+      });
+    } catch (err) {
+      console.error(err);
+      toast.error("An error occurred while saving.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="modalWrapper">
-      {" "}
-      {/* Using wrapper class from CSS for consistent styling */}
       <div className="topSection">
         <h3>{title}</h3>
         <button className="closeBtn" onClick={onClose}>
@@ -78,8 +84,22 @@ const Modal = ({ title, onClose, onSubmit, categories, currentBalance }) => {
           />
         </div>
 
-        <button className="saveBtn" onClick={handleSave}>
-          Save Transaction
+        <button
+          className="saveBtn"
+          onClick={handleSave}
+          disabled={loading} // Disable button while loading
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "10px",
+          }}
+        >
+          {loading ? (
+            <ClipLoader color="#ffffff" size={20} />
+          ) : (
+            "Save Transaction"
+          )}
         </button>
       </div>
     </div>
