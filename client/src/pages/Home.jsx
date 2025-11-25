@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
-import ClipLoader from "react-spinners/ClipLoader";
+import { ClipLoader } from "react-spinners"; // Use named import if default fails, or check package
 import { useAuth } from "../context/ContextProvider";
 
 // Components
@@ -46,6 +46,54 @@ const Home = () => {
     "Freelance",
     "Others",
   ];
+
+  // --- Animations ---
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        when: "beforeChildren",
+      },
+    },
+  };
+
+  const itemFadeUp = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: "easeOut" },
+    },
+  };
+
+  const itemPop = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: { type: "spring", stiffness: 200, damping: 15 },
+    },
+  };
+
+  const itemFadeRight = {
+    hidden: { opacity: 0, x: -30 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.6, ease: "easeOut" },
+    },
+  };
+
+  const itemFadeLeft = {
+    hidden: { opacity: 0, x: 30 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.6, ease: "easeOut" },
+    },
+  };
 
   // --- Fetch Data ---
   useEffect(() => {
@@ -124,20 +172,27 @@ const Home = () => {
   }
 
   return (
-    <div className="dashboard-container">
+    <motion.div
+      className="dashboard-container"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
       {/* Welcome Header */}
-      <header className="welcome-section">
+      <motion.header className="welcome-section" variants={itemFadeUp}>
         <h1 className="welcome-title">Overview</h1>
         <p className="welcome-subtitle">
           Welcome back, @{user?.username || "User"}
         </p>
-      </header>
+      </motion.header>
 
       {/* Top Row: Stats Cards */}
       <section className="stats-grid">
         <motion.div
           className="stat-card glass-panel balance"
-          whileHover={{ scale: 1.02 }}
+          variants={itemPop}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
           <div className="stat-header">
             <img
@@ -152,7 +207,9 @@ const Home = () => {
 
         <motion.div
           className="stat-card glass-panel income"
-          whileHover={{ scale: 1.02 }}
+          variants={itemPop}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
           <div className="stat-header">
             <img
@@ -167,7 +224,9 @@ const Home = () => {
 
         <motion.div
           className="stat-card glass-panel expense"
-          whileHover={{ scale: 1.02 }}
+          variants={itemPop}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
           <div className="stat-header">
             <img
@@ -183,35 +242,47 @@ const Home = () => {
 
       {/* Middle Row: Chart & Actions */}
       <section className="main-grid">
-        <div className="chart-section glass-panel">
+        <motion.div
+          className="chart-section glass-panel"
+          variants={itemFadeRight}
+        >
           <div className="section-header">
             <h3 className="section-title">Financial Analytics</h3>
           </div>
-          {/* Assuming Chart handles its own sizing logic inside */}
           <Chart expenses={expenses} balances={incomes} />
-        </div>
+        </motion.div>
 
-        <div className="actions-section glass-panel">
+        <motion.div
+          className="actions-section glass-panel"
+          variants={itemFadeLeft}
+        >
           <div className="section-header">
             <h3 className="section-title">Quick Actions</h3>
           </div>
-          <button
+          <motion.button
             className="action-btn add-income"
             onClick={() => setShowIncomeModal(true)}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
           >
             <span>+</span> Add Income
-          </button>
-          <button
+          </motion.button>
+          <motion.button
             className="action-btn add-expense"
             onClick={() => setShowExpenseModal(true)}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
           >
             <span>-</span> Add Expense
-          </button>
-        </div>
+          </motion.button>
+        </motion.div>
       </section>
 
       {/* Bottom Row: Recent Transactions */}
-      <section className="recent-section glass-panel">
+      <motion.section
+        className="recent-section glass-panel"
+        variants={itemFadeUp}
+      >
         <div className="section-header">
           <h3 className="section-title">Recent Transactions</h3>
         </div>
@@ -222,7 +293,14 @@ const Home = () => {
             </p>
           ) : (
             recentActivity.map((item, index) => (
-              <div key={index} className="transaction-item">
+              <motion.div
+                key={index}
+                className="transaction-item"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.1 }}
+                whileHover={{ x: 5, backgroundColor: "rgba(255,255,255,0.08)" }}
+              >
                 <div className="t-info">
                   <div className="t-icon">
                     {item.type === "income" ? "💰" : "🛍️"}
@@ -238,11 +316,11 @@ const Home = () => {
                   {item.type === "income" ? "+" : "-"} ₱
                   {item.amount.toLocaleString()}
                 </span>
-              </div>
+              </motion.div>
             ))
           )}
         </div>
-      </section>
+      </motion.section>
 
       {/* Modals */}
       <AnimatePresence>
@@ -253,7 +331,6 @@ const Home = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            {/* Removed redundant wrapper */}
             <Modal
               title="Add Expense"
               onClose={() => setShowExpenseModal(false)}
@@ -271,7 +348,6 @@ const Home = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            {/* Removed redundant wrapper */}
             <Modal
               title="Add Income"
               onClose={() => setShowIncomeModal(false)}
@@ -282,7 +358,7 @@ const Home = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 };
 
