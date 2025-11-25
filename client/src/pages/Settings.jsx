@@ -45,7 +45,7 @@ const Settings = () => {
 
   const handleLogout = () => {
     logout();
-    navigate("/login");
+    navigate("/");
   };
 
   // --- Animations ---
