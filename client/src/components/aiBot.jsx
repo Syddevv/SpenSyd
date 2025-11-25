@@ -9,19 +9,19 @@ const AIBot = ({ expenses = [], incomes = [], currentBalance = 0 }) => {
   const [messages, setMessages] = useState([
     {
       role: "bot",
-      text: "Hi! I'm SpenSyd AI 🤖. Ask me about your finances!",
+      text: "Hi! I'm SpenSyd AI 🤖. I can analyze your transaction history. Ask me anything!",
     },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
-  // 👇 NEW: Define your ready-to-send questions
+  // Quick suggestions for complex queries
   const suggestions = [
-    "💰 Balance check",
-    "📉 Spending this month",
-    "🏆 Highest expense",
-    "📊 Income vs Expense",
+    "📅 Expenses last week",
+    "🍔 Spent on Food this month",
+    "💰 Recent income",
+    "📉 Highest expense ever",
   ];
 
   useEffect(() => {
@@ -29,86 +29,101 @@ const AIBot = ({ expenses = [], incomes = [], currentBalance = 0 }) => {
   }, [messages, isOpen]);
 
   const getFinancialContext = () => {
-    // ... (Keep your existing getFinancialContext logic exactly as it was in the previous step)
-    // For brevity, I am not repeating the calculation code here, but ensure it remains part of the file.
-    // ...
     const safeExpenses = Array.isArray(expenses) ? expenses : [];
     const safeIncomes = Array.isArray(incomes) ? incomes : [];
-    const now = new Date();
-    const currentMonth = now.getMonth();
-    const currentYear = now.getFullYear();
+    const today = new Date();
 
-    const thisMonthExpenses = safeExpenses.filter((e) => {
-      const d = new Date(e.date);
-      return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
-    });
+    // Helper to format dates clearly for the AI
+    const formatDate = (dateStr) =>
+      new Date(dateStr).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
 
-    const thisMonthIncomes = safeIncomes.filter((i) => {
-      const d = new Date(i.date);
-      return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
-    });
-
-    const totalExpenseThisMonth = thisMonthExpenses.reduce(
-      (acc, curr) => acc + (curr.amount || 0),
-      0
+    // 1. Sort data by date (newest first)
+    const sortedExpenses = [...safeExpenses].sort(
+      (a, b) => new Date(b.date) - new Date(a.date)
     );
-    const totalIncomeThisMonth = thisMonthIncomes.reduce(
-      (acc, curr) => acc + (curr.amount || 0),
-      0
+    const sortedIncomes = [...safeIncomes].sort(
+      (a, b) => new Date(b.date) - new Date(a.date)
     );
 
-    const highestExpense = safeExpenses.reduce(
-      (max, curr) => (curr.amount > (max?.amount || 0) ? curr : max),
-      null
-    );
+    // 2. Generate Raw Transaction Logs (Last 50 items)
+    // This allows the AI to "see" individual records to answer "last week", "specific date", etc.
+    const expenseLog = sortedExpenses
+      .slice(0, 50)
+      .map((e) => `- ${formatDate(e.date)}: ${e.category} (₱${e.amount})`)
+      .join("\n");
 
+    const incomeLog = sortedIncomes
+      .slice(0, 50)
+      .map((i) => `- ${formatDate(i.date)}: ${i.category} (₱${i.amount})`)
+      .join("\n");
+
+    // 3. Calculate Category Summaries (All time)
     const categoryTotals = safeExpenses.reduce((acc, curr) => {
       acc[curr.category] = (acc[curr.category] || 0) + curr.amount;
       return acc;
     }, {});
-
-    const sortedCategories = Object.entries(categoryTotals)
+    const categorySummary = Object.entries(categoryTotals)
       .sort(([, a], [, b]) => b - a)
       .map(([cat, total]) => `${cat}: ₱${total}`)
       .join(", ");
 
-    const recentExpenses = safeExpenses
-      .slice(0, 10)
-      .map((e) => `${e.category}: ₱${e.amount}`)
-      .join("; ");
-
+    // 4. Construct the Master Context
     return `
-      Current Wallet Balance: ₱${currentBalance.toLocaleString()}
-      This Month Income: ₱${totalIncomeThisMonth.toLocaleString()}
-      This Month Expense: ₱${totalExpenseThisMonth.toLocaleString()}
-      Highest Expense: ${
-        highestExpense
-          ? `${highestExpense.category} (₱${highestExpense.amount})`
-          : "None"
-      }
-      Spending by Category: ${sortedCategories}
-      Recent: ${recentExpenses}
+      CONTEXT FOR AI ANALYSIS:
+      ------------------------
+      TODAY'S DATE: ${today.toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })}
+      
+      CURRENT WALLET BALANCE: ₱${currentBalance.toLocaleString()}
+
+      SPENDING BY CATEGORY (ALL TIME):
+      ${categorySummary || "No data"}
+
+      RECENT EXPENSE LOG (Analyze this for time-based questions):
+      ${expenseLog || "No expenses recorded."}
+
+      RECENT INCOME LOG:
+      ${incomeLog || "No incomes recorded."}
     `;
   };
 
-  // 👇 UPDATED: handleSend now accepts an optional 'text' argument
   const handleSend = async (textOverride = null) => {
     const textToSend = typeof textOverride === "string" ? textOverride : input;
-
     if (!textToSend.trim()) return;
 
     const userMessage = { role: "user", text: textToSend };
     setMessages((prev) => [...prev, userMessage]);
-    setInput(""); // Clear input field
+    setInput("");
     setLoading(true);
 
     try {
+      console.log("Generating financial context...");
       const context = getFinancialContext();
       const apiKey = key;
 
       if (!apiKey) throw new Error("API Key is missing.");
 
-      const systemPrompt = `You are SpenSyd AI. User Data: ${context}. Be concise. Use ₱ symbol.`;
+      const systemPrompt = `
+        You are SpenSyd AI, an advanced financial analyst.
+        
+        DATA PROVIDED:
+        ${context}
+
+        INSTRUCTIONS:
+        1. Answer the user's question based STRICTLY on the provided logs.
+        2. If asked about "last week" or "this month", calculate it based on TODAY'S DATE provided in the context.
+        3. Be precise with numbers. Use the ₱ symbol.
+        4. If the user asks for something not in the last 50 transactions, simply say you only have access to recent records.
+        5. Keep answers short, friendly, and insightful.
+      `;
 
       const response = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
@@ -116,7 +131,7 @@ const AIBot = ({ expenses = [], incomes = [], currentBalance = 0 }) => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            contents: [{ parts: [{ text: textToSend }] }], // Use textToSend here
+            contents: [{ parts: [{ text: textToSend }] }],
             systemInstruction: { parts: [{ text: systemPrompt }] },
           }),
         }
@@ -127,14 +142,17 @@ const AIBot = ({ expenses = [], incomes = [], currentBalance = 0 }) => {
       const data = await response.json();
       const botResponseText =
         data.candidates?.[0]?.content?.parts?.[0]?.text ||
-        "I couldn't understand that.";
+        "I couldn't analyze that right now.";
 
       setMessages((prev) => [...prev, { role: "bot", text: botResponseText }]);
     } catch (error) {
       console.error("AI Bot Error:", error);
       setMessages((prev) => [
         ...prev,
-        { role: "bot", text: "I'm having trouble connecting to the server." },
+        {
+          role: "bot",
+          text: "I'm having trouble processing that. Please try again.",
+        },
       ]);
     } finally {
       setLoading(false);
@@ -166,8 +184,7 @@ const AIBot = ({ expenses = [], incomes = [], currentBalance = 0 }) => {
                 </div>
               ))}
 
-              {/* 👇 NEW: Render Suggestions only if specific condition met (e.g., not loading) */}
-              {!loading && (
+              {!loading && messages.length < 3 && (
                 <div className="suggestions-container">
                   {suggestions.map((question, idx) => (
                     <button
@@ -193,7 +210,7 @@ const AIBot = ({ expenses = [], incomes = [], currentBalance = 0 }) => {
               <input
                 type="text"
                 className="chat-input"
-                placeholder="Ask me anything..."
+                placeholder="Ask about your finances..."
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={(e) => e.key === "Enter" && handleSend()}
@@ -216,7 +233,6 @@ const AIBot = ({ expenses = [], incomes = [], currentBalance = 0 }) => {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
       >
-        {/* (Keep existing SVG icon) */}
         <svg
           width="32"
           height="32"
