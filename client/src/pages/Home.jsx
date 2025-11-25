@@ -358,7 +358,12 @@ const Home = () => {
         </div>
       </motion.section>
 
-      <AIBot />
+      <AIBot
+        expenses={expenses}
+        incomes={incomes}
+        currentBalance={currentBalance}
+      />
+
       {/* Modals */}
       <AnimatePresence>
         {showExpenseModal && (

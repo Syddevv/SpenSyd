@@ -3,116 +3,126 @@ import { motion, AnimatePresence } from "framer-motion";
 import "../styles/AIBot.css";
 
 const key = import.meta.env?.VITE_GEMINI_KEY;
+
 const AIBot = ({ expenses = [], incomes = [], currentBalance = 0 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     {
       role: "bot",
-      text: "Hi! I'm SpenSyd AI 🤖. I've analyzed your finances. Ask me anything about your spending habits, income, or balance!",
+      text: "Hi! I'm SpenSyd AI 🤖. Ask me about your finances!",
     },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
+  // 👇 NEW: Define your ready-to-send questions
+  const suggestions = [
+    "💰 Balance check",
+    "📉 Spending this month",
+    "🏆 Highest expense",
+    "📊 Income vs Expense",
+  ];
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isOpen]);
 
   const getFinancialContext = () => {
-    // Safety check: ensure arrays exist before processing
+    // ... (Keep your existing getFinancialContext logic exactly as it was in the previous step)
+    // For brevity, I am not repeating the calculation code here, but ensure it remains part of the file.
+    // ...
     const safeExpenses = Array.isArray(expenses) ? expenses : [];
     const safeIncomes = Array.isArray(incomes) ? incomes : [];
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
 
-    const recentExpenses = safeExpenses
-      .slice(0, 15)
-      .map(
-        (e) =>
-          `${e.category}: ${e.amount} (${new Date(
-            e.date
-          ).toLocaleDateString()})`
-      )
-      .join("; ");
+    const thisMonthExpenses = safeExpenses.filter((e) => {
+      const d = new Date(e.date);
+      return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+    });
 
-    const recentIncomes = safeIncomes
-      .slice(0, 15)
-      .map(
-        (i) =>
-          `${i.category}: ${i.amount} (${new Date(
-            i.date
-          ).toLocaleDateString()})`
-      )
-      .join("; ");
+    const thisMonthIncomes = safeIncomes.filter((i) => {
+      const d = new Date(i.date);
+      return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+    });
+
+    const totalExpenseThisMonth = thisMonthExpenses.reduce(
+      (acc, curr) => acc + (curr.amount || 0),
+      0
+    );
+    const totalIncomeThisMonth = thisMonthIncomes.reduce(
+      (acc, curr) => acc + (curr.amount || 0),
+      0
+    );
+
+    const highestExpense = safeExpenses.reduce(
+      (max, curr) => (curr.amount > (max?.amount || 0) ? curr : max),
+      null
+    );
 
     const categoryTotals = safeExpenses.reduce((acc, curr) => {
       acc[curr.category] = (acc[curr.category] || 0) + curr.amount;
       return acc;
     }, {});
 
-    const categorySummary = Object.entries(categoryTotals)
-      .map(([cat, total]) => `${cat}: ${total}`)
+    const sortedCategories = Object.entries(categoryTotals)
+      .sort(([, a], [, b]) => b - a)
+      .map(([cat, total]) => `${cat}: ₱${total}`)
       .join(", ");
 
+    const recentExpenses = safeExpenses
+      .slice(0, 10)
+      .map((e) => `${e.category}: ₱${e.amount}`)
+      .join("; ");
+
     return `
-      Current Wallet Balance: ${currentBalance}.
-      Total Income Count: ${safeIncomes.length}.
-      Total Expense Count: ${safeExpenses.length}.
-      Expense Breakdown by Category: ${categorySummary}.
-      Recent Expenses List: ${recentExpenses}.
-      Recent Incomes List: ${recentIncomes}.
+      Current Wallet Balance: ₱${currentBalance.toLocaleString()}
+      This Month Income: ₱${totalIncomeThisMonth.toLocaleString()}
+      This Month Expense: ₱${totalExpenseThisMonth.toLocaleString()}
+      Highest Expense: ${
+        highestExpense
+          ? `${highestExpense.category} (₱${highestExpense.amount})`
+          : "None"
+      }
+      Spending by Category: ${sortedCategories}
+      Recent: ${recentExpenses}
     `;
   };
 
-  const handleSend = async () => {
-    if (!input.trim()) return;
+  // 👇 UPDATED: handleSend now accepts an optional 'text' argument
+  const handleSend = async (textOverride = null) => {
+    const textToSend = typeof textOverride === "string" ? textOverride : input;
 
-    const userMessage = { role: "user", text: input };
+    if (!textToSend.trim()) return;
+
+    const userMessage = { role: "user", text: textToSend };
     setMessages((prev) => [...prev, userMessage]);
-    setInput("");
+    setInput(""); // Clear input field
     setLoading(true);
 
     try {
-      // 1. Prepare Context (Now inside try block to catch data errors)
-      console.log("Preparing financial context...");
       const context = getFinancialContext();
-
-      // 2. Get API Key
       const apiKey = key;
 
-      if (!apiKey) {
-        throw new Error(
-          "API Key is missing. Please check your .env file and VITE_GEMINI_KEY."
-        );
-      }
+      if (!apiKey) throw new Error("API Key is missing.");
 
-      const systemPrompt = `You are SpenSyd AI, a helpful financial assistant. 
-      You have access to the user's data: ${context}. 
-      Answer concisely based on this data. If the answer isn't in the data, say so.`;
+      const systemPrompt = `You are SpenSyd AI. User Data: ${context}. Be concise. Use ₱ symbol.`;
 
-      console.log("Sending request to Gemini...");
-
-      // 3. Call API
       const response = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            contents: [{ parts: [{ text: input }] }],
+            contents: [{ parts: [{ text: textToSend }] }], // Use textToSend here
             systemInstruction: { parts: [{ text: systemPrompt }] },
           }),
         }
       );
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        console.error("API Error Details:", errorData);
-        throw new Error(
-          `Server Error: ${response.status} - ${
-            errorData.error?.message || response.statusText
-          }`
-        );
-      }
+      if (!response.ok) throw new Error(`API Error: ${response.status}`);
 
       const data = await response.json();
       const botResponseText =
@@ -124,13 +134,10 @@ const AIBot = ({ expenses = [], incomes = [], currentBalance = 0 }) => {
       console.error("AI Bot Error:", error);
       setMessages((prev) => [
         ...prev,
-        {
-          role: "bot",
-          text: `Error: ${error.message}. Check console (F12) for details.`,
-        },
+        { role: "bot", text: "I'm having trouble connecting to the server." },
       ]);
     } finally {
-      setLoading(false); // This ensures "Thinking..." always stops
+      setLoading(false);
     }
   };
 
@@ -158,6 +165,22 @@ const AIBot = ({ expenses = [], incomes = [], currentBalance = 0 }) => {
                   {msg.text}
                 </div>
               ))}
+
+              {/* 👇 NEW: Render Suggestions only if specific condition met (e.g., not loading) */}
+              {!loading && (
+                <div className="suggestions-container">
+                  {suggestions.map((question, idx) => (
+                    <button
+                      key={idx}
+                      className="suggestion-chip"
+                      onClick={() => handleSend(question)}
+                    >
+                      {question}
+                    </button>
+                  ))}
+                </div>
+              )}
+
               {loading && (
                 <div className="message bot">
                   <span className="typing-indicator">Thinking...</span>
@@ -170,29 +193,17 @@ const AIBot = ({ expenses = [], incomes = [], currentBalance = 0 }) => {
               <input
                 type="text"
                 className="chat-input"
-                placeholder="Ask about your finances..."
+                placeholder="Ask me anything..."
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={(e) => e.key === "Enter" && handleSend()}
               />
               <button
                 className="send-button"
-                onClick={handleSend}
+                onClick={() => handleSend()}
                 disabled={loading}
               >
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <line x1="22" y1="2" x2="11" y2="13"></line>
-                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                </svg>
+                ➤
               </button>
             </div>
           </motion.div>
@@ -205,6 +216,7 @@ const AIBot = ({ expenses = [], incomes = [], currentBalance = 0 }) => {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
       >
+        {/* (Keep existing SVG icon) */}
         <svg
           width="32"
           height="32"

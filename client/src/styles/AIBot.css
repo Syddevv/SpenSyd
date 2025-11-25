@@ -210,6 +210,40 @@
   border-radius: 3px;
 }
 
+/* Add to the bottom of AIBot.css */
+
+.suggestions-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 0 5px;
+}
+
+.suggestion-chip {
+  background-color: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  color: #e0e7ff;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.suggestion-chip:hover {
+  background-color: rgba(99, 102, 241, 0.3);
+  border-color: #6366f1;
+  transform: translateY(-1px);
+}
+
+.suggestion-chip:active {
+  transform: scale(0.95);
+}
+
 /* Responsive */
 @media (max-width: 480px) {
   .ai-chat-window {
