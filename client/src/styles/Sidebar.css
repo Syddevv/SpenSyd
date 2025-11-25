@@ -4,7 +4,9 @@
   position: fixed;
   top: 0;
   left: 0;
+  /* 👇 FIX: Use dvh for mobile browsers, fallback to vh */
   height: 100vh;
+  height: 100dvh;
   width: var(--sidebar-width);
   background: var(--bg-surface);
   border-right: 1px solid var(--border-glass);
@@ -49,7 +51,15 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  flex: 1; /* Pushes footer down */
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  margin-bottom: 10px;
+}
+
+.sidebar-nav::-webkit-scrollbar {
+  display: none;
 }
 
 .nav-item {
@@ -206,10 +216,8 @@
   .sidebar {
     transform: translateX(-100%);
     box-shadow: var(--shadow-lg);
-    /* Ensure sidebar creates a positioning context */
-    position: fixed;
+    padding: 16px;
   }
-
   .sidebar.mobile-open {
     transform: translateX(0);
   }
