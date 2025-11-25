@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
-import { ClipLoader } from "react-spinners"; // Use named import if default fails, or check package
 import { useAuth } from "../context/ContextProvider";
 
 // Components
@@ -12,9 +11,10 @@ import Modal from "../components/Modal";
 import "../styles/HomePage.css";
 import IncomeIcon from "../assets/income icon.png";
 import ExpenseIcon from "../assets/expenses icon.png";
-import WalletIcon from "../assets/money gift icon.png"; // Using as balance icon
+import WalletIcon from "../assets/money gift icon.png";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+// Safe access to env variable
+const BASE_URL = import.meta.env?.VITE_API_BASE_URL || "http://localhost:5000";
 
 const Home = () => {
   const { user } = useAuth();
@@ -108,9 +108,9 @@ const Home = () => {
           axios.get(`${BASE_URL}/api/activity/recent`, { headers }),
         ]);
 
-        setExpenses(expRes.data.expenses);
-        setIncomes(incRes.data.balances);
-        setRecentActivity(actRes.data.activities);
+        setExpenses(expRes.data.expenses || []);
+        setIncomes(incRes.data.balances || []);
+        setRecentActivity(actRes.data.activities || []);
       } catch (error) {
         console.error("Error fetching dashboard data", error);
       } finally {
@@ -121,16 +121,43 @@ const Home = () => {
     fetchData();
   }, [refresh]);
 
-  // --- Calculations ---
-  const totalExpenses = expenses.reduce(
+  // --- Calculations for Current Month ---
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth();
+  const currentYear = currentDate.getFullYear();
+  const monthName = currentDate.toLocaleString("default", { month: "long" });
+
+  // Filter for Current Month
+  const monthlyExpensesList = expenses.filter((item) => {
+    const d = new Date(item.date);
+    return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+  });
+
+  const monthlyIncomesList = incomes.filter((item) => {
+    const d = new Date(item.date);
+    return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+  });
+
+  // Calculate Monthly Totals
+  const monthlyTotalExpense = monthlyExpensesList.reduce(
     (acc, curr) => acc + Number(curr.amount),
     0
   );
-  const totalIncome = incomes.reduce(
+  const monthlyTotalIncome = monthlyIncomesList.reduce(
     (acc, curr) => acc + Number(curr.amount),
     0
   );
-  const currentBalance = totalIncome - totalExpenses;
+
+  // Calculate All-Time Balance (Wallet)
+  const allTimeExpenses = expenses.reduce(
+    (acc, curr) => acc + Number(curr.amount),
+    0
+  );
+  const allTimeIncome = incomes.reduce(
+    (acc, curr) => acc + Number(curr.amount),
+    0
+  );
+  const currentBalance = allTimeIncome - allTimeExpenses;
 
   // --- Handlers ---
   const handleAddExpense = async (data) => {
@@ -166,7 +193,7 @@ const Home = () => {
   if (loading) {
     return (
       <div className="loading-container">
-        <ClipLoader color="#8b5cf6" size={50} />
+        <div style={{ color: "white" }}>Loading...</div>
       </div>
     );
   }
@@ -188,6 +215,7 @@ const Home = () => {
 
       {/* Top Row: Stats Cards */}
       <section className="stats-grid">
+        {/* Total Balance (All Time) */}
         <motion.div
           className="stat-card glass-panel balance"
           variants={itemPop}
@@ -205,6 +233,7 @@ const Home = () => {
           <div className="stat-value">₱ {currentBalance.toLocaleString()}</div>
         </motion.div>
 
+        {/* Total Income (Current Month) */}
         <motion.div
           className="stat-card glass-panel income"
           variants={itemPop}
@@ -217,11 +246,14 @@ const Home = () => {
               alt="icon"
               style={{ width: 24, opacity: 0.8 }}
             />
-            <span>Total Income</span>
+            <span>Income ({monthName})</span>
           </div>
-          <div className="stat-value">₱ {totalIncome.toLocaleString()}</div>
+          <div className="stat-value">
+            ₱ {monthlyTotalIncome.toLocaleString()}
+          </div>
         </motion.div>
 
+        {/* Total Expense (Current Month) */}
         <motion.div
           className="stat-card glass-panel expense"
           variants={itemPop}
@@ -234,9 +266,11 @@ const Home = () => {
               alt="icon"
               style={{ width: 24, opacity: 0.8 }}
             />
-            <span>Total Expense</span>
+            <span>Expense ({monthName})</span>
           </div>
-          <div className="stat-value">₱ {totalExpenses.toLocaleString()}</div>
+          <div className="stat-value">
+            ₱ {monthlyTotalExpense.toLocaleString()}
+          </div>
         </motion.div>
       </section>
 
