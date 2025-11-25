@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../context/ContextProvider";
+import AIBot from "../components/aiBot";
+import { ClipLoader } from "react-spinners";
 
 // Components
 import Chart from "../components/Chart";
@@ -193,7 +195,7 @@ const Home = () => {
   if (loading) {
     return (
       <div className="loading-container">
-        <div style={{ color: "white" }}>Loading...</div>
+        <ClipLoader color="#8b5cf6" size={50} />
       </div>
     );
   }
@@ -356,6 +358,7 @@ const Home = () => {
         </div>
       </motion.section>
 
+      <AIBot />
       {/* Modals */}
       <AnimatePresence>
         {showExpenseModal && (
