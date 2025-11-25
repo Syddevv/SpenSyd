@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
-import ClipLoader from "react-spinners/ClipLoader";
+import { ClipLoader } from "react-spinners";
 import SpenSyd_Icon from "../assets/SpenSyd Icon.png";
 import "../styles/Login.css"; // Import base auth styles
 import "../styles/Register.css"; // Import specific register overrides
@@ -53,31 +53,51 @@ const Register = () => {
   return (
     <div className="auth-container">
       {/* Left Side - Visual */}
-      <div className="auth-visual register-visual">
+      <motion.div
+        className="auth-visual register-visual"
+        initial={{ opacity: 0, x: -50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
         <div className="visual-content">
-          <img src={SpenSyd_Icon} alt="Logo" className="visual-logo" />
+          <motion.img
+            src={SpenSyd_Icon}
+            alt="Logo"
+            className="visual-logo"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
+          />
           <h1 className="visual-heading">Join the SpenSyd Community.</h1>
           <p className="visual-text">
             Start your journey towards financial freedom today. Create an
             account to access professional tracking tools.
           </p>
         </div>
-      </div>
+      </motion.div>
 
       {/* Right Side - Form */}
       <div className="auth-form-container">
         <motion.div
           className="auth-card glass-panel"
-          initial={{ opacity: 0, x: -20 }}
+          initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
         >
           <div className="auth-header">
             <h2>Create Account</h2>
             <p>Get started with your free account</p>
           </div>
 
-          {error && <div className="error-message">{error}</div>}
+          {error && (
+            <motion.div
+              className="error-message"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              {error}
+            </motion.div>
+          )}
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
@@ -119,18 +139,20 @@ const Register = () => {
               />
             </div>
 
-            <button
+            <motion.button
               type="submit"
               className="btn-primary"
               style={{ width: "100%" }}
               disabled={loading}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
               {loading ? (
                 <ClipLoader color="#fff" size={20} />
               ) : (
                 "Create Account"
               )}
-            </button>
+            </motion.button>
           </form>
 
           <div className="auth-footer">

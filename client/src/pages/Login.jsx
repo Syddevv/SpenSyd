@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/ContextProvider";
 import axios from "axios";
 import { motion } from "framer-motion";
-import ClipLoader from "react-spinners/ClipLoader";
 import SpenSyd_Icon from "../assets/SpenSyd Icon.png";
 import "../styles/Login.css";
 
@@ -42,31 +41,51 @@ const Login = () => {
   return (
     <div className="auth-container">
       {/* Left Side - Visual */}
-      <div className="auth-visual">
+      <motion.div
+        className="auth-visual"
+        initial={{ opacity: 0, x: -50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
         <div className="visual-content">
-          <img src={SpenSyd_Icon} alt="Logo" className="visual-logo" />
+          <motion.img
+            src={SpenSyd_Icon}
+            alt="Logo"
+            className="visual-logo"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
+          />
           <h1 className="visual-heading">Welcome back to SpenSyd.</h1>
           <p className="visual-text">
             Your personal finance command center. Log in to track expenses,
             analyze your habits, and grow your wealth.
           </p>
         </div>
-      </div>
+      </motion.div>
 
       {/* Right Side - Form */}
       <div className="auth-form-container">
         <motion.div
           className="auth-card glass-panel"
-          initial={{ opacity: 0, x: 20 }}
+          initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
         >
           <div className="auth-header">
             <h2>Sign In</h2>
             <p>Enter your details to access your account</p>
           </div>
 
-          {error && <div className="error-message">{error}</div>}
+          {error && (
+            <motion.div
+              className="error-message"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              {error}
+            </motion.div>
+          )}
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
@@ -95,14 +114,16 @@ const Login = () => {
               />
             </div>
 
-            <button
+            <motion.button
               type="submit"
               className="btn-primary"
               style={{ width: "100%" }}
               disabled={loading}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
-              {loading ? <ClipLoader color="#fff" size={20} /> : "Sign In"}
-            </button>
+              {loading ? "Loading..." : "Sign In"}
+            </motion.button>
           </form>
 
           <div className="auth-footer">
