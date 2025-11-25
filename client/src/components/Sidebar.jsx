@@ -13,6 +13,7 @@ import IncomesIcon from "../assets/income icon.png";
 import SettingsIcon from "../assets/account-settings.png";
 import LogoutIcon from "../assets/logout.png";
 import DefaultProfile from "../assets/default-profile.png";
+import CloseIcon from "../assets/close-btn.png"; // 👈 Import Close Icon
 
 const Sidebar = ({ isOpen, onClose }) => {
   const { user, logout } = useAuth();
@@ -85,8 +86,16 @@ const Sidebar = ({ isOpen, onClose }) => {
             variants={itemVariants}
             style={{ marginBottom: "40px" }}
           >
-            <img src={Logo} alt="SpenSyd" className="brand-logo" />
-            <span className="brand-text">SpenSyd</span>
+            {/* Wrapper for Logo & Text */}
+            <div className="brand-wrapper">
+              <img src={Logo} alt="SpenSyd" className="brand-logo" />
+              <span className="brand-text">SpenSyd</span>
+            </div>
+
+            {/* Close Button (Visible only on Mobile) */}
+            <button className="sidebar-close-btn" onClick={onClose}>
+              <img src={CloseIcon} alt="Close" />
+            </button>
           </motion.div>
 
           {/* Navigation - Takes up available space */}

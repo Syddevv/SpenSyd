@@ -19,9 +19,16 @@
 .sidebar-header {
   display: flex;
   align-items: center;
+  justify-content: space-between; /* Push close button to right */
   gap: 12px;
   margin-bottom: 40px;
   padding: 0 12px;
+}
+
+.brand-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .brand-logo {
@@ -162,15 +169,58 @@
   display: none;
 }
 
+/* Close Button - Default Hidden (Desktop) */
+.sidebar-close-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.sidebar-close-btn img {
+  width: 24px;
+  height: 24px;
+  /* Invert color if your close icon is black, to make it white on dark bg */
+  filter: invert(1);
+  opacity: 0.7;
+}
+
+.sidebar-close-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-close-btn:hover img {
+  opacity: 1;
+}
+
+/* Responsive Behavior */
+/* client/src/styles/Sidebar.css */
+
+/* ... existing code ... */
+
 /* Responsive Behavior */
 @media (max-width: 900px) {
   .sidebar {
     transform: translateX(-100%);
     box-shadow: var(--shadow-lg);
+    /* Ensure sidebar creates a positioning context */
+    position: fixed;
   }
 
   .sidebar.mobile-open {
     transform: translateX(0);
+  }
+
+  /* Updated Close Button Styling */
+  .sidebar-close-btn {
+    display: block;
+    position: absolute; /* Takes it out of the flex flow */
+    top: 20px; /* Aligns with top padding */
+    right: 16px; /* Pushes it further right than the padding allows */
+    z-index: 10; /* Ensures it stays on top */
   }
 
   .mobile-overlay.open {
