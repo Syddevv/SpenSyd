@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../styles/Records.css";
 import ClipLoader from "react-spinners/ClipLoader";
+import { motion } from "framer-motion";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -57,7 +58,12 @@ const ExpensesRecord = () => {
     );
 
   return (
-    <div className="records-container">
+    <motion.div
+      className="records-container"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+    >
       <header className="records-header">
         <h2 className="records-title">Expense Records</h2>
       </header>
@@ -91,13 +97,17 @@ const ExpensesRecord = () => {
       </div>
 
       {/* Data Table */}
-      <div className="table-container glass-panel">
+      <motion.div
+        className="table-container glass-panel"
+        initial={{ opacity: 0, scale: 0.98 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.4, delay: 0.1 }}
+      >
         <table className="data-table">
           <thead>
             <tr>
               <th>Category</th>
               <th>Date</th>
-              {/* Removed Description Header */}
               <th style={{ textAlign: "right" }}>Amount</th>
             </tr>
           </thead>
@@ -115,7 +125,6 @@ const ExpensesRecord = () => {
                     </span>
                   </td>
                   <td>{new Date(item.date).toLocaleDateString()}</td>
-                  {/* Removed Description Cell */}
                   <td
                     style={{
                       textAlign: "right",
@@ -129,7 +138,6 @@ const ExpensesRecord = () => {
               ))
             ) : (
               <tr>
-                {/* Adjusted colspan from 4 to 3 since one column was removed */}
                 <td colSpan="3" className="no-data">
                   No records found for this month.
                 </td>
@@ -137,8 +145,8 @@ const ExpensesRecord = () => {
             )}
           </tbody>
         </table>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 
