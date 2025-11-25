@@ -11,7 +11,6 @@ import { ChangePassModal } from "../components/ChangePassModal";
 import { ChangeEmailModal } from "../components/ChangeEmailModal";
 import { EditProfileModal } from "../components/EditProfileModal";
 import { AboutUsModal } from "../components/AboutUsModal";
-// Removed: VerifyCodeModal is no longer needed
 import { ForgotPassModal } from "../components/ForgotPassModal";
 
 // Assets
@@ -37,7 +36,6 @@ const Settings = () => {
     editProfile: false,
     changePassForm: false,
     changeEmailForm: false,
-    // Removed: verifyCode
     forgotPass: false,
   });
 
@@ -50,26 +48,56 @@ const Settings = () => {
     navigate("/login");
   };
 
+  // --- Animations ---
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        when: "beforeChildren",
+      },
+    },
+  };
+
+  const slideDown = {
+    hidden: { opacity: 0, y: -20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  };
+
+  const slideUp = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+  };
+
   return (
-    <div className="settings-container">
-      <div className="settings-header">
+    <motion.div
+      className="settings-container"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      <motion.div className="settings-header" variants={slideDown}>
         <h2 className="settings-title">Account Settings</h2>
         <p className="settings-subtitle">
           Manage your profile and security preferences.
         </p>
-      </div>
+      </motion.div>
 
       {/* Profile Section */}
-      <div className="profile-section glass-panel">
-        <img
+      <motion.div className="profile-section glass-panel" variants={slideDown}>
+        <motion.img
           src={user?.profilePicture || DefaultProfile}
           alt="Profile"
           className="profile-img-large"
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.4 }}
         />
         <div className="profile-info-large">
           <h3>@{user?.username}</h3>
           <p>{user?.email}</p>
-          <button
+          <motion.button
             className="btn-outline"
             style={{
               marginTop: "12px",
@@ -77,17 +105,24 @@ const Settings = () => {
               fontSize: "0.85rem",
             }}
             onClick={() => toggleModal("editProfile", true)}
+            whileHover={{
+              scale: 1.05,
+              backgroundColor: "rgba(255,255,255,0.1)",
+            }}
+            whileTap={{ scale: 0.95 }}
           >
             Edit Profile
-          </button>
+          </motion.button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Settings List */}
       <div className="settings-grid">
-        <div
+        <motion.div
           className="setting-item"
           onClick={() => toggleModal("password", true)}
+          variants={slideUp}
+          whileHover={{ x: 5, backgroundColor: "rgba(255, 255, 255, 0.06)" }}
         >
           <div className="setting-left">
             <div className="setting-icon-box">
@@ -99,11 +134,13 @@ const Settings = () => {
             </div>
           </div>
           <img src={ArrowIcon} className="arrow-right" width={20} alt="arrow" />
-        </div>
+        </motion.div>
 
-        <div
+        <motion.div
           className="setting-item"
           onClick={() => toggleModal("email", true)}
+          variants={slideUp}
+          whileHover={{ x: 5, backgroundColor: "rgba(255, 255, 255, 0.06)" }}
         >
           <div className="setting-left">
             <div className="setting-icon-box">
@@ -115,11 +152,13 @@ const Settings = () => {
             </div>
           </div>
           <img src={ArrowIcon} className="arrow-right" width={20} alt="arrow" />
-        </div>
+        </motion.div>
 
-        <div
+        <motion.div
           className="setting-item"
           onClick={() => toggleModal("about", true)}
+          variants={slideUp}
+          whileHover={{ x: 5, backgroundColor: "rgba(255, 255, 255, 0.06)" }}
         >
           <div className="setting-left">
             <div className="setting-icon-box">
@@ -131,12 +170,14 @@ const Settings = () => {
             </div>
           </div>
           <img src={ArrowIcon} className="arrow-right" width={20} alt="arrow" />
-        </div>
+        </motion.div>
 
-        <div
+        <motion.div
           className="setting-item"
           style={{ borderColor: "rgba(244, 63, 94, 0.3)" }}
           onClick={() => toggleModal("logout", true)}
+          variants={slideUp}
+          whileHover={{ x: 5, backgroundColor: "rgba(244, 63, 94, 0.15)" }}
         >
           <div className="setting-left">
             <div
@@ -151,7 +192,7 @@ const Settings = () => {
             </div>
           </div>
           <img src={ArrowIcon} className="arrow-right" width={20} alt="arrow" />
-        </div>
+        </motion.div>
       </div>
 
       {/* --- Modals --- */}
@@ -208,7 +249,6 @@ const Settings = () => {
         {modalState.changePassForm && (
           <ChangePassModal
             onClose={() => toggleModal("changePassForm", false)}
-            // Removed openModal prop since verification is gone
           />
         )}
 
@@ -235,7 +275,7 @@ const Settings = () => {
           <AboutUsModal onClose={() => toggleModal("about", false)} />
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 };
 
