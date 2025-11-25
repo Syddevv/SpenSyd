@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/ContextProvider";
+import { motion, AnimatePresence } from "framer-motion";
 import "../styles/Sidebar.css";
-import { ConfirmationModal } from "./ConfirmationModal"; // Ensure correct import path
+import { ConfirmationModal } from "./ConfirmationModal";
 
 // Assets
 import Logo from "../assets/SpenSyd Icon.png";
@@ -24,7 +25,7 @@ const Sidebar = ({ isOpen, onClose }) => {
 
   const confirmLogout = () => {
     logout();
-    navigate("/login");
+    navigate("/");
     setShowLogoutModal(false);
   };
 
@@ -36,58 +37,125 @@ const Sidebar = ({ isOpen, onClose }) => {
     { path: "/settings", label: "Settings", icon: SettingsIcon },
   ];
 
+  // Animation Variants
+  const sidebarContentVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, x: -20 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.4 } },
+  };
+
   return (
     <>
-      {/* Mobile Overlay */}
-      <div
-        className={`mobile-overlay ${isOpen ? "open" : ""}`}
-        onClick={onClose}
-      />
+      {/* Mobile Overlay with Fade Animation */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            className="mobile-overlay"
+            onClick={onClose}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          />
+        )}
+      </AnimatePresence>
 
       {/* Sidebar Container */}
       <aside className={`sidebar ${isOpen ? "mobile-open" : ""}`}>
-        {/* Header */}
-        <div className="sidebar-header">
-          <img src={Logo} alt="SpenSyd" className="brand-logo" />
-          <span className="brand-text">SpenSyd</span>
-        </div>
+        <motion.div
+          className="sidebar-content-wrapper"
+          variants={sidebarContentVariants}
+          initial="hidden"
+          animate="visible"
+          style={{ display: "flex", flexDirection: "column", height: "100%" }}
+        >
+          {/* Header */}
+          <motion.div
+            className="sidebar-header"
+            variants={itemVariants}
+            style={{ marginBottom: "40px" }}
+          >
+            <img src={Logo} alt="SpenSyd" className="brand-logo" />
+            <span className="brand-text">SpenSyd</span>
+          </motion.div>
 
-        {/* Navigation */}
-        <nav className="sidebar-nav">
-          {navItems.map((item) => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              className={({ isActive }) =>
-                `nav-item ${isActive ? "active" : ""}`
-              }
-              onClick={() => onClose && onClose()} // Close sidebar on mobile when clicked
-            >
-              <img src={item.icon} alt={item.label} className="nav-icon" />
-              <span>{item.label}</span>
-            </NavLink>
-          ))}
-        </nav>
+          {/* Navigation - Takes up available space */}
+          <nav
+            className="sidebar-nav"
+            style={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              gap: "8px",
+            }}
+          >
+            {navItems.map((item) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className={({ isActive }) =>
+                  `nav-item ${isActive ? "active" : ""}`
+                }
+                onClick={() => onClose && onClose()}
+              >
+                <motion.div
+                  className="nav-item-inner"
+                  variants={itemVariants}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "16px",
+                    width: "100%",
+                  }}
+                >
+                  <img src={item.icon} alt={item.label} className="nav-icon" />
+                  <span>{item.label}</span>
+                </motion.div>
+              </NavLink>
+            ))}
+          </nav>
 
-        {/* Footer / Profile */}
-        <div className="sidebar-footer">
-          <div className="user-info">
-            <img
-              src={user?.profilePicture || DefaultProfile}
-              alt="Profile"
-              className="user-avatar"
-            />
-            <div className="user-details">
-              <span className="user-name">@{user?.username || "User"}</span>
-              <span className="user-email">{user?.email || "Loading..."}</span>
+          {/* Footer / Profile - Pushed to bottom */}
+          <motion.div
+            className="sidebar-footer"
+            variants={itemVariants}
+            style={{
+              marginTop: "auto",
+              display: "flex",
+              flexDirection: "column",
+              gap: "15px",
+            }}
+          >
+            <div className="user-info">
+              <img
+                src={user?.profilePicture || DefaultProfile}
+                alt="Profile"
+                className="user-avatar"
+              />
+              <div className="user-details">
+                <span className="user-name">@{user?.username || "User"}</span>
+                <span className="user-email">
+                  {user?.email || "Loading..."}
+                </span>
+              </div>
             </div>
-          </div>
 
-          <button className="logout-btn" onClick={handleLogoutClick}>
-            <img src={LogoutIcon} alt="Logout" className="logout-icon" />
-            Logout
-          </button>
-        </div>
+            <button className="logout-btn" onClick={handleLogoutClick}>
+              <img src={LogoutIcon} alt="Logout" className="logout-icon" />
+              Logout
+            </button>
+          </motion.div>
+        </motion.div>
       </aside>
 
       {/* Logout Confirmation Modal */}
