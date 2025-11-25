@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../styles/Records.css"; // Reusing the shared styles
 import ClipLoader from "react-spinners/ClipLoader";
+import { motion } from "framer-motion";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -45,7 +46,12 @@ const IncomesRecord = () => {
     );
 
   return (
-    <div className="records-container">
+    <motion.div
+      className="records-container"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+    >
       <header className="records-header">
         <h2 className="records-title">Income Records</h2>
       </header>
@@ -83,7 +89,12 @@ const IncomesRecord = () => {
         </div>
       </div>
 
-      <div className="table-container glass-panel">
+      <motion.div
+        className="table-container glass-panel"
+        initial={{ opacity: 0, scale: 0.98 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.4, delay: 0.1 }}
+      >
         <table className="data-table">
           <thead>
             <tr>
@@ -115,15 +126,15 @@ const IncomesRecord = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="4" className="no-data">
+                <td colSpan="3" className="no-data">
                   No records found for this month.
                 </td>
               </tr>
             )}
           </tbody>
         </table>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 
