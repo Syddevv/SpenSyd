@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import "../styles/Modal.css";
 import { toast } from "react-toastify";
-import ClipLoader from "react-spinners/ClipLoader";
+import { ClipLoader } from "react-spinners";
 
 const Modal = ({ title, onClose, onSubmit, categories, currentBalance }) => {
   const [category, setCategory] = useState(categories[0]?.toLowerCase() || "");
+  const [customCategory, setCustomCategory] = useState(""); // State for "Others" input
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState("");
   const [loading, setLoading] = useState(false);
@@ -12,6 +13,12 @@ const Modal = ({ title, onClose, onSubmit, categories, currentBalance }) => {
   const handleSave = async () => {
     if (!amount || !date) {
       toast.error("Please fill out all fields");
+      return;
+    }
+
+    // If category is 'others', validate the custom input
+    if (category === "others" && !customCategory.trim()) {
+      toast.error("Please specify the category");
       return;
     }
 
@@ -26,8 +33,12 @@ const Modal = ({ title, onClose, onSubmit, categories, currentBalance }) => {
     try {
       setLoading(true);
 
+      // Use custom category name if 'others' is selected
+      const finalCategory =
+        category === "others" ? customCategory.trim() : category;
+
       await onSubmit({
-        category,
+        category: finalCategory,
         amount: parseFloat(amount),
         date,
       });
@@ -62,6 +73,21 @@ const Modal = ({ title, onClose, onSubmit, categories, currentBalance }) => {
             ))}
           </select>
         </div>
+
+        {/* Specification Input - Only shows when 'others' is selected */}
+        {category === "others" && (
+          <div className="inputGroup" style={{ animation: "fadeIn 0.3s" }}>
+            <label htmlFor="customCategory">Specify Details</label>
+            <input
+              type="text"
+              id="customCategory"
+              placeholder="e.g. Gift, Repair, Taxi..."
+              value={customCategory}
+              onChange={(e) => setCustomCategory(e.target.value)}
+              autoFocus
+            />
+          </div>
+        )}
 
         <div className="inputGroup">
           <label htmlFor="total">Amount</label>
