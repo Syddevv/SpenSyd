@@ -138,7 +138,7 @@ const Login = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              {loading ? <ClipLoader color="#8b5cf6" size={18} /> : "Sign In"}
+              {loading ? <ClipLoader color="#ffffff" size={18} /> : "Sign In"}
             </motion.button>
 
             {showSlowLoadingMsg && (
