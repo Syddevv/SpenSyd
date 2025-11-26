@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ProtectedRoute from "./components/ProtectedRoutes";
 
 // Context
 import ContextProvider from "./context/ContextProvider";
@@ -102,11 +103,13 @@ function App() {
           <Route path="/login" element={<Login />} />
 
           {/* Protected Dashboard Routes */}
-          <Route element={<DashboardLayout />}>
-            <Route path="/home" element={<Home />} />
-            <Route path="/expenses" element={<Expenses />} />
-            <Route path="/incomes" element={<Incomes />} />
-            <Route path="/settings" element={<Settings />} />
+          <Route element={<ProtectedRoute />}>
+            <Route element={<DashboardLayout />}>
+              <Route path="/home" element={<Home />} />
+              <Route path="/expenses" element={<Expenses />} />
+              <Route path="/incomes" element={<Incomes />} />
+              <Route path="/settings" element={<Settings />} />
+            </Route>
           </Route>
         </Routes>
 
