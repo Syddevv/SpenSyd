@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../context/ContextProvider";
 import AIBot from "../components/aiBot";
 import { ClipLoader } from "react-spinners";
+import { toast } from "react-toastify";
 
 // Components
 import Chart from "../components/Chart";
@@ -41,6 +42,7 @@ const Home = () => {
     "Bills",
     "Others",
   ];
+
   const incomeCategories = [
     "Salary",
     "Allowance",

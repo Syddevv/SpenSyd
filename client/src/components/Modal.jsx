@@ -42,6 +42,11 @@ const Modal = ({ title, onClose, onSubmit, categories, currentBalance }) => {
         amount: parseFloat(amount),
         date,
       });
+      {
+        title === "Add Income"
+          ? toast.success("Income added successfully")
+          : toast.success("Expense added successfully");
+      }
     } catch (err) {
       console.error(err);
       toast.error("An error occurred while saving.");
