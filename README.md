@@ -12,6 +12,7 @@
 - ✅ View and manage detailed **Transaction Records**
 - ✅ Organize all entries using **Category Labels**
 - ✅ Responsive and modern UI
+- ✅ Reset data
 ---
 ## 📸 Screenshots
 
@@ -20,7 +21,8 @@
 <img width="393" height="623" alt="Screenshot 2025-11-26 163417" src="https://github.com/user-attachments/assets/33e6f5fd-e798-4318-b442-657cc95779b2" />
 <img width="369" height="593" alt="Screenshot 2025-11-26 163445" src="https://github.com/user-attachments/assets/8ba90181-3ea8-43a4-add2-2c79067dfbd0" />
 <img width="1919" height="954" alt="Screenshot 2025-11-26 163459" src="https://github.com/user-attachments/assets/0dcea45c-77b4-4079-847b-04c5f08c45d9" />
-<img width="1911" height="950" alt="Screenshot 2025-11-26 163507" src="https://github.com/user-attachments/assets/8dfdf110-a734-4b02-a346-35a3af1a0f85" />
+<img width="1917" height="953" alt="Screenshot 2025-11-26 172117" src="https://github.com/user-attachments/assets/b8a77690-c1d0-4ec0-969c-bd6d7a0816c8" />
+
 
 
 ## 🔧 Tech Stack
