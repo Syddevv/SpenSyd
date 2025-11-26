@@ -11,8 +11,6 @@
 - ✅ Add **Incomes** with categories
 - ✅ View and manage detailed **Transaction Records**
 - ✅ Organize all entries using **Category Labels**
-- ✅ Built-in **Password Recovery** system
-- ✅ **Email Verification** for secure account setup
 - ✅ Responsive and modern UI
 ---
 ## 📸 Screenshots
