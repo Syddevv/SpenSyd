@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/ContextProvider";
 import axios from "axios";
 import { motion } from "framer-motion";
 import SpenSyd_Icon from "../assets/SpenSyd Icon.png";
 import "../styles/Login.css";
+import { ClipLoader } from "react-spinners";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -14,11 +15,24 @@ const Login = () => {
   const [formData, setFormData] = useState({ identifier: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showSlowLoadingMsg, setShowSlowLoadingMsg] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setError("");
   };
+
+  useEffect(() => {
+    let timer;
+    if (loading) {
+      timer = setTimeout(() => {
+        setShowSlowLoadingMsg(true);
+      }, 3000);
+    } else {
+      setShowSlowLoadingMsg(false);
+    }
+    return () => clearTimeout(timer);
+  }, [loading]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -98,6 +112,7 @@ const Login = () => {
                 value={formData.identifier}
                 onChange={handleChange}
                 required
+                disabled={loading}
               />
             </div>
 
@@ -111,6 +126,7 @@ const Login = () => {
                 value={formData.password}
                 onChange={handleChange}
                 required
+                disabled={loading}
               />
             </div>
 
@@ -122,8 +138,24 @@ const Login = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              {loading ? "Loading..." : "Sign In"}
+              {loading ? <ClipLoader color="#8b5cf6" size={18} /> : "Sign In"}
             </motion.button>
+
+            {showSlowLoadingMsg && (
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                style={{
+                  fontSize: "0.85rem",
+                  color: "var(--text-muted)",
+                  textAlign: "center",
+                  marginTop: "12px",
+                  fontStyle: "italic",
+                }}
+              >
+                Server waking up, this may take a minute...
+              </motion.p>
+            )}
           </form>
 
           <div className="auth-footer">
