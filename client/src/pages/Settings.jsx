@@ -21,7 +21,7 @@ import GmailIcon from "../assets/gmail.png";
 import LogoutIcon from "../assets/logout.png";
 import AboutIcon from "../assets/about icon.png";
 import ArrowIcon from "../assets/arrow icon.png";
-import ResetIcon from "../assets/password recovery.png";
+import ResetIcon from "../assets/reset.png";
 
 // Safe fallback for BASE_URL
 const BASE_URL = import.meta.env?.VITE_API_BASE_URL || "http://localhost:5000";
