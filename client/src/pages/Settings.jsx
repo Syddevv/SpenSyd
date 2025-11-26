@@ -12,6 +12,7 @@ import { ChangeEmailModal } from "../components/ChangeEmailModal";
 import { EditProfileModal } from "../components/EditProfileModal";
 import { AboutUsModal } from "../components/AboutUsModal";
 import { ForgotPassModal } from "../components/ForgotPassModal";
+import { ResetDataModal } from "../components/ResetDataModal";
 
 // Assets
 import DefaultProfile from "../assets/default-profile.png";
@@ -20,8 +21,10 @@ import GmailIcon from "../assets/gmail.png";
 import LogoutIcon from "../assets/logout.png";
 import AboutIcon from "../assets/about icon.png";
 import ArrowIcon from "../assets/arrow icon.png";
+import ResetIcon from "../assets/password recovery.png";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+// Safe fallback for BASE_URL
+const BASE_URL = import.meta.env?.VITE_API_BASE_URL || "http://localhost:5000";
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -37,6 +40,7 @@ const Settings = () => {
     changePassForm: false,
     changeEmailForm: false,
     forgotPass: false,
+    resetData: false,
   });
 
   const toggleModal = (key, value) => {
@@ -154,6 +158,25 @@ const Settings = () => {
           <img src={ArrowIcon} className="arrow-right" width={20} alt="arrow" />
         </motion.div>
 
+        {/* New Reset Data Setting */}
+        <motion.div
+          className="setting-item"
+          onClick={() => toggleModal("resetData", true)}
+          variants={slideUp}
+          whileHover={{ x: 5, backgroundColor: "rgba(255, 255, 255, 0.06)" }}
+        >
+          <div className="setting-left">
+            <div className="setting-icon-box">
+              <img src={ResetIcon} className="setting-icon" alt="reset" />
+            </div>
+            <div className="setting-text">
+              <h4>Reset Data</h4>
+              <p>Clear expenses, incomes, or all data</p>
+            </div>
+          </div>
+          <img src={ArrowIcon} className="arrow-right" width={20} alt="arrow" />
+        </motion.div>
+
         <motion.div
           className="setting-item"
           onClick={() => toggleModal("about", true)}
@@ -259,6 +282,10 @@ const Settings = () => {
             token={token}
             onEmailChanged={(newEmail) => setUser({ ...user, email: newEmail })}
           />
+        )}
+
+        {modalState.resetData && (
+          <ResetDataModal onClose={() => toggleModal("resetData", false)} />
         )}
 
         {modalState.forgotPass && (
