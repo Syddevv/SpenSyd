@@ -6,7 +6,7 @@ const authContext = createContext();
 const ContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("token") || null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(!!localStorage.getItem("token"));
 
   const login = (user, token) => {
     setUser(user);
@@ -31,6 +31,7 @@ const ContextProvider = ({ children }) => {
       if (!storedToken) {
         setUser(null);
         setToken(null);
+        setLoading(false);
         return;
       }
       try {
@@ -49,6 +50,7 @@ const ContextProvider = ({ children }) => {
       } catch (error) {
         setUser(null);
         setToken(null);
+        localStorage.removeItem("token");
         console.log(error.message);
       } finally {
         setLoading(false);
@@ -58,7 +60,9 @@ const ContextProvider = ({ children }) => {
   }, []);
 
   return (
-    <authContext.Provider value={{ user, token, login, logout, setUser }}>
+    <authContext.Provider
+      value={{ user, token, login, logout, setUser, loading }}
+    >
       {children}
     </authContext.Provider>
   );
