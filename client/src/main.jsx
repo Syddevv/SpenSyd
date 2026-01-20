@@ -3,10 +3,13 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import ContextProvider from "./context/ContextProvider";
-import "./styles/App.css";
+import AnalyticsTracker from "./lib/analyticsTracker";
 
 createRoot(document.getElementById("root")).render(
-  <ContextProvider>
-    <App />
-  </ContextProvider>
+  <StrictMode>
+    <BrowserRouter>
+      <AnalyticsTracker />
+      <App />
+    </BrowserRouter>
+  </StrictMode>,
 );
