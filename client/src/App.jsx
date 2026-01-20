@@ -19,6 +19,9 @@ import Settings from "./pages/Settings";
 // Components
 import Sidebar from "./components/Sidebar";
 
+// Analytics
+import { Analytics } from "@vercel/analytics/react";
+
 // --- Internal Layout Component ---
 // This wrapper handles the Sidebar and Main Content area
 const DashboardLayout = () => {
@@ -112,6 +115,8 @@ function App() {
             </Route>
           </Route>
         </Routes>
+
+        <Analytics />
 
         <ToastContainer
           position="top-right"
