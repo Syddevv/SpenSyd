@@ -1,13 +1,15 @@
-import React from "react";
+import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import App from "./App";
+import "./index.css";
+import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
-import ContextProvider from "./context/ContextProvider";
-import AnalyticsTracker from "./lib/analyticsTracker";
+import AnalyticsTracker from "./lib/analyticsTracker.jsx";
 
 createRoot(document.getElementById("root")).render(
-  <BrowserRouter>
-    <AnalyticsTracker />
-    <App />
-  </BrowserRouter>,
+  <StrictMode>
+    <BrowserRouter>
+      <AnalyticsTracker />
+      <App />
+    </BrowserRouter>
+  </StrictMode>,
 );
