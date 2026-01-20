@@ -98,33 +98,31 @@ const DashboardLayout = () => {
 function App() {
   return (
     <ContextProvider>
-      <BrowserRouter>
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
 
-          {/* Protected Dashboard Routes */}
-          <Route element={<ProtectedRoute />}>
-            <Route element={<DashboardLayout />}>
-              <Route path="/home" element={<Home />} />
-              <Route path="/expenses" element={<Expenses />} />
-              <Route path="/incomes" element={<Incomes />} />
-              <Route path="/settings" element={<Settings />} />
-            </Route>
+        {/* Protected Dashboard Routes */}
+        <Route element={<ProtectedRoute />}>
+          <Route element={<DashboardLayout />}>
+            <Route path="/home" element={<Home />} />
+            <Route path="/expenses" element={<Expenses />} />
+            <Route path="/incomes" element={<Incomes />} />
+            <Route path="/settings" element={<Settings />} />
           </Route>
-        </Routes>
+        </Route>
+      </Routes>
 
-        <Analytics />
+      <Analytics />
 
-        <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          theme="dark"
-          toastStyle={{ backgroundColor: "#1e293b", color: "#fff" }}
-        />
-      </BrowserRouter>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        theme="dark"
+        toastStyle={{ backgroundColor: "#1e293b", color: "#fff" }}
+      />
     </ContextProvider>
   );
 }
