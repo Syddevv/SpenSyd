@@ -6,10 +6,8 @@ import ContextProvider from "./context/ContextProvider";
 import AnalyticsTracker from "./lib/analyticsTracker";
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <BrowserRouter>
-      <AnalyticsTracker />
-      <App />
-    </BrowserRouter>
-  </StrictMode>,
+  <BrowserRouter>
+    <AnalyticsTracker />
+    <App />
+  </BrowserRouter>,
 );
