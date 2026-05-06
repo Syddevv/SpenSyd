@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../context/ContextProvider";
+import { useLocation, useNavigate } from "react-router-dom";
 import AIBot from "../components/aiBot";
 import { ClipLoader } from "react-spinners";
 import { toast } from "react-toastify";
@@ -20,6 +21,8 @@ import WalletIcon from "../assets/money gift icon.png";
 const BASE_URL = import.meta.env?.VITE_API_BASE_URL || "http://localhost:5000";
 
 const Home = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [expenses, setExpenses] = useState([]);
   const [incomes, setIncomes] = useState([]);
@@ -30,6 +33,7 @@ const Home = () => {
   // Modals
   const [showExpenseModal, setShowExpenseModal] = useState(false);
   const [showIncomeModal, setShowIncomeModal] = useState(false);
+  const [isMobileFabOpen, setIsMobileFabOpen] = useState(false);
 
   // Categories
   const expenseCategories = [
@@ -125,6 +129,31 @@ const Home = () => {
     fetchData();
   }, [refresh]);
 
+  useEffect(() => {
+    if (location.state?.openActionMenu) {
+      setIsMobileFabOpen(true);
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location, navigate]);
+
+  useEffect(() => {
+    const handleToggleMobileActions = () => {
+      setIsMobileFabOpen((prev) => !prev);
+    };
+
+    window.addEventListener(
+      "spensyd:toggle-mobile-actions",
+      handleToggleMobileActions
+    );
+
+    return () => {
+      window.removeEventListener(
+        "spensyd:toggle-mobile-actions",
+        handleToggleMobileActions
+      );
+    };
+  }, []);
+
   // --- Calculations for Current Month ---
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth();
@@ -174,6 +203,7 @@ const Home = () => {
       );
       setRefresh((prev) => !prev);
       setShowExpenseModal(false);
+      setIsMobileFabOpen(false);
     } catch (error) {
       console.error("Add Expense Error", error);
     }
@@ -189,6 +219,7 @@ const Home = () => {
       );
       setRefresh((prev) => !prev);
       setShowIncomeModal(false);
+      setIsMobileFabOpen(false);
     } catch (error) {
       console.error("Add Income Error", error);
     }
@@ -365,6 +396,46 @@ const Home = () => {
         incomes={incomes}
         currentBalance={currentBalance}
       />
+
+      <div className="mobile-fab-zone" aria-hidden={false}>
+        <AnimatePresence>
+          {isMobileFabOpen && (
+            <motion.div
+              className="mobile-fab-menu"
+              initial={{ opacity: 0, y: 16, scale: 0.94 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 16, scale: 0.94 }}
+              transition={{ duration: 0.22, ease: "easeOut" }}
+            >
+              <motion.button
+                type="button"
+                className="mobile-fab-menu__item income"
+                onClick={() => {
+                  setShowIncomeModal(true);
+                  setIsMobileFabOpen(false);
+                }}
+                whileTap={{ scale: 0.97 }}
+              >
+                <span className="mobile-fab-menu__icon">+</span>
+                Add Income
+              </motion.button>
+
+              <motion.button
+                type="button"
+                className="mobile-fab-menu__item expense"
+                onClick={() => {
+                  setShowExpenseModal(true);
+                  setIsMobileFabOpen(false);
+                }}
+                whileTap={{ scale: 0.97 }}
+              >
+                <span className="mobile-fab-menu__icon">-</span>
+                Add Expense
+              </motion.button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
       {/* Modals */}
       <AnimatePresence>

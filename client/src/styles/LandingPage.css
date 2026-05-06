@@ -360,6 +360,16 @@
   }
 }
 
+.nav-logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer; /* Added cursor */
+}
+
 /* Scrolled State */
 .landing-nav.scrolled {
   height: 70px; /* Slightly smaller on scroll */
@@ -374,14 +384,4 @@
     rgba(15, 23, 42, 0.9),
     rgba(30, 41, 59, 0.9)
   );
-}
-
-.nav-logo {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--text-main);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer; /* Added cursor */
 }

@@ -162,6 +162,10 @@
 
 /* --- Mobile Responsive: Card View Transformation --- */
 @media (max-width: 768px) {
+  .records-header {
+    display: none;
+  }
+
   .filters-bar {
     flex-direction: column;
     align-items: stretch;

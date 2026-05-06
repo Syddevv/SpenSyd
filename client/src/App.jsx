@@ -1,11 +1,12 @@
-import React, { useState } from "react";
-import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
+import React from "react";
+import { Routes, Route, Outlet, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ProtectedRoute from "./components/ProtectedRoutes";
 
 // Context
 import ContextProvider from "./context/ContextProvider";
+import { useAuth } from "./context/ContextProvider";
 
 // Pages
 import Register from "./pages/Register";
@@ -18,79 +19,71 @@ import Settings from "./pages/Settings";
 
 // Components
 import Sidebar from "./components/Sidebar";
+import MobileBottomNav from "./components/MobileBottomNav";
 
 // Analytics
 import { Analytics } from "@vercel/analytics/react";
+import DefaultProfile from "./assets/default-profile.png";
 
 // --- Internal Layout Component ---
 // This wrapper handles the Sidebar and Main Content area
 const DashboardLayout = () => {
-  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const location = useLocation();
+  const { user } = useAuth();
+
+  const mobileIntroMap = {
+    "/home": {
+      eyebrow: "Dashboard",
+      title: "Overview",
+      subtitle: `Welcome back, @${user?.username || "User"}`,
+    },
+    "/expenses": {
+      eyebrow: "Tracking",
+      title: "Expenses",
+      subtitle: "Review your spending history and monthly totals.",
+    },
+    "/incomes": {
+      eyebrow: "Tracking",
+      title: "Income",
+      subtitle: "Monitor incoming funds and keep cash flow visible.",
+    },
+  };
+
+  const mobileIntro = mobileIntroMap[location.pathname];
 
   return (
-    <div
-      style={{
-        display: "flex",
-        minHeight: "100vh",
-        backgroundColor: "var(--bg-dark)",
-      }}
-    >
-      {/* Sidebar */}
-      <Sidebar
-        isOpen={isMobileSidebarOpen}
-        onClose={() => setIsMobileSidebarOpen(false)}
-      />
+    <div className="dashboard-shell">
+      <Sidebar />
 
-      {/* Main Content Area */}
-      <main
-        style={{
-          flex: 1,
-          marginLeft: "var(--sidebar-width)", // Pushes content to right of fixed sidebar
-          width: "calc(100% - var(--sidebar-width))",
-          padding: "20px",
-          transition: "all 0.3s ease",
-        }}
-        className="main-content-area" // Class for mobile css targeting
-      >
-        {/* Mobile Hamburger (Visible only on small screens) */}
-        <div
-          className="mobile-header"
-          style={{ display: "none", marginBottom: "20px" }}
-        >
-          <button
-            onClick={() => setIsMobileSidebarOpen(true)}
-            style={{ background: "none", color: "white", fontSize: "24px" }}
-          >
-            ☰
-          </button>
-        </div>
+      <main className="dashboard-main">
+        {mobileIntro && (
+          <section className="mobile-dashboard-intro">
+            <div className="mobile-dashboard-intro__copy">
+              <span className="mobile-dashboard-intro__eyebrow">
+                {mobileIntro.eyebrow}
+              </span>
+              <h1 className="mobile-dashboard-intro__title">
+                {mobileIntro.title}
+              </h1>
+              <p className="mobile-dashboard-intro__subtitle">
+                {mobileIntro.subtitle}
+              </p>
+            </div>
 
-        {/* Render the Page Content */}
+            <div className="mobile-dashboard-intro__avatar-shell">
+              <img
+                src={user?.profilePicture || DefaultProfile}
+                alt="Profile"
+                className="mobile-dashboard-intro__avatar"
+              />
+            </div>
+          </section>
+        )}
+
         <Outlet />
       </main>
 
-      {/* Mobile Responsive Styles Injector for Layout */}
-      <style>{`
-        @media (max-width: 900px) {
-          .main-content-area {
-            margin-left: 0 !important;
-            width: 100% !important;
-            padding-top: 70px !important; /* Space for mobile header */
-          }
-          .mobile-header {
-            display: block !important;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 60px;
-            background: var(--bg-surface);
-            z-index: 40;
-            padding: 15px;
-            border-bottom: 1px solid var(--border-glass);
-          }
-        }
-      `}</style>
+      <MobileBottomNav />
     </div>
   );
 };

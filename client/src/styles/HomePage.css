@@ -170,6 +170,10 @@
   transform: translateY(-2px);
 }
 
+.mobile-fab-zone {
+  display: none;
+}
+
 /* --- Bottom Row: Recent Transactions --- */
 .recent-section {
   padding: 24px;
@@ -265,6 +269,102 @@
   .actions-section {
     flex-direction: row;
     height: auto;
+  }
+}
+
+@media (max-width: 900px) {
+  .welcome-section {
+    display: none;
+  }
+
+  .dashboard-container {
+    gap: 18px;
+  }
+
+  .stats-grid,
+  .main-grid {
+    gap: 18px;
+  }
+
+  .stat-card,
+  .chart-section,
+  .actions-section,
+  .recent-section {
+    padding: 20px;
+  }
+
+  .stat-value {
+    font-size: 1.85rem;
+  }
+
+  .actions-section {
+    display: none;
+  }
+
+  .mobile-fab-zone {
+    display: block;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: calc(122px + env(safe-area-inset-bottom, 0px));
+    z-index: 1105;
+    pointer-events: none;
+  }
+
+  .mobile-fab-menu {
+    position: fixed;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    bottom: calc(106px + env(safe-area-inset-bottom, 0px));
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    pointer-events: auto;
+  }
+
+  .mobile-fab-menu__item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-width: 156px;
+    padding: 12px 14px;
+    border-radius: 18px;
+    color: var(--text-main);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(
+      180deg,
+      rgba(30, 41, 59, 0.96),
+      rgba(15, 23, 42, 0.92)
+    );
+    box-shadow: 0 16px 32px rgba(2, 8, 23, 0.34);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .mobile-fab-menu__item.income {
+    color: #d1fae5;
+  }
+
+  .mobile-fab-menu__item.expense {
+    color: #ffe4e6;
+  }
+
+  .mobile-fab-menu__icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.08);
+    font-size: 1rem;
+    line-height: 1;
   }
 }
 

@@ -62,6 +62,24 @@ button {
   font-family: inherit;
 }
 
+.dashboard-shell {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-dark);
+}
+
+.dashboard-main {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  width: calc(100% - var(--sidebar-width));
+  padding: 20px;
+  transition: padding 0.3s ease, margin 0.3s ease, width 0.3s ease;
+}
+
+.mobile-dashboard-intro {
+  display: none;
+}
+
 /* --- Utility Classes --- */
 
 /* The "Glass" Effect Card */
@@ -142,4 +160,82 @@ button {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #475569;
+}
+
+@keyframes mobileIntroFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@media (max-width: 900px) {
+  .dashboard-main {
+    margin-left: 0;
+    width: 100%;
+    padding: 24px 16px calc(120px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .mobile-dashboard-intro {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 20px;
+  }
+
+  .mobile-dashboard-intro__copy {
+    min-width: 0;
+  }
+
+  .mobile-dashboard-intro__eyebrow {
+    display: inline-block;
+    margin-bottom: 8px;
+    color: #a78bfa;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .mobile-dashboard-intro__title {
+    color: var(--text-main);
+    font-size: 2rem;
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    margin-bottom: 8px;
+  }
+
+  .mobile-dashboard-intro__subtitle {
+    max-width: 240px;
+    color: var(--text-muted);
+    font-size: 0.96rem;
+    line-height: 1.55;
+  }
+
+  .mobile-dashboard-intro__avatar-shell {
+    flex-shrink: 0;
+    padding: 3px;
+    border-radius: 999px;
+    background: linear-gradient(
+      135deg,
+      rgba(139, 92, 246, 0.95),
+      rgba(96, 165, 250, 0.85)
+    );
+    box-shadow: 0 16px 34px rgba(76, 29, 149, 0.32);
+    animation: mobileIntroFloat 5s ease-in-out infinite;
+  }
+
+  .mobile-dashboard-intro__avatar {
+    display: block;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(15, 23, 42, 0.95);
+    background: var(--bg-surface);
+  }
 }

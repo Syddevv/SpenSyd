@@ -274,3 +274,14 @@
     font-size: 16px; /* Prevents iOS zoom on focus */
   }
 }
+
+@media (max-width: 900px) {
+  .ai-bot-container {
+    right: 18px;
+    bottom: calc(108px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .ai-chat-window {
+    bottom: 78px;
+  }
+}
