@@ -79,6 +79,15 @@ const Register = () => {
       {/* Right Side - Form */}
       <div className="auth-form-container">
         <motion.div
+          initial={{ opacity: 0, y: -12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, ease: "easeOut", delay: 0.15 }}
+        >
+          <Link to="/" className="auth-home-link">
+            Back
+          </Link>
+        </motion.div>
+        <motion.div
           className="auth-card glass-panel"
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}

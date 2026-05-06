@@ -96,6 +96,7 @@
 
 /* --- Hero Section --- */
 .hero-section {
+  position: relative;
   text-align: center;
   margin-top: 160px; /* Increased from 80px to account for fixed header */
   margin-bottom: 100px;
@@ -136,6 +137,51 @@
   display: flex;
   gap: 16px;
   justify-content: center;
+}
+
+.scroll-indicator {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -58px;
+  width: fit-content;
+  margin: 0 auto;
+  display: none;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: linear-gradient(
+    135deg,
+    rgba(15, 23, 42, 0.72),
+    rgba(30, 41, 59, 0.5)
+  );
+  backdrop-filter: blur(14px);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.28);
+  color: var(--text-main);
+  cursor: pointer;
+  z-index: 2;
+}
+
+.scroll-indicator__text {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.scroll-indicator__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: rgba(139, 92, 246, 0.16);
+  color: #c4b5fd;
+  font-size: 0.9rem;
 }
 
 .btn-outline {
@@ -257,8 +303,20 @@
 
 /* Mobile Responsiveness Update */
 @media (max-width: 768px) {
+  .hero-section {
+    margin-top: 132px;
+  }
+
   .hero-title {
     font-size: 2.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.05rem;
+  }
+
+  .scroll-indicator {
+    display: inline-flex;
   }
 
   .bento-grid {

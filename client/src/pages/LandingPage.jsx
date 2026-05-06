@@ -8,6 +8,11 @@ const LandingPage = () => {
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false); // State for scroll detection
 
+  const handleScrollDown = () => {
+    const featuresSection = document.querySelector(".features-section");
+    featuresSection?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   // Scroll listener
   useEffect(() => {
     const handleScroll = () => {
@@ -119,6 +124,24 @@ const LandingPage = () => {
             Create Free Account
           </motion.button>
         </motion.div>
+
+        {!isScrolled && (
+          <motion.button
+            type="button"
+            className="scroll-indicator"
+            onClick={handleScrollDown}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: [0.5, 1, 0.5], y: [0, 8, 0] }}
+            transition={{
+              opacity: { duration: 1.8, repeat: Infinity, ease: "easeInOut" },
+              y: { duration: 1.8, repeat: Infinity, ease: "easeInOut" },
+            }}
+            aria-label="Scroll down to explore more content"
+          >
+            <span className="scroll-indicator__text">Explore More</span>
+            <span className="scroll-indicator__icon">↓</span>
+          </motion.button>
+        )}
       </header>
 
       <section className="features-section">
