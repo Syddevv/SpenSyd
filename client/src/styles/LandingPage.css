@@ -233,7 +233,6 @@
 }
 
 .bento-icon {
-  font-size: 2rem;
   margin-bottom: 16px;
   background: rgba(255, 255, 255, 0.05);
   width: 50px;
@@ -242,6 +241,11 @@
   align-items: center;
   justify-content: center;
   border-radius: 12px;
+}
+
+.bento-icon svg {
+  width: 24px;
+  height: 24px;
 }
 
 .bento-title {
@@ -276,7 +280,6 @@
 .bento-item.ai-feature .bento-icon {
   width: 80px;
   height: 80px;
-  font-size: 3rem;
   background: linear-gradient(135deg, #6366f1, #a855f7);
   color: white;
   box-shadow: 0 0 25px rgba(168, 85, 247, 0.4);
@@ -285,6 +288,11 @@
   display: flex; /* Ensure emoji/icon is centered in the box */
   align-items: center;
   justify-content: center;
+}
+
+.bento-item.ai-feature .bento-icon svg {
+  width: 38px;
+  height: 38px;
 }
 
 .bento-item.ai-feature .bento-title {
@@ -339,8 +347,12 @@
   .bento-item.ai-feature .bento-icon {
     width: 70px;
     height: 70px;
-    font-size: 2.5rem;
     margin-bottom: 0; /* Reset margin if set elsewhere */
+  }
+
+  .bento-item.ai-feature .bento-icon svg {
+    width: 32px;
+    height: 32px;
   }
 }
 

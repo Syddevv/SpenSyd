@@ -4,6 +4,20 @@ import { motion } from "framer-motion";
 import "../styles/LandingPage.css";
 import SpenSyd_Icon from "../assets/SpenSyd Icon.png";
 
+const FeatureIcon = ({ children }) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    {children}
+  </svg>
+);
+
 const LandingPage = () => {
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false); // State for scroll detection
@@ -157,7 +171,27 @@ const LandingPage = () => {
             variants={item}
             whileHover={{ scale: 1.01 }}
           >
-            <div className="bento-icon">🤖</div>
+            <div className="bento-icon">
+              <FeatureIcon>
+                <rect x="4" y="9" width="16" height="10" rx="3" />
+                <path d="M12 4v3" />
+                <circle
+                  cx="9"
+                  cy="13.5"
+                  r="0.9"
+                  fill="currentColor"
+                  stroke="none"
+                />
+                <circle
+                  cx="15"
+                  cy="13.5"
+                  r="0.9"
+                  fill="currentColor"
+                  stroke="none"
+                />
+                <path d="M9 16h6" />
+              </FeatureIcon>
+            </div>
             <div className="ai-content">
               <h3 className="bento-title">Powered by SpenSyd AI</h3>
               <p className="bento-desc">
@@ -173,7 +207,14 @@ const LandingPage = () => {
             variants={item}
             whileHover={{ scale: 1.02 }}
           >
-            <div className="bento-icon">📊</div>
+            <div className="bento-icon">
+              <FeatureIcon>
+                <path d="M4 19V9" />
+                <path d="M10 19V5" />
+                <path d="M16 19v-7" />
+                <path d="M22 19v-11" />
+              </FeatureIcon>
+            </div>
             <h3 className="bento-title">Real-time Analytics</h3>
             <p className="bento-desc">
               Visualize your spending habits with dynamic charts. See exactly
@@ -186,7 +227,12 @@ const LandingPage = () => {
             variants={item}
             whileHover={{ scale: 1.02 }}
           >
-            <div className="bento-icon">🛡️</div>
+            <div className="bento-icon">
+              <FeatureIcon>
+                <path d="M12 3l7 3v5c0 4.5-2.9 7.9-7 10-4.1-2.1-7-5.5-7-10V6l7-3z" />
+                <path d="M9.5 12.5l1.8 1.8 3.7-4.1" />
+              </FeatureIcon>
+            </div>
             <h3 className="bento-title">Secure & Private</h3>
             <p className="bento-desc">
               Your financial data is encrypted and secure. We prioritize your
@@ -199,7 +245,11 @@ const LandingPage = () => {
             variants={item}
             whileHover={{ scale: 1.02 }}
           >
-            <div className="bento-icon">⚡</div>
+            <div className="bento-icon">
+              <FeatureIcon>
+                <path d="M13 2L5 14h5l-1 8 8-12h-5l1-8z" />
+              </FeatureIcon>
+            </div>
             <h3 className="bento-title">Quick Actions</h3>
             <p className="bento-desc">
               Log transactions in seconds. Designed for speed so you never miss
@@ -212,7 +262,14 @@ const LandingPage = () => {
             variants={item}
             whileHover={{ scale: 1.02 }}
           >
-            <div className="bento-icon">🎯</div>
+            <div className="bento-icon">
+              <FeatureIcon>
+                <circle cx="12" cy="12" r="7" />
+                <circle cx="12" cy="12" r="3" />
+                <path d="M16.5 7.5L21 3" />
+                <path d="M15 9l6-6" />
+              </FeatureIcon>
+            </div>
             <h3 className="bento-title">Smart Categorization</h3>
             <p className="bento-desc">
               Automatically organize expenses into categories like Food,
